@@ -1,0 +1,11 @@
+#   Template files
+tmp/
+include/tmp_api.h
+
+#   NetBeans
+nbproject/
+
+#   Files created by the compiler
+*.d
+*.o
+ria

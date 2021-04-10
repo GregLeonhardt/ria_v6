@@ -4,8 +4,11 @@ CC		=	gcc
 #-----------------------------------------------------------------------
 RM		=	rm
 #-----------------------------------------------------------------------
+LIBTOOLS	=	../libtools
+#-----------------------------------------------------------------------
 CFLAGS		=	-DDEBUG -Wall -g -O  -MMD
 CFLAGS		+=	-I. -Iinclude
+CFLAGS		+=	-I$(LIBTOOLS)/include/
 CFLAGS		+=	-Idecode/include
 CFLAGS		+=	-Iimport/include
 #-----------------------------------------------------------------------
@@ -40,12 +43,12 @@ all: $(APPNAME)
 
 $(APPNAME): $(OBJ) ../tools/libtools.a
 	@echo "BUILD THE APPLICATION:"
-	$(CC) $(LFLAGS) $(APPNAME) $(OBJ) ../tools/libtools.a -lpthread -ldl
+	$(CC) $(LFLAGS) $(APPNAME) $(OBJ) $(LIBTOOLS)/libtools.a -lpthread -ldl
 
 -include $(DEP)
 
 ../tools/libtools.a:
-	cd ../tools ; make all
+	cd $(LIBTOOLS) ; make all
 
 ########################################################################
 # Cleans object and library file(s)

@@ -47,6 +47,21 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+#define THREAD_NAME_SIZE        ( 24 )
+//-----
+#define THREAD_NAME_IMPORT      "IMPORT:"
+#define THREAD_NAME_DECODE      "DECODE:"
+#define THREAD_NAME_ENCODE      "ENCODE:"
+#define THREAD_NAME_EXPORT      "EXPORT:"
+//-----
+#define THREAD_COUNT_IMPORT     ( 9 )
+#define THREAD_COUNT_DECODE     ( 1 )
+#define THREAD_COUNT_ENCODE     ( 1 )
+#define THREAD_COUNT_EXPORT     ( 1 )
+//----------------------------------------------------------------------------
+#define MAX_QUEUE_DEPTH         ( 0 )
+//----------------------------------------------------------------------------
+#define FILE_NAME_SIZE          ( 512 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -54,6 +69,16 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+/**
+ *  @param  thread_state_e      The current state of a thread               */
+enum    thread_stat_e
+{
+    TS_STARTUP              =   0,
+    TS_INITIALIZED          =   1,
+    TS_WAIT                 =   2,
+    TS_WORKING              =   3,
+    TS_SHUTDOWN             =   4
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -61,6 +86,32 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+/**
+ *  @param  rcb                 Recipe Control Block                        */
+struct  rcb_t
+{
+    /**
+     *  @param  file_info_p     Pointer to a file information structure     */
+    struct  file_info_t     *   file_info_p;
+};
+//----------------------------------------------------------------------------
+/**
+ *  @param  tcb                 Thread Control Block                        */
+struct  tcb_t
+{
+    /**
+     *  @param  queue_id            Data queue id                           */
+    int                             queue_id;
+    /**
+     *  @param  thread_id           Identifies the thread                   */
+    int                             thread_id;
+    /**
+     *  @param  thread_name         Name of this thread                     */
+    char                            thread_name[ THREAD_NAME_SIZE ];
+    /**
+     *  @param  thread_state        State of the thread                     */
+    enum    thread_stat_e           thread_state;
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************

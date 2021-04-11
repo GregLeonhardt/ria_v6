@@ -38,8 +38,8 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
-#include "decode_api.h"            //  API for all decode_*               PUBLIC
-#include "decode_lib.h"            //  API for all DECODE__*              PRIVATE
+#include "decode_api.h"         //  API for all decode_*            PUBLIC
+#include "decode_lib.h"         //  API for all DECODE__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -87,32 +87,53 @@
  *
  ****************************************************************************/
 
-int
-decode_init(
-    void
+void
+decode(
+    void                    *   void_p
     )
 {
     /**
-     *  The assumption is that this function will pass                      */
-    int                             decode_rc;
+     *  @param  tcb_p           Pointer to a Thread Control Block           */
+    struct  tcb_t           *   tcb_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Assume a successful initialization
-    decode_rc = true;
+    //  Set the pointer
+    tcb_p = void_p;
+
+    //  Progress report.
+    log_write( MID_INFO, tcb_p->thread_name,
+               "Initialization complete.\n" );
+
+    //  Change execution state to "INITIALIZED" for work.
+    tcb_p->thread_state = TS_INITIALIZED;
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
+    while ( 1 )
+    {
+        sleep( 10 );
+
+        /********************************************************************
+         *  Get a new set of addresses
+         ********************************************************************/
+
+        //  Get the current File-ID.
+//      file_id_p = queue_get_payload( tcb_p->queue_id );
+
+        //  Progress report.
+//      log_write( MID_LOGONLY, tcb_p->thread_name,
+//                 "Q-%03d: Rcv: FILE-ID: %s\n",
+//                 tcb_p->queue_id, file_id_p );
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
-    //  DONE!
-    return( decode_rc );
 }
 /****************************************************************************/

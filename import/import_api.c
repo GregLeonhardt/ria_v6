@@ -38,8 +38,8 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
-#include "import_api.h"            //  API for all import_*         PUBLIC
-#include "import_lib.h"            //  API for all IMPORT__*        PRIVATE
+#include "import_api.h"         //  API for all import_*            PUBLIC
+#include "import_lib.h"         //  API for all IMPORT__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -78,41 +78,73 @@
 /**
  *  Initialize the Translations tables.
  *
- *  @param  void                No parameters are passed in.
+ *  @param  tcb_p               Pointer to a thread control block
  *
- *  @return void                Upon successful completion TRUE is returned
- *                              else FALSE is returned.
+ *  @return void                No information is returned from this function.
  *
  *  @note
  *
  ****************************************************************************/
 
-int
-import_init(
-    void
+void
+import(
+    void                    *   void_p
     )
 {
     /**
-     *  The assumption is that this function will pass                      */
-    int                             import_rc;
+     *  @param  tcb_p           Pointer to a Thread Control Block           */
+    struct  tcb_t           *   tcb_p;
+    /**
+     *  @param  rcb_p           Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   rcb_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Assume a successful initialization
-    import_rc = true;
+    //  Set the pointer
+    tcb_p = void_p;
+
+    //  Progress report.
+    log_write( MID_INFO, tcb_p->thread_name,
+               "Initialization complete.\n" );
+
+    //  Change execution state to "INITIALIZED" for work.
+    tcb_p->thread_state = TS_INITIALIZED;
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
+    while ( 1 )
+    {
+
+        /********************************************************************
+         *  Get a new set of addresses
+         ********************************************************************/
+
+        //  Get the current File-ID.
+        rcb_p = queue_get_payload( tcb_p->queue_id );
+
+        //  Progress report.
+        log_write( MID_INFO, tcb_p->thread_name,
+                   "Q-%03d: Rcv: FILE-ID: %s\n",
+                   tcb_p->queue_id, rcb_p->file_info_p->file_name );
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WORKING;
+
+
+        usleep( 100000 );
+
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WAIT;
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
-    //  DONE!
-    return( import_rc );
 }
 /****************************************************************************/

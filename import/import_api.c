@@ -124,8 +124,8 @@ import(
     log_write( MID_INFO, tcb_p->thread_name,
                "Initialization complete.\n" );
 
-    //  Change execution state to "INITIALIZED" for work.
-    tcb_p->thread_state = TS_INITIALIZED;
+    //  Change execution state to "WAIT"ing for work.
+    tcb_p->thread_state = TS_WAIT;
 
     /************************************************************************
      *  Function Body
@@ -199,9 +199,6 @@ import(
                 {
                     //  NO:     Put the new line on the list
                     list_put_last( import_list_p, read_data_p );
-
-
-
                 }
             }
 
@@ -210,6 +207,12 @@ import(
 
         //  Close the import file
         file_close( import_fp );
+
+        //  Set the packet destination
+        rcb_p->destination = DST_EMAIL;
+
+        //  Put it in one of the IMPORT queue's
+        queue_put_payload( router_queue_id, rcb_p  );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

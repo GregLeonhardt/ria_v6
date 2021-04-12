@@ -73,7 +73,9 @@
 #include "libtools_api.h"       //  My tools library
                                 //*******************************************
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
+#include "router_api.h"         //  API for all router_*            PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
+#include "email_api.h"          //  API for all email_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
 
@@ -120,14 +122,6 @@ char                        *   out_dir_name_p;
 /**
  * @param delete_flag           Delete input file when true                 */
 int                             delete_flag;
-//----------------------------------------------------------------------------
-/**
- * @param import_tcb            TCB list for all import threads             */
-struct  tcb_t               *   import_tcb[ THREAD_COUNT_IMPORT ];
-//----------------------------------------------------------------------------
-/**
- * @param decode_tcb            TCB list for all decode threads             */
-struct  tcb_t               *   decode_tcb[ THREAD_COUNT_DECODE ];
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -214,7 +208,7 @@ void
 command_line(
     int                             argc,
     char                        *   argv[]
-      )
+    )
 {
 
     /************************************************************************
@@ -275,6 +269,205 @@ command_line(
 }
 
 /****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the router thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_router_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Anything in the input queue ?
+    if ( queue_get_count( router_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+        //  NO:     Is the thread working on something
+    if ( router_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the router thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_import_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Loop through all IMPORT threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_ENCODE;
+         thread_id += 1 )
+    {
+        //  Anything in the input queue ?
+        if ( queue_get_count( import_tcb[ thread_id ]->queue_id ) != 0 )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+        else
+        //  NO:     Is the thread working on something
+        if ( import_tcb[ thread_id ]->thread_state == TS_WORKING )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+
+        //  Is this thread done ?
+        if ( func_rc == false )
+        {
+            //  NO:     No need to look at the others.
+            break;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the router thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_email_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Loop through all EMAIL threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_EMAIL;
+         thread_id += 1 )
+    {
+        //  Anything in the input queue ?
+        if ( queue_get_count( email_tcb[ thread_id ]->queue_id ) != 0 )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+        else
+        //  NO:     Is the thread working on something
+        if ( email_tcb[ thread_id ]->thread_state == TS_WORKING )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+
+        //  Is this thread done ?
+        if ( func_rc == false )
+        {
+            //  NO:     No need to look at the others.
+            break;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
+/****************************************************************************/
 
 /****************************************************************************
  * Public Functions
@@ -308,9 +501,6 @@ main(
     /**
      *  @param  file_info_p     Pointer to a file information structure     */
     struct  file_info_t     *   file_info_p;
-    /**
-     *  @param  queue_rc        Return code from queue management           */
-    enum    queue_rc_e          queue_rc;
     /**
      * @param thread_id         Unique thread id number                     */
     int                         thread_id;
@@ -415,17 +605,34 @@ main(
     }
 
     /************************************************************************
-     *  Queue Initialization
+     *  ROUTER      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Initialize queue management
-    queue_rc = queue_init( );
+    //  Allocate storage for a Thread Control Block
+    router_tcb = mem_malloc( sizeof( struct tcb_t ) );
 
-    //  Verify initialization was successful
-    if ( queue_rc != QUEUE_RC_SUCCESS )
+    //  Build the queue name
+    snprintf( router_tcb->thread_name,
+              sizeof( router_tcb->thread_name ),
+              "%s%02d", THREAD_NAME_ROUTER, 0 );
+
+    //  Create the queue
+    router_tcb->queue_id = queue_new( router_tcb->thread_name,
+                                      MAX_QUEUE_DEPTH );
+
+    //  The router queue id needs to be global
+    router_queue_id = router_tcb->queue_id;
+
+    //  Launch the import thread
+    thread_new( router, router_tcb );
+
+    //  Wait for the thread to be initialized
+    do
     {
-        //  @ToDo:
-    }
+        usleep( 100 );
+
+        //  Loop until the thread is 'WAIT'ing for work
+    }   while( router_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  IMPORT      Thread and Queue Initialization
@@ -457,8 +664,42 @@ main(
         {
             usleep( 100 );
 
-            //  Loop until the thread is initialized
-        }   while( import_tcb[ thread_id ]->thread_state != TS_INITIALIZED );
+            //  Loop until the thread is 'WAIT'ing for work
+        }   while( import_tcb[ thread_id ]->thread_state != TS_WAIT );
+    }
+
+    /************************************************************************
+     *  EMAIL       Thread and Queue Initialization
+     ************************************************************************/
+
+    //  Loop through all EMAIL threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_EMAIL;
+         thread_id += 1 )
+    {
+        //  Allocate storage for a Thread Control Block
+        email_tcb[ thread_id ] = mem_malloc( sizeof( struct tcb_t ) );
+
+        //  Build the queue name
+        snprintf( email_tcb[ thread_id ]->thread_name,
+                  sizeof( email_tcb[ thread_id ]->thread_name ),
+                  "%s%02d", THREAD_NAME_EMAIL, thread_id );
+
+        //  Create the queue
+        email_tcb[ thread_id ]->queue_id =
+                queue_new( email_tcb[ thread_id ]->thread_name,
+                           MAX_QUEUE_DEPTH );
+
+        //  Launch the EMAIL thread
+        thread_new( email, email_tcb[ thread_id ] );
+
+        //  Wait for the thread to be initialized
+        do
+        {
+            usleep( 100 );
+
+            //  Loop until the thread is 'WAIT'ing for work
+        }   while( import_tcb[ thread_id ]->thread_state != TS_WAIT );
     }
 
     /************************************************************************
@@ -491,8 +732,8 @@ main(
         {
             usleep( 100 );
 
-            //  Loop until the thread is initialized
-        }   while( decode_tcb[ thread_id ]->thread_state != TS_INITIALIZED );
+            //  Loop until the thread is 'WAIT'ing for work
+        }   while( decode_tcb[ thread_id ]->thread_state != TS_WAIT );
     }
 
     /************************************************************************
@@ -608,29 +849,28 @@ main(
      ************************************************************************/
 
     //  DO - WHILE any thread is still working
-    do
+    while( 1 )
     {
-        //  Loop through all IMPORT threads
-        for( thread_id = 0;
-             thread_id < THREAD_COUNT_ENCODE;
-             thread_id += 1 )
-        {
+        /**
+         *  @param  done_flag       TRUE when threads are done              */
+        int                         done_flag;
 
-            //  Get the queue count for this queue
-            queue_size = queue_get_count( import_tcb[ thread_id ]->queue_id );
+        //  Sleep a few seconds before trying again.
+        usleep( 500 );
 
-            //  Is there something on this queue ?
-            if ( queue_size != 0 )
-            {
-                //  YES:    Sleep a few seconds before trying again.
-                sleep( 5 );
+        //  Is there any work running through the router ?
+        done_flag = is_router_done( );
 
-                //  Reset and try again.
-                break;
-            }
-        }
+        if ( done_flag == true )
+            done_flag = is_import_done( );
 
-    }   while( queue_size != 0 );
+        if ( done_flag == true )
+            done_flag = is_email_done( );
+
+        //  DONE_FLAG can only be TRUE when EVERYTHING is done.
+        if ( done_flag == true )
+            break;
+    }
 
     /************************************************************************
      *  Application Exit

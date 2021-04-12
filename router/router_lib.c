@@ -1,13 +1,15 @@
 /*******************************  COPYRIGHT  ********************************/
 /*
- *  Copyright (c) 2017 Gregory N. Leonhardt All rights reserved.
+ *  Author? "Gregory N. Leonhardt"
+ *  License? "CC BY-NC 2.0"
+ *           "https://creativecommons.org/licenses/by-nc/2.0/"
  *
  ****************************************************************************/
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains public function that makeup the external
- *  library components of the 'decode' library.
+ *  This file contains private functions that makeup the internal
+ *  library components of the 'router' library.
  *
  *  @note
  *
@@ -17,7 +19,6 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_DECODE          ( "ALLOCATEGORIESE STORAGE FOR DECODE" )
 
 /****************************************************************************
  * System Function API
@@ -38,101 +39,77 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
-#include "decode_api.h"         //  API for all decode_*            PUBLIC
-#include "decode_lib.h"         //  API for all DECODE__*           PRIVATE
+#include "router_api.h"         //  API for all router_*            PUBLIC
+#include "router_lib.h"         //  API for all ROUTER__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
- * Private API Enumerations
+ * Enumerations local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Definitions
+ * Definitions local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Structures
+ * Structures local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Storage Allocation
+ * Storage Allocation local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Public API Functions
+ * LIB Functions
  ****************************************************************************/
 
 /****************************************************************************/
 /**
- *  Initialize the Translations tables.
+ *  The table_input function does all the hard work of reading
+ *  the translation tables and saving the information.
  *
- *  @param  void                No parameters are passed in.
+ *  @param  file_fp             A pointer to the file descriptor.
+ *  @param  router_table_p       A pointer to the base of the table chain.
  *
- *  @return void                Upon successful completion TRUE is returned
- *                              else FALSE is returned.
- *
- *  @note
+ *  @return                     Upon successful completion PASS is returned
+ *                              else FAIL is returned
  *
  ****************************************************************************/
 
-void
-decode(
-    void                    *   void_p
+int
+ROUTER__FooBar(
+    FILE                        *   file_fp,
+    struct  list_base_t         *   router_table_p
     )
 {
-    /**
-     *  @param  tcb_p           Pointer to a Thread Control Block           */
-    struct  tcb_t           *   tcb_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Set the pointer
-    tcb_p = void_p;
-
-    //  Progress report.
-    log_write( MID_INFO, tcb_p->thread_name,
-               "Initialization complete.\n" );
-
-    //  Change execution state to "WAIT"ing for work.
-    tcb_p->thread_state = TS_WAIT;
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
-    while ( 1 )
-    {
-
-        /********************************************************************
-         *  Get a new set of addresses
-         ********************************************************************/
-
-        //  Get the current File-ID.
-//      file_id_p = queue_get_payload( tcb_p->queue_id );
-
-        //  Progress report.
-//      log_write( MID_LOGONLY, tcb_p->thread_name,
-//                 "Q-%03d: Rcv: FILE-ID: %s\n",
-//                 tcb_p->queue_id, file_id_p );
-    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
+    //  DONE!
+    return ( 0 );
 }
 /****************************************************************************/

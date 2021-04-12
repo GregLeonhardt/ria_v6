@@ -7,7 +7,7 @@
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains public function that makeup the external
- *  library components of the 'decode' library.
+ *  library components of the 'email' library.
  *
  *  @note
  *
@@ -17,7 +17,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_DECODE          ( "ALLOCATEGORIESE STORAGE FOR DECODE" )
+#define ALLOC_EMAIL          ( "ALLOCATEGORIESE STORAGE FOR EMAIL" )
 
 /****************************************************************************
  * System Function API
@@ -38,8 +38,8 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
-#include "decode_api.h"         //  API for all decode_*            PUBLIC
-#include "decode_lib.h"         //  API for all DECODE__*           PRIVATE
+#include "email_api.h"          //  API for all email_*             PUBLIC
+#include "email_lib.h"          //  API for all EMAIL__*            PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -88,13 +88,16 @@
  ****************************************************************************/
 
 void
-decode(
+email(
     void                    *   void_p
     )
 {
     /**
      *  @param  tcb_p           Pointer to a Thread Control Block           */
     struct  tcb_t           *   tcb_p;
+    /**
+     *  @param  rcb_p           Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   rcb_p;
 
     /************************************************************************
      *  Function Initialization
@@ -118,21 +121,40 @@ decode(
     {
 
         /********************************************************************
-         *  Get a new set of addresses
+         *  Get a new file to import
          ********************************************************************/
 
         //  Get the current File-ID.
-//      file_id_p = queue_get_payload( tcb_p->queue_id );
+        rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-//      log_write( MID_LOGONLY, tcb_p->thread_name,
-//                 "Q-%03d: Rcv: FILE-ID: %s\n",
-//                 tcb_p->queue_id, file_id_p );
+        log_write( MID_LOGONLY, tcb_p->thread_name,
+                   "Q-%03d: Rcv: FILE-ID: %s\n",
+                   tcb_p->queue_id, rcb_p->display_name );
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WORKING;
+
+        /********************************************************************
+         *  FUNCTIONAL CODE FOR THIS THREAD GOES HERE
+         ********************************************************************/
+
+
+
+
+
+
+
+
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WAIT;
     }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
+    //  DONE!
 }
 /****************************************************************************/

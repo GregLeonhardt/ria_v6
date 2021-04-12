@@ -535,41 +535,63 @@ main(
          file_info_p != NULL;
          file_info_p = list_get_next( file_list_p, file_info_p ) )
     {
-        /**
-         *  @param  rcb_p           Recipe Control block                    */
-        struct  rcb_t           *   rcb_p;
+        //  Remove this file from the list.
+        list_delete( file_list_p, file_info_p );
 
-        //  Allocate a new recipe control block
-        rcb_p = mem_malloc( sizeof( struct rcb_t ) );
-
-        //  Put the file info pointer into the recipe control block
-        rcb_p->file_info_p = file_info_p;
-
-        //  Set the base numbers
-        id = 99999999;
-        queue_size = 99999999;
-
-        //  Locate the thread with the smallest queue depth
-        for( thread_id = 0;
-             thread_id < THREAD_COUNT_IMPORT;
-             thread_id += 1 )
+        //  Is there anything in the file ?
+        if ( text_to_int( file_info_p->file_size ) >= 100 )
         {
-            int                     queue_count;
+            /**
+             *  @param  rcb_p           Recipe Control block                    */
+            struct  rcb_t           *   rcb_p;
 
-            //  Get the queue count for this queue
-            queue_count = queue_get_count( import_tcb[ thread_id ]->queue_id );
+            //  YES:    Allocate a new recipe control block
+            rcb_p = mem_malloc( sizeof( struct rcb_t ) );
 
-            //  Is it smaller than the current smallest ?
-            if ( queue_count < queue_size )
+            //  Put the file info pointer into the recipe control block
+            rcb_p->file_info_p = file_info_p;
+
+            //  Set the base numbers
+            id = 99999999;
+            queue_size = 99999999;
+
+            //  Locate the thread with the smallest queue depth
+            for( thread_id = 0;
+                 thread_id < THREAD_COUNT_IMPORT;
+                 thread_id += 1 )
             {
-                //  YES:    Use this queue
-                id = import_tcb[ thread_id ]->queue_id;
-                queue_size = queue_count;
-            }
-        }
+                int                     queue_count;
 
-        //  Put it in the IMPORT queue
-        queue_put_payload( id, rcb_p  );
+                //  Get the queue count for this queue
+                queue_count = queue_get_count( import_tcb[ thread_id ]->queue_id );
+
+                //  Is it smaller than the current smallest ?
+                if ( queue_count < queue_size )
+                {
+                    //  YES:    Use this queue
+                    id = import_tcb[ thread_id ]->queue_id;
+                    queue_size = queue_count;
+                }
+            }
+
+            //  Put it in one of the IMPORT queue's
+            queue_put_payload( id, rcb_p  );
+
+            //  Progress report.
+            log_write( MID_LOGONLY, "main",
+                       "Q-%03d: Snd: FILE-ID: %s\n", id,
+                       rcb_p->file_info_p->file_name );
+        }
+        else
+        {
+            //  NO:     Log the Empty or small file
+            log_write( MID_INFO, "main",
+                       "Skipping empty or small file: '%s'\n",
+                       file_info_p->file_name );
+
+            //  Release the storage for this file
+            mem_free( file_info_p );
+        }
     }
 
     /************************************************************************

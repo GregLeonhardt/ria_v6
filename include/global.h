@@ -54,10 +54,10 @@
 #define THREAD_NAME_ENCODE      "ENCODE:"
 #define THREAD_NAME_EXPORT      "EXPORT:"
 //-----
-#define THREAD_COUNT_IMPORT     ( 9 )
-#define THREAD_COUNT_DECODE     ( 1 )
-#define THREAD_COUNT_ENCODE     ( 1 )
-#define THREAD_COUNT_EXPORT     ( 1 )
+#define THREAD_COUNT_IMPORT     (  1 )
+#define THREAD_COUNT_DECODE     (  1 )
+#define THREAD_COUNT_ENCODE     (  1 )
+#define THREAD_COUNT_EXPORT     (  1 )
 //----------------------------------------------------------------------------
 #define MAX_QUEUE_DEPTH         ( 0 )
 //----------------------------------------------------------------------------

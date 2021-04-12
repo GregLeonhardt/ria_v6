@@ -97,6 +97,18 @@ import(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+    /**
+     *  @param  file_name       Full file name (with directory)             */
+    char                        file_name[ FILE_NAME_L * 3 ];
+    /**
+     *  @param  import_fp       File pointer for the import file            */
+    FILE                    *   import_fp;
+    /**
+     *  @param  read_data_p     Read data buffer                            */
+    char                    *   read_data_p;
+    /**
+     *  @param  read_data_l     Read data buffer                            */
+    size_t                      read_data_l;
 
     /************************************************************************
      *  Function Initialization
@@ -120,23 +132,64 @@ import(
     {
 
         /********************************************************************
-         *  Get a new set of addresses
+         *  Get a new file to import
          ********************************************************************/
 
         //  Get the current File-ID.
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_INFO, tcb_p->thread_name,
+        log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->file_info_p->file_name );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
 
+        //  Build the full path/file name
+        snprintf( file_name, sizeof( file_name ),
+                  "%s/%s",
+                  rcb_p->file_info_p->dir_name,
+                  rcb_p->file_info_p->file_name );
 
-        usleep( 100000 );
+        //  Open the file for reading
+        import_fp = file_open_read( file_name );
 
+        do
+        {
+            //  Read a line of text
+            read_data_l = 0;
+            read_data_p = NULL;
+            read_data_l = getline( &read_data_p, &read_data_l, import_fp );
+
+            //  Was the read successful ?
+            if ( read_data_l != -1 )
+            {
+                //  YES:    Remove CR/LF
+                text_remove_crlf( read_data_p );
+
+                //  Is this a binary file ?
+                if ( text_is_binary( read_data_p, read_data_l ) == true )
+                {
+                    //  YES:    Log the binary file
+                    log_write( MID_INFO, tcb_p->thread_name,
+                               "Skipping binary file '%s'\n",
+                               rcb_p->file_info_p->file_name );
+
+                    //  Skip the file
+                    read_data_l = -1;
+                    break;
+                }
+
+                //  Done with this read data buffer.
+                mem_free( read_data_p );
+            }
+
+            //  Keep reading until we reach the end-of-file
+        }   while( read_data_l != -1 );
+
+        //  Close the import file
+        file_close( import_fp );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

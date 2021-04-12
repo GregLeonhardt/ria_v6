@@ -47,21 +47,21 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-#define THREAD_NAME_SIZE        ( 24 )
+#define ROUTER_QUEUE_ID             0
+//----------------------------------------------------------------------------
+#define THREAD_NAME_SIZE        (  24 )
 //-----
 #define THREAD_NAME_IMPORT      "IMPORT:"
 #define THREAD_NAME_DECODE      "DECODE:"
 #define THREAD_NAME_ENCODE      "ENCODE:"
 #define THREAD_NAME_EXPORT      "EXPORT:"
 //-----
-#define THREAD_COUNT_IMPORT     (  1 )
-#define THREAD_COUNT_DECODE     (  1 )
-#define THREAD_COUNT_ENCODE     (  1 )
-#define THREAD_COUNT_EXPORT     (  1 )
+#define THREAD_COUNT_IMPORT     (   3 )
+#define THREAD_COUNT_DECODE     (   1 )
+#define THREAD_COUNT_ENCODE     (   1 )
+#define THREAD_COUNT_EXPORT     (   1 )
 //----------------------------------------------------------------------------
-#define MAX_QUEUE_DEPTH         ( 0 )
-//----------------------------------------------------------------------------
-#define FILE_NAME_SIZE          ( 512 )
+#define MAX_QUEUE_DEPTH         (   0 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -80,6 +80,17 @@ enum    thread_stat_e
     TS_SHUTDOWN             =   4
 };
 //----------------------------------------------------------------------------
+/**
+ *  @param  destination_e       Destination Thread                          */
+enum    destination_e
+{
+    DST_INVALID             =   0,      //  Zero is always invalid
+    DST_IMPORT              =   1,
+    DST_DECODE              =   2,
+    DST_ENCODE              =   3,
+    DST_EXPORT              =   4
+};
+//----------------------------------------------------------------------------
 
 /****************************************************************************
  * Global Structures
@@ -93,6 +104,12 @@ struct  rcb_t
     /**
      *  @param  file_info_p     Pointer to a file information structure     */
     struct  file_info_t     *   file_info_p;
+    /**
+     *  @param  display_name    Display file name                           */
+    char                        display_name[ FILENAME_MAX ];
+    /**
+     *  @param  destination     Destination Thread                          */
+    enum    destination_e       destination;
 };
 //----------------------------------------------------------------------------
 /**

@@ -29,6 +29,7 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <string.h>             //  Functions for managing strings
                                 //*******************************************
 
 /****************************************************************************
@@ -80,39 +81,173 @@
 
 /****************************************************************************/
 /**
- *  The table_input function does all the hard work of reading
- *  the translation tables and saving the information.
+ *  Test the string for a recipe end marker.
+ *      FORMATS:
+ *          1   |MMMMM|
+ *          2   |-----|
+ *          3   |- -----|
+ *      NOTE:
+ *          When new end of recipe markers are added here, they should also
+ *          be added to rd_input_file:rd_preprocess( )
  *
- *  @param  file_fp             A pointer to the file descriptor.
- *  @param  mmf_table_p       A pointer to the base of the table chain.
+ *  @param  data_p              Pointer to a a line of text to be scanned.
  *
- *  @return                     Upon successful completion PASS is returned
- *                              else FAIL is returned
+ *  @return                     TRUE when the text string matches a known
+ *                              end of recipe marker, else FALSE
+ *
+ *  @note
  *
  ****************************************************************************/
 
 int
-MMF__FooBar(
-    FILE                        *   file_fp,
-    struct  list_base_t         *   mmf_table_p
+MMF__is_end(
+    char                    *   data_p
     )
 {
+    /**
+     * @param mmf_rc            Return Code                                 */
+    int                         mmf_rc;
+    /**
+     * @param tmp_data_p        Pointer to a temp data buffer               */
+    char                    *   tmp_data_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
+    //  The assumption is that this is NOT the start of a Meal-Master recipe
+    mmf_rc = false;
+
+    //  Locate the first character in the buffer
+    tmp_data_p = text_skip_past_whitespace( data_p );
 
     /************************************************************************
-     *  Function Body
+     *  Test for a valid recipe end string
      ************************************************************************/
 
+    //  Is this the start of a Meal-Master MMF recipe ?
+    if (    (    ( strncasecmp( tmp_data_p, MMF_END_1,  MMF_END_1_L  ) == 0 )
+              && ( strlen( tmp_data_p ) == MMF_END_1_L ) )
+         || (    ( strncasecmp( tmp_data_p, MMF_END_2,  MMF_END_2_L  ) == 0 )
+              && ( strlen( tmp_data_p ) == MMF_END_2_L ) )
+         || (    ( strncasecmp( tmp_data_p, MMF_END_3,  MMF_END_3_L  ) == 0 )
+              && ( strlen( tmp_data_p ) == MMF_END_3_L ) )
+         || (    ( strncasecmp( tmp_data_p, MMF_END_4,  MMF_END_4_L  ) == 0 )
+              && ( strlen( tmp_data_p ) == MMF_END_4_L ) ) )
+    {
+        //  YES:    Change the return code
+        mmf_rc = true;
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
     //  DONE!
-    return ( 0 );
+    return ( mmf_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Test the string for a recipe START marker.
+ *      FORMATS:
+ *          1   |Recipe via Meal-Master|
+ *          2   |----- Now You're Cooking!|
+ *          3   |MMMMM----- Now You're Cooking|
+ *          4   |- ----- Recipe via Meal-Master|
+ *          5   |MMMM----- Recipe via Meal-Master|
+ *          6   |--------- Recipe via Meal-Master|
+ *          7   |MMMMM----- Recipe via Meal-Master|
+ *          8   |---------- Recipe via Meal-Master|
+ *          9   |:MMMMM----- Recipe via Meal-Master|
+ *         10   |----------- Recipe via Meal-Master|
+ *         11   |----------- Recipe via Meal-Master|
+ *         12   |-- MMMMM----- Recipe via Meal-Master|
+ *         13   |------------- Recipe Extracted from Meal-Master|
+
+ *
+ *  @param  data_p              Pointer to a a line of text to be scanned.
+ *
+ *  @return                     TRUE when the text string matches a known
+ *                              end of recipe marker, else FALSE
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+MMF__is_start (
+    char                    *   data_p
+    )
+{
+    /**
+     * @param mmf_rc            Return Code                                 */
+    int                         mmf_rc;
+    /**
+     * @param start_p           Pointer to a temp data buffer               */
+    char                    *   start_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  The assumption is that this is NOT the start of a Meal-Master recipe
+    mmf_rc = false;
+
+    //  Locate the first character in the buffer
+    start_p = text_skip_past_whitespace( data_p );
+
+
+    /************************************************************************
+     *  Look for a generic recipe start message for Meal-Master format
+     ************************************************************************/
+
+    //  Is the a CP2 start tag ?
+    if (    ( start_p != NULL )                           //  Data is present
+         && ( start_p[ 0 ] != '>' ) )                     //  Not forwarded e-mail
+    {
+        //  Does the string start with one of out line prefixes?
+        if (    ( strncmp( start_p, MMF_PREFIX_1, MMF_PREFIX_1_L ) == 0 )    //  -----
+             || ( strncmp( start_p, MMF_PREFIX_2, MMF_PREFIX_2_L ) == 0 )    //  MMMMM
+             || ( strncmp( start_p, MMF_PREFIX_3, MMF_PREFIX_3_L ) == 0 ) )  //  - -----
+        {
+            //  YES:    Does it contain contain a software tag ?
+            if (    ( strstr( start_p, MMF_MMF_1 ) != NULL )     //  Meal-Master
+                 || ( strstr( start_p, MMF_NYC_1 ) != NULL ) )   //  Now You're Cooking!
+            {
+                //  YES:    Change the return code
+                mmf_rc = true;
+            }
+        }
+
+        /********************************************************************
+         *  Look for other more specialized start messages
+         ********************************************************************/
+
+        //  Skip this test if a previous test was TRUE
+        if ( mmf_rc == false )
+        {
+            //  Is this the start of a Meal-Master MMF recipe ?
+            if (    ( strncmp( start_p, MMF_START_1,  MMF_START_1_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_2,  MMF_START_2_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_3,  MMF_START_3_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_4,  MMF_START_4_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_5,  MMF_START_5_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_6,  MMF_START_6_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_7,  MMF_START_7_L  ) == 0 )
+                 || ( strncmp( start_p, MMF_START_8,  MMF_START_8_L  ) == 0 ) )
+            {
+                //  YES:    Change the return code
+                mmf_rc = true;
+            }
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return ( mmf_rc );
 }
 /****************************************************************************/

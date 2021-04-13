@@ -124,17 +124,17 @@ struct  rcb_t
 struct  tcb_t
 {
     /**
-     *  @param  queue_id            Data queue id                           */
-    int                             queue_id;
+     *  @param  queue_id        Data queue id                               */
+    int                         queue_id;
     /**
-     *  @param  thread_id           Identifies the thread                   */
-    int                             thread_id;
+     *  @param  thread_id       Identifies the thread                       */
+    int                         thread_id;
     /**
-     *  @param  thread_name         Name of this thread                     */
-    char                            thread_name[ THREAD_NAME_SIZE ];
+     *  @param  thread_name     Name of this thread                         */
+    char                        thread_name[ THREAD_NAME_SIZE ];
     /**
-     *  @param  thread_state        State of the thread                     */
-    enum    thread_stat_e           thread_state;
+     *  @param  thread_state    State of the thread                         */
+    enum    thread_stat_e       thread_state;
 };
 //----------------------------------------------------------------------------
 
@@ -143,23 +143,27 @@ struct  tcb_t
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-    int                             router_queue_id;
+int                             router_queue_id;
 //----------------------------------------------------------------------------
 /**
- * @param router_tcb                TCB list for the router thread          */
-    struct  tcb_t               *   router_tcb;
+ * @param router_tcb            TCB list for the router thread              */
+    struct  tcb_t           *   router_tcb;
 //----------------------------------------------------------------------------
 /**
- * @param import_tcb                TCB list for all import threads         */
-    struct  tcb_t               *   import_tcb[ THREAD_COUNT_IMPORT ];
+ * @param import_tcb            TCB list for all import threads             */
+    struct  tcb_t           *   import_tcb[ THREAD_COUNT_IMPORT ];
 //----------------------------------------------------------------------------
 /**
- * @param email_tcb                 TCB list for all import threads         */
-    struct  tcb_t               *   email_tcb[ THREAD_COUNT_EMAIL ];
+ * @param email_tcb             TCB list for all import threads             */
+    struct  tcb_t           *   email_tcb[ THREAD_COUNT_EMAIL ];
 //----------------------------------------------------------------------------
 /**
- * @param decode_tcb                TCB list for all decode threads         */
-    struct  tcb_t               *   decode_tcb[ THREAD_COUNT_DECODE ];
+ * @param decode_tcb            TCB list for all decode threads             */
+    struct  tcb_t           *   decode_tcb[ THREAD_COUNT_DECODE ];
+//---------------------------------------------------------------------------
+/**
+ *  @param  store_value_p       ID number for the DECODE queue              */
+char                        *   recipe_id_p;
 //----------------------------------------------------------------------------
 
 /****************************************************************************

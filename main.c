@@ -51,7 +51,7 @@
 //  Version Numbers
 #define VER_MAJ                 6
 #define VER_MIN                 0
-#define VER_TMP                 0
+#define VER_TMP                 1
 
 /****************************************************************************
  * System Function API

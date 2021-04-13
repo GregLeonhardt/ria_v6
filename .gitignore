@@ -1,6 +1,7 @@
 #   Template files
 tmp/
 include/tmp_api.h
+.vscode/
 
 #   NetBeans
 nbproject/

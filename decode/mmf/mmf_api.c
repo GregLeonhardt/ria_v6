@@ -1,6 +1,8 @@
 /*******************************  COPYRIGHT  ********************************/
-/*
- *  Copyright (c) 2017 Gregory N. Leonhardt All rights reserved.
+/**
+ *  Author? "Gregory N. Leonhardt"
+ *  License? "CC BY-NC 2.0"
+ *           "https://creativecommons.org/licenses/by-nc/2.0/"
  *
  ****************************************************************************/
 

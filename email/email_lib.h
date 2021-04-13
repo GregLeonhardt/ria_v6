@@ -1,5 +1,5 @@
 /*******************************  COPYRIGHT  ********************************/
-/*
+/**
  *  Author? "Gregory N. Leonhardt"
  *  License? "CC BY-NC 2.0"
  *           "https://creativecommons.org/licenses/by-nc/2.0/"

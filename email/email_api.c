@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_EMAIL          ( "ALLOCATEGORIESE STORAGE FOR EMAIL" )
+#define ALLOC_EMAIL          ( "ALLOCATE STORAGE FOR EMAIL" )
 
 /****************************************************************************
  * System Function API

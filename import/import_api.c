@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_IMPORT          ( "ALLOCATEGORIESE STORAGE FOR IMPORT" )
+#define ALLOC_IMPORT          ( "ALLOCATE STORAGE FOR IMPORT" )
 
 /****************************************************************************
  * System Function API

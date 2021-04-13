@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_MMF          ( "ALLOCATEGORIESE STORAGE FOR MMF" )
+#define ALLOC_MMF          ( "ALLOCATE STORAGE FOR MMF" )
 
 /****************************************************************************
  * System Function API

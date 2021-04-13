@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_XLATE          ( "ALLOCATEGORIESE STORAGE FOR XLATE" )
+#define ALLOC_XLATE          ( "ALLOCATE STORAGE FOR XLATE" )
 
 /****************************************************************************
  * System Function API

@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_ROUTER          ( "ALLOCATEGORIESE STORAGE FOR ROUTER" )
+#define ALLOC_ROUTER          ( "ALLOCATE STORAGE FOR ROUTER" )
 
 /****************************************************************************
  * System Function API

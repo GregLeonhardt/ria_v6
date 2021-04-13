@@ -19,7 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_DECODE          ( "ALLOCATEGORIESE STORAGE FOR DECODE" )
+#define ALLOC_DECODE          ( "ALLOCATE STORAGE FOR DECODE" )
 
 /****************************************************************************
  * System Function API

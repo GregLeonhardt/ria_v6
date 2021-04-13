@@ -38,8 +38,6 @@
  ****************************************************************************/
 
 //  This is a global to do list:
-//  @ToDo:  Create TCB management tools (create, delete, copy)
-//  @ToDo:  Create RCB management tools (create, delete, copy)
 
 /****************************************************************************
  *  Compiler directives
@@ -75,6 +73,9 @@
                                 //*******************************************
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My tools library
+                                //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
 #include "router_api.h"         //  API for all router_*            PUBLIC
@@ -613,16 +614,7 @@ main(
      ************************************************************************/
 
     //  Allocate storage for a Thread Control Block
-    router_tcb = mem_malloc( sizeof( struct tcb_t ) );
-
-    //  Build the queue name
-    snprintf( router_tcb->thread_name,
-              sizeof( router_tcb->thread_name ),
-              "%s%02d", THREAD_NAME_ROUTER, 0 );
-
-    //  Create the queue
-    router_tcb->queue_id = queue_new( router_tcb->thread_name,
-                                      MAX_QUEUE_DEPTH );
+    router_tcb = tcb_new( THREAD_NAME_ROUTER, MAX_QUEUE_DEPTH );
 
     //  The router queue id needs to be global
     router_queue_id = router_tcb->queue_id;
@@ -648,17 +640,7 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        import_tcb[ thread_id ] = mem_malloc( sizeof( struct tcb_t ) );
-
-        //  Build the queue name
-        snprintf( import_tcb[ thread_id ]->thread_name,
-                  sizeof( import_tcb[ thread_id ]->thread_name ),
-                  "%s%02d", THREAD_NAME_IMPORT, thread_id );
-
-        //  Create the queue
-        import_tcb[ thread_id ]->queue_id =
-                queue_new( import_tcb[ thread_id ]->thread_name,
-                           MAX_QUEUE_DEPTH );
+        import_tcb[ thread_id ] = tcb_new( THREAD_NAME_IMPORT, MAX_QUEUE_DEPTH );
 
         //  Launch the import thread
         thread_new( import, import_tcb[ thread_id ] );
@@ -682,17 +664,7 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        email_tcb[ thread_id ] = mem_malloc( sizeof( struct tcb_t ) );
-
-        //  Build the queue name
-        snprintf( email_tcb[ thread_id ]->thread_name,
-                  sizeof( email_tcb[ thread_id ]->thread_name ),
-                  "%s%02d", THREAD_NAME_EMAIL, thread_id );
-
-        //  Create the queue
-        email_tcb[ thread_id ]->queue_id =
-                queue_new( email_tcb[ thread_id ]->thread_name,
-                           MAX_QUEUE_DEPTH );
+        email_tcb[ thread_id ] = tcb_new( THREAD_NAME_EMAIL, MAX_QUEUE_DEPTH );
 
         //  Launch the EMAIL thread
         thread_new( email, email_tcb[ thread_id ] );
@@ -716,17 +688,7 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        decode_tcb[ thread_id ] = mem_malloc( sizeof( struct tcb_t ) );
-
-        //  Build the queue name
-        snprintf( decode_tcb[ thread_id ]->thread_name,
-                  sizeof( decode_tcb[ thread_id ]->thread_name ),
-                  "%s%02d", THREAD_NAME_DECODE, thread_id );
-
-        //  Create the queue
-        decode_tcb[ thread_id ]->queue_id =
-                queue_new( decode_tcb[ thread_id ]->thread_name,
-                           MAX_QUEUE_DEPTH );
+        decode_tcb[ thread_id ] = tcb_new( THREAD_NAME_DECODE, MAX_QUEUE_DEPTH );
 
         //  Launch the decode thread
         thread_new( decode, decode_tcb[ thread_id ] );
@@ -792,7 +754,7 @@ main(
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
-            rcb_p = mem_malloc( sizeof( struct rcb_t ) );
+            rcb_p = rcb_new( );
 
             //  Put the file info pointer into the recipe control block
             rcb_p->file_info_p = file_info_p;

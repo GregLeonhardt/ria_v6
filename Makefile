@@ -34,6 +34,10 @@ SRC		+=	$(wildcard email/*.c)
 SRC		+=	$(wildcard decode/*.c)
 SRC		+=	$(wildcard decode/*/*.c)
 #
+SRC		+=	$(wildcard rcb/*.c)
+#
+SRC		+=	$(wildcard tcb/*.c)
+#
 SRC		+=	$(wildcard xlate/*.c)
 #-----------------------------------------------------------------------
 OBJ		=	$(SRC:.c=.o)

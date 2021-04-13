@@ -109,9 +109,6 @@ import(
     /**
      *  @param  read_data_l     Read data buffer                            */
     size_t                      read_data_l;
-    /**
-     * @param file_ll_p         Pointer to a list where the file is stored  */
-    struct  list_base_t         *   import_list_p;
 
     /************************************************************************
      *  Function Initialization
@@ -159,11 +156,11 @@ import(
         import_fp = file_open_read( file_name );
 
         //  Create a new list
-        import_list_p = list_new( );
+        rcb_p->import_list_p = list_new( );
 
         log_write( MID_DEBUG_0, tcb_p->thread_name,
                       "Allocate a new list structure 'import_list_p' [%p].\n",
-                      import_list_p );
+                      rcb_p->import_list_p );
 
         do
         {
@@ -186,11 +183,6 @@ import(
                                "Skipping binary file '%s'\n",
                                rcb_p->display_name );
 
-                    //  @ToDo:  Cleanup the read data, open read file and
-                    //          import list.
-
-
-
                     //  Done reading this file.
                     read_data_l = -1;
                     break;
@@ -198,7 +190,7 @@ import(
                 else
                 {
                     //  NO:     Put the new line on the list
-                    list_put_last( import_list_p, read_data_p );
+                    list_put_last( rcb_p->import_list_p, read_data_p );
                 }
             }
 

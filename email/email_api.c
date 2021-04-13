@@ -98,6 +98,27 @@ email(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+    /**
+     * @param list_data_p       Pointer to the read data                    */
+    char                    *   list_data_p;
+    /**
+     * @param list_lock_key     File list key                               */
+    int                         list_lock_key;
+
+    //  @ToDo:  Move to rcb_p
+
+    /**
+     * @param email_flag        A mark on the wall if wr are doing an e-Mail*/
+    int                         email_flag;
+    /**
+     * @param content_type      e-Mail content type                         */
+    enum    content_type_e      content_type;
+    /**
+     * @param encoding_type     e-Mail encoding type                        */
+    enum    encoding_type_e     encoding_type;
+    /**
+     * @param boundary_type     e-Mail boundary type                        */
+//  enum    boundary_type_e     boundary_type;
 
     /************************************************************************
      *  Function Initialization
@@ -121,7 +142,7 @@ email(
     {
 
         /********************************************************************
-         *  Get a new file to import
+         *  Get a new file
          ********************************************************************/
 
         //  Get the current File-ID.
@@ -138,6 +159,29 @@ email(
         /********************************************************************
          *  FUNCTIONAL CODE FOR THIS THREAD GOES HERE
          ********************************************************************/
+
+        //  Lock the list for fast(er) access
+        list_lock_key = list_user_lock( rcb_p->import_list_p );
+
+        //  Is this the start of a new e-Mail ?
+        list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
+
+        if ( EMAIL__is_start( list_data_p ) == true )
+        {
+            //  YES:    Set a flag so we can track it.
+            email_flag = true;
+
+            //  Reset the content types.
+            content_type   = CT_NONE;
+            encoding_type  = CTE_NONE;
+
+            log_write( MID_DEBUG_0, tcb_p->thread_name,
+                          "Start      %p - '%.80s'\n", list_data_p, list_data_p );
+
+            //  Done with this text line
+            list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
+            mem_free( list_data_p );
+        }
 
 
 

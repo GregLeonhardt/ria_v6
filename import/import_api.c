@@ -40,6 +40,9 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+                                //*******************************************
 #include "import_api.h"         //  API for all import_*            PUBLIC
 #include "import_lib.h"         //  API for all IMPORT__*           PRIVATE
                                 //*******************************************
@@ -103,9 +106,6 @@ import(
      *  @param  file_name       Full file name (with directory)             */
     char                        file_name[ FILE_NAME_L * 3 ];
     /**
-     *  @param  import_fp       File pointer for the import file            */
-    FILE                    *   import_fp;
-    /**
      *  @param  read_data_p     Read data buffer                            */
     char                    *   read_data_p;
     /**
@@ -155,7 +155,7 @@ import(
                   rcb_p->file_info_p->file_name );
 
         //  Open the file for reading
-        import_fp = file_open_read( file_name );
+        rcb_p->file_p = file_open_read( file_name );
 
         //  Create a new list
         rcb_p->import_list_p = list_new( );
@@ -169,7 +169,7 @@ import(
             //  Read a line of text
             read_data_l = 0;
             read_data_p = NULL;
-            read_data_l = getline( &read_data_p, &read_data_l, import_fp );
+            read_data_l = getline( &read_data_p, &read_data_l, rcb_p->file_p );
 
             //  Was the read successful ?
             if ( read_data_l != -1 )
@@ -200,10 +200,10 @@ import(
         }   while( read_data_l != -1 );
 
         //  Close the import file
-        file_close( import_fp );
+        file_close( rcb_p->file_p ); rcb_p->file_p = 0;
 
         //  Set the packet destination
-        rcb_p->destination = DST_EMAIL;
+        rcb_p->dst_thread = DST_EMAIL;
 
         //  Put it in one of the IMPORT queue's
         queue_put_payload( router_queue_id, rcb_p  );

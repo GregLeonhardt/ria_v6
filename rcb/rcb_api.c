@@ -104,7 +104,12 @@ rcb_free(
      *  Function Body
      ************************************************************************/
 
-    //  @ToDo:  rcb_free( );
+    //  Is there an open file ?
+    if ( rcb_p->file_p != 0 )
+    {
+        //  YES:    Close it.
+        file_close( rcb_p->file_p ); rcb_p->file_p = 0;
+    }
 
     /************************************************************************
      *  Function Exit

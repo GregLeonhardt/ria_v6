@@ -19,6 +19,7 @@
  *  Compiler directives
  ****************************************************************************/
 
+#define _GNU_SOURCE             //  See feature_test_macros(7)
 
 /****************************************************************************
  * System Function API
@@ -40,6 +41,9 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+                                //*******************************************
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "email_lib.h"          //  API for all EMAIL__*            PRIVATE
                                 //*******************************************
@@ -56,6 +60,7 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+#define EMAIL_BOUNDARY_L            ( 100 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -148,7 +153,6 @@ EMAIL__is_start(
  *
  ****************************************************************************/
 
-#if 0
 enum    boundary_type_e
 EMAIL__is_boundary(
     char                        *   data_p
@@ -163,6 +167,10 @@ EMAIL__is_boundary(
     /**
      * @param boundary_p        Pointer to the start of 'boundary='         */
     char                        *   boundary_p;
+    /**
+     *  @param  email_blank_count   Number of blank lines needed before
+     *                              normal processing resumes               */
+    char                            email_boundary[ EMAIL_BOUNDARY_L ];
 
     /************************************************************************
      *  Function Initialization
@@ -262,7 +270,6 @@ EMAIL__is_boundary(
     //  DONE!
     return( email_rc );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -277,7 +284,6 @@ EMAIL__is_boundary(
  *
  ****************************************************************************/
 
-#if 0
 enum    boundary_type_e
 EMAIL__is_boundary_identifier(
     char                        *   data_p
@@ -289,6 +295,10 @@ EMAIL__is_boundary_identifier(
     /**
      * @param start_p           Pointer to a temp data buffer               */
     char                        *   start_p;
+    /**
+     *  @param  email_blank_count   Number of blank lines needed before
+     *                              normal processing resumes               */
+    char                            email_boundary[ EMAIL_BOUNDARY_L ];
 
     /************************************************************************
      *  Function Initialization
@@ -330,7 +340,6 @@ EMAIL__is_boundary_identifier(
     //  DONE!
     return( email_rc );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -345,7 +354,6 @@ EMAIL__is_boundary_identifier(
  *
  ****************************************************************************/
 
-#if 0
 int
 EMAIL__is_multipart_break(
     char                        *   data_p
@@ -357,6 +365,10 @@ EMAIL__is_multipart_break(
     /**
      * @param start_p           Pointer to a temp data buffer               */
     char                        *   start_p;
+    /**
+     *  @param  email_blank_count   Number of blank lines needed before
+     *                              normal processing resumes               */
+    char                            email_boundary[ EMAIL_BOUNDARY_L ];
 
     /************************************************************************
      *  Function Initialization
@@ -400,7 +412,6 @@ EMAIL__is_multipart_break(
     //  DONE!
     return( email_rc );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -419,7 +430,6 @@ EMAIL__is_multipart_break(
  *
  ****************************************************************************/
 
-#if 0
 int
 EMAIL__is_group_break(
     char                        *   data_p
@@ -464,7 +474,7 @@ EMAIL__is_group_break(
          || ( strncmp( tmp_data_p, "========================  Arch",      30 ) == 0 )
          || ( strncmp( tmp_data_p, "--------------- MESSAGE bread-",      30 ) == 0 )
          || ( strncmp( tmp_data_p, "--------------- END bread-bake",      30 ) == 0 )
-         || ( email_is_multipart_break( tmp_data_p )                           == true ) )
+         || ( EMAIL__is_multipart_break( tmp_data_p )                           == true ) )
     {
         //  YES:    Change the return code
         email_rc = true;
@@ -477,7 +487,6 @@ EMAIL__is_group_break(
     //  DONE!
     return( email_rc );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -495,7 +504,6 @@ EMAIL__is_group_break(
  *
  ****************************************************************************/
 
-#if 0
 enum    content_type_e
 EMAIL__find_content(
     char                        *   data_p
@@ -625,7 +633,6 @@ EMAIL__find_content(
     //  DONE!
     return( content_type );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -644,7 +651,6 @@ EMAIL__find_content(
  *
  ****************************************************************************/
 
-#if 0
 enum    encoding_type_e
 EMAIL__find_encoding(
     char                        *   data_p
@@ -742,7 +748,6 @@ EMAIL__find_encoding(
     //  DONE!
     return( encoding_type );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -759,7 +764,6 @@ EMAIL__find_encoding(
  *
  ****************************************************************************/
 
-#if 0
 char    *
 EMAIL__find_source(
     char                        *   data_p
@@ -826,7 +830,6 @@ EMAIL__find_source(
     //  DONE!
     return( tmp_data_p );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -842,7 +845,6 @@ EMAIL__find_source(
  *
  ****************************************************************************/
 
-#if 0
 char    *
 EMAIL__find_from(
     char                        *   data_p
@@ -885,7 +887,6 @@ EMAIL__find_from(
     //  DONE!
     return( tmp_data_p );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -901,7 +902,6 @@ EMAIL__find_from(
  *
  ****************************************************************************/
 
-#if 0
 char    *
 EMAIL__find_datetime(
     char                        *   data_p
@@ -944,7 +944,6 @@ EMAIL__find_datetime(
     //  DONE!
     return( tmp_data_p );
 }
-#endif
 
 /****************************************************************************/
 /**
@@ -959,7 +958,6 @@ EMAIL__find_datetime(
  *
  ****************************************************************************/
 
-#if 0
 char    *
 EMAIL__find_subject(
     char                        *   data_p
@@ -1002,7 +1000,6 @@ EMAIL__find_subject(
     //  DONE!
     return( tmp_data_p );
 }
-#endif
 
 /****************************************************************************/
 /**

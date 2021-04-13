@@ -39,6 +39,9 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+                                //*******************************************
 #include "router_api.h"         //  API for all router_*            PUBLIC
 #include "router_lib.h"         //  API for all ROUTER__*           PRIVATE
                                 //*******************************************
@@ -79,7 +82,7 @@
 /**
  *  Choose the queue with the least number of queued objects
  *
- *  @param  tcb_p               Pointer to a Thread Control Block 
+ *  @param  tcb_p               Pointer to a Thread Control Block
  *
  *  @return                     Upon successful completion PASS is returned
  *                              else FAIL is returned

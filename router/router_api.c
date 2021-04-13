@@ -40,6 +40,9 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+                                //*******************************************
 #include "router_api.h"         //  API for all router_*            PUBLIC
 #include "router_lib.h"         //  API for all ROUTER__*           PRIVATE
                                 //*******************************************
@@ -147,7 +150,7 @@ router(
          ********************************************************************/
 
         //  Locate the destination queue
-        switch( rcb_p->destination )
+        switch( rcb_p->dst_thread )
         {
             case    DST_INVALID:
             {

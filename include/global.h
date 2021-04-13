@@ -110,10 +110,13 @@ struct  rcb_t
     char                        display_name[ FILENAME_MAX ];
     /**
      *  @param  destination     Destination Thread                          */
-    enum    destination_e       destination;
+    enum    destination_e       dst_thread;
     /**
      * @param file_ll_p         Pointer to a list where the file is stored  */
     struct  list_base_t     *   import_list_p;
+    /**
+     *  @param  file_p          File pointer for the import file            */
+    FILE                    *   file_p;
 };
 //----------------------------------------------------------------------------
 /**

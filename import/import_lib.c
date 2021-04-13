@@ -39,8 +39,11 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
-#include "import_api.h"            //  API for all import_*               PUBLIC
-#include "import_lib.h"            //  API for all IMPORT__*              PRIVATE
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+                                //*******************************************
+#include "import_api.h"         //  API for all import_*            PUBLIC
+#include "import_lib.h"         //  API for all IMPORT__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************

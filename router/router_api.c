@@ -124,14 +124,8 @@ router(
     while ( 1 )
     {
         /**
-         * @param thread_id         Unique thread id number                 */
-        int                         thread_id;
-        /**
          *  @param  id              Thread ID with smallest queue           */
         int                         id;
-        /**
-         *  @param  queue_size      Queue size                              */
-        int                         queue_size;
 
         /********************************************************************
          *  Get a new file to import
@@ -161,30 +155,9 @@ router(
             //================================================================
             case    DST_IMPORT:
             {
-                //  Set the base numbers
-                id = 99999999;
-                queue_size = 99999999;
+                id = ROUTER__choose( import_tcb, THREAD_COUNT_IMPORT );
 
-                //  Locate the thread with the smallest queue depth
-                for( thread_id = 0;
-                     thread_id < THREAD_COUNT_IMPORT;
-                     thread_id += 1 )
-                {
-                    int                     queue_count;
-
-                    //  Get the queue count for this queue
-                    queue_count = queue_get_count( import_tcb[ thread_id ]->queue_id );
-
-                    //  Is it smaller than the current smallest ?
-                    if ( queue_count < queue_size )
-                    {
-                        //  YES:    Use this queue
-                        id = import_tcb[ thread_id ]->queue_id;
-                        queue_size = queue_count;
-                    }
-                }
-
-                //  Put it in one of the IMPORT queue's
+                //  Put it in one of the EMAIL queue's
                 queue_put_payload( id, rcb_p  );
 
                 //  Progress report.
@@ -195,28 +168,7 @@ router(
             //================================================================
             case    DST_EMAIL:
             {
-                //  Set the base numbers
-                id = 99999999;
-                queue_size = 99999999;
-
-                //  Locate the thread with the smallest queue depth
-                for( thread_id = 0;
-                     thread_id < THREAD_COUNT_EMAIL;
-                     thread_id += 1 )
-                {
-                    int                     queue_count;
-
-                    //  Get the queue count for this queue
-                    queue_count = queue_get_count( email_tcb[ thread_id ]->queue_id );
-
-                    //  Is it smaller than the current smallest ?
-                    if ( queue_count < queue_size )
-                    {
-                        //  YES:    Use this queue
-                        id = email_tcb[ thread_id ]->queue_id;
-                        queue_size = queue_count;
-                    }
-                }
+                id = ROUTER__choose( email_tcb, THREAD_COUNT_EMAIL );
 
                 //  Put it in one of the EMAIL queue's
                 queue_put_payload( id, rcb_p  );
@@ -229,26 +181,47 @@ router(
             //================================================================
             case    DST_DECODE:
             {
+                id = ROUTER__choose( decode_tcb, THREAD_COUNT_DECODE );
+
+                //  Put it in one of the EMAIL queue's
+                queue_put_payload( id, rcb_p  );
+
+                //  Progress report.
+                log_write( MID_LOGONLY, "main",
+                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           rcb_p->display_name );
             }   break;
             //================================================================
             case    DST_ENCODE:
             {
+#if 0
+                id = ROUTER__choose( encode_tcb, THREAD_COUNT_ENCODE );
+
+                //  Put it in one of the EMAIL queue's
+                queue_put_payload( id, rcb_p  );
+
+                //  Progress report.
+                log_write( MID_LOGONLY, "main",
+                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           rcb_p->display_name );
+#endif
             }   break;
             //================================================================
             case    DST_EXPORT:
             {
+#if 0
+                id = ROUTER__choose( export_tcb, THREAD_COUNT_EXPORT );
+
+                //  Put it in one of the EMAIL queue's
+                queue_put_payload( id, rcb_p  );
+
+                //  Progress report.
+                log_write( MID_LOGONLY, "main",
+                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           rcb_p->display_name );
+#endif
             }   break;
         }
-
-
-
-
-
-
-
-
-
-
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

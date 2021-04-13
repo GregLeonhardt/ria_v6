@@ -77,11 +77,9 @@
 
 /****************************************************************************/
 /**
- *  The table_input function does all the hard work of reading
- *  the translation tables and saving the information.
+ *  Choose the queue with the least number of queued objects
  *
- *  @param  file_fp             A pointer to the file descriptor.
- *  @param  router_table_p       A pointer to the base of the table chain.
+ *  @param  tcb_p               Pointer to a Thread Control Block 
  *
  *  @return                     Upon successful completion PASS is returned
  *                              else FAIL is returned
@@ -89,11 +87,20 @@
  ****************************************************************************/
 
 int
-ROUTER__FooBar(
-    FILE                        *   file_fp,
-    struct  list_base_t         *   router_table_p
+ROUTER__choose(
+    struct  tcb_t           *   tcb_p[ ],
+    int                         count
     )
 {
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+    /**
+     *  @param  id              Thread ID with smallest queue               */
+    int                         id;
+    /**
+     *  @param  queue_size      Queue size                                  */
+    int                         queue_size;
 
     /************************************************************************
      *  Function Initialization
@@ -104,12 +111,34 @@ ROUTER__FooBar(
      *  Function Body
      ************************************************************************/
 
+    //  Set the base numbers
+    id = 99999999;
+    queue_size = 99999999;
+
+    //  Locate the thread with the smallest queue depth
+    for( thread_id = 0;
+         thread_id < count;
+         thread_id += 1 )
+    {
+        int                     queue_count;
+
+        //  Get the queue count for this queue
+        queue_count = queue_get_count( tcb_p[ thread_id ]->queue_id );
+
+        //  Is it smaller than the current smallest ?
+        if ( queue_count < queue_size )
+        {
+            //  YES:    Use this queue
+            id = tcb_p[ thread_id ]->queue_id;
+            queue_size = queue_count;
+        }
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
     //  DONE!
-    return ( 0 );
+    return ( id );
 }
 /****************************************************************************/

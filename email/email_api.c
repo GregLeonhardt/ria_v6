@@ -186,7 +186,14 @@ email(
         }
 
 
-
+        //  @ToDo:  This is only here to avoid compile warnings
+        if (    ( email_flag    ==     true )
+             && ( content_type  ==  CT_NONE )
+             && ( encoding_type == CTE_NONE ) )
+        {
+            //  YES:
+            printf( "Compile warning hack\n" );
+        }
 
 
 

@@ -111,6 +111,9 @@ struct  rcb_t
     /**
      *  @param  destination     Destination Thread                          */
     enum    destination_e       destination;
+    /**
+     * @param file_ll_p         Pointer to a list where the file is stored  */
+    struct  list_base_t     *   import_list_p;
 };
 //----------------------------------------------------------------------------
 /**

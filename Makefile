@@ -1,4 +1,6 @@
 ########################################################################
+#   MAKEFILE for Recipe Import Assist [RIA]
+########################################################################
 # Compiler settings
 CC		=	gcc
 #-----------------------------------------------------------------------
@@ -9,9 +11,6 @@ LIBTOOLS	=	../libtools
 CFLAGS		=	-DDEBUG -Wall -g -MMD
 CFLAGS		+=	-I. -Iinclude
 CFLAGS		+=	-I$(LIBTOOLS)/include/
-CFLAGS		+=	-Irouter/include
-CFLAGS		+=	-Iimport/include
-CFLAGS		+=	-Iemail/include
 CFLAGS		+=	-Idecode/include
 #-----------------------------------------------------------------------
 LFLAGS		=	-o 
@@ -27,13 +26,10 @@ APPNAME = ria
 SRC		=	main.c
 #
 SRC		+=	$(wildcard router/*.c)
-SRC		+=	$(wildcard router/*/*.c)
 #
 SRC		+=	$(wildcard import/*.c)
-SRC		+=	$(wildcard import/*/*.c)
 #
 SRC		+=	$(wildcard email/*.c)
-SRC		+=	$(wildcard email/*/*.c)
 #
 SRC		+=	$(wildcard decode/*.c)
 SRC		+=	$(wildcard decode/*/*.c)

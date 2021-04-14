@@ -33,6 +33,9 @@ SRC		+=	$(wildcard email/*.c)
 SRC		+=	$(wildcard decode/*.c)
 SRC		+=	$(wildcard decode/*/*.c)
 #
+SRC		+=	$(wildcard encode/*.c)
+SRC		+=	$(wildcard encode/*/*.c)
+#
 SRC		+=	$(wildcard recipe/*.c)
 #
 SRC		+=	$(wildcard rcb/*.c)

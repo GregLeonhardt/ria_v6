@@ -82,6 +82,7 @@
 #include "import_api.h"         //  API for all import_*            PUBLIC
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
+#include "encode_api.h"         //  API for all encode_*            PUBLIC
                                 //*******************************************
 
 /****************************************************************************
@@ -706,6 +707,32 @@ main(
 
             //  Loop until the thread is 'WAIT'ing for work
         }   while( decode_tcb[ thread_id ]->thread_state != TS_WAIT );
+    }
+
+    /************************************************************************
+     *  ENCODE      Thread and Queue Initialization
+     ************************************************************************/
+
+    //  Loop through all IMPORT threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_ENCODE;
+         thread_id += 1 )
+    {
+        //  Allocate storage for a Thread Control Block
+        encode_tcb[ thread_id ] = tcb_new( THREAD_NAME_ENCODE,
+                                           thread_id,
+                                           MAX_QUEUE_DEPTH );
+
+        //  Launch the decode thread
+        thread_new( encode, encode_tcb[ thread_id ] );
+
+        //  Wait for the thread to be initialized
+        do
+        {
+            usleep( 100 );
+
+            //  Loop until the thread is 'WAIT'ing for work
+        }   while( encode_tcb[ thread_id ]->thread_state != TS_WAIT );
     }
 
     /************************************************************************

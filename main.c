@@ -51,7 +51,7 @@
 //  Version Numbers
 #define VER_MAJ                 6
 #define VER_MIN                 0
-#define VER_TMP                 1
+#define VER_TMP                 2
 
 /****************************************************************************
  * System Function API
@@ -76,8 +76,9 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
-                                //*******************************************
+#include "monitor_api.h"        //  API for all monitor_*           PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
+                                //*******************************************
 #include "router_api.h"         //  API for all router_*            PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
 #include "email_api.h"          //  API for all email_*             PUBLIC
@@ -369,7 +370,7 @@ is_import_done(
 
     //  Loop through all IMPORT threads
     for( thread_id = 0;
-         thread_id < THREAD_COUNT_ENCODE;
+         thread_id < THREAD_COUNT_IMPORT;
          thread_id += 1 )
     {
         //  Anything in the input queue ?
@@ -473,6 +474,150 @@ is_email_done(
     //  DONE!
     return( func_rc );
 }
+
+/****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the router thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_decode_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Loop through all DECODE threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_ENCODE;
+         thread_id += 1 )
+    {
+        //  Anything in the input queue ?
+        if ( queue_get_count( decode_tcb[ thread_id ]->queue_id ) != 0 )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+        else
+        //  NO:     Is the thread working on something
+        if ( decode_tcb[ thread_id ]->thread_state == TS_WORKING )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+
+        //  Is this thread done ?
+        if ( func_rc == false )
+        {
+            //  NO:     No need to look at the others.
+            break;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the router thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_encode_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Loop through all ENCODE threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_ENCODE;
+         thread_id += 1 )
+    {
+        //  Anything in the input queue ?
+        if ( queue_get_count( encode_tcb[ thread_id ]->queue_id ) != 0 )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+        else
+        //  NO:     Is the thread working on something
+        if ( encode_tcb[ thread_id ]->thread_state == TS_WORKING )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+
+        //  Is this thread done ?
+        if ( func_rc == false )
+        {
+            //  NO:     No need to look at the others.
+            break;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
 /****************************************************************************/
 
 /****************************************************************************
@@ -501,9 +646,6 @@ main(
     /**
      * @param main_rc           Return code from called functions.          */
     enum    queue_rc_e          main_rc;
-    /**
-     *  @param  file_list       Pointer to a list of files                  */
-    struct  list_base_t     *   file_list_p;
     /**
      *  @param  file_info_p     Pointer to a file information structure     */
     struct  file_info_t     *   file_info_p;
@@ -768,6 +910,16 @@ main(
     }
 
     /************************************************************************
+     *  MONITOR     Track all queue depths
+     ************************************************************************/
+
+    //  Allocate storage for a Thread Control Block
+    monitor_tcb = tcb_new( THREAD_NAME_MONITOR, 0, MAX_QUEUE_DEPTH );
+
+    //  Launch the import thread
+    thread_new( monitor, monitor_tcb );
+
+    /************************************************************************
      *  IMPORT  everything on the list
      ************************************************************************/
 
@@ -865,6 +1017,12 @@ main(
 
         if ( done_flag == true )
             done_flag = is_email_done( );
+
+        if ( done_flag == true )
+            done_flag = is_decode_done( );
+
+        if ( done_flag == true )
+            done_flag = is_encode_done( );
 
         //  DONE_FLAG can only be TRUE when EVERYTHING is done.
         if ( done_flag == true )

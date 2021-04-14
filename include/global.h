@@ -50,6 +50,7 @@
 //----------------------------------------------------------------------------
 #define THREAD_NAME_SIZE        (  24 )
 //-----
+#define THREAD_NAME_MONITOR     "MONITOR:"
 #define THREAD_NAME_ROUTER      "ROUTER:"
 #define THREAD_NAME_IMPORT      "IMPORT:"
 #define THREAD_NAME_EMAIL       "EMAIL:"
@@ -57,11 +58,11 @@
 #define THREAD_NAME_ENCODE      "ENCODE:"
 #define THREAD_NAME_EXPORT      "EXPORT:"
 //-----
-#define THREAD_COUNT_IMPORT     (   1 )
-#define THREAD_COUNT_EMAIL      (   1 )
-#define THREAD_COUNT_DECODE     (   1 )
-#define THREAD_COUNT_ENCODE     (   1 )
-#define THREAD_COUNT_EXPORT     (   1 )
+#define THREAD_COUNT_IMPORT     (   2 )
+#define THREAD_COUNT_EMAIL      (   2 )
+#define THREAD_COUNT_DECODE     (   8 )
+#define THREAD_COUNT_ENCODE     (   2 )
+#define THREAD_COUNT_EXPORT     (   2 )
 //----------------------------------------------------------------------------
 #define MAX_QUEUE_DEPTH         (   0 )
 //----------------------------------------------------------------------------
@@ -109,6 +110,10 @@ enum    destination_e
 int                             router_queue_id;
 //----------------------------------------------------------------------------
 /**
+ * @param monitor_tcb           TCB list for the router thread              */
+    struct  tcb_t           *   monitor_tcb;
+//----------------------------------------------------------------------------
+/**
  * @param router_tcb            TCB list for the router thread              */
     struct  tcb_t           *   router_tcb;
 //----------------------------------------------------------------------------
@@ -131,6 +136,10 @@ int                             router_queue_id;
 /**
  *  @param  store_value_p       ID number for the DECODE queue              */
 char                        *   recipe_id_p;
+//----------------------------------------------------------------------------
+/**
+ *  @param  file_list           Pointer to a list of files                  */
+struct  list_base_t         *   file_list_p;
 //----------------------------------------------------------------------------
 
 /****************************************************************************

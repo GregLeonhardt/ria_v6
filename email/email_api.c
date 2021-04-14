@@ -42,6 +42,7 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+#include "recipe_api.h"         //  API for all recipe_*            PUBLIC
                                 //*******************************************
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "email_lib.h"          //  API for all EMAIL__*            PRIVATE
@@ -81,6 +82,43 @@
 
 /****************************************************************************/
 /**
+ *  Test the text line to see if it contains an e-Mail group break.
+ *
+ *  @param  data_p              Pointer to a line of text data
+ *
+ *  @return email_rc            TRUE when the text is the start of an e-Mail
+ *                              message, else FALSE is returned
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+email_is_group_break(
+    char                        *   data_p
+    )
+{
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( EMAIL__is_group_break( data_p ) );
+}
+
+/****************************************************************************/
+/**
  *  Initialize the Translations tables.
  *
  *  @param  void                No parameters are passed in.
@@ -104,14 +142,14 @@ email(
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
     /**
+     *  @param  new_rcb_p       Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   new_rcb_p;
+    /**
      * @param list_data_p       Pointer to the read data                    */
     char                    *   list_data_p;
     /**
      * @param list_lock_key     File list key                               */
     int                         list_lock_key;
-
-    //  @ToDo:  Move to rcb_p
-
     /**
      * @param email_flag        A mark on the wall if wr are doing an e-Mail*/
     int                         email_flag;
@@ -171,6 +209,10 @@ email(
         //  Is this the start of a new e-Mail ?
         list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
 
+        //  Is there anything to scan ?
+        if ( list_data_p == NULL )
+            continue;
+
         if ( EMAIL__is_start( list_data_p ) == true )
         {
             //  YES:    Set a flag so we can track it.
@@ -194,10 +236,10 @@ email(
              list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
         {
             /**
-             * @param tmp_c_type        e-Mail content type                     */
+             * @param tmp_c_type        e-Mail content type                 */
             enum    content_type_e          tmp_c_type;
             /**
-             * @param tmp_e_type        e-Mail encoding type                    */
+             * @param tmp_e_type        e-Mail encoding type                */
             enum    encoding_type_e         tmp_e_type;
 
             //  Remove the data from the level 1 list
@@ -501,6 +543,41 @@ email(
             list_put_last( level2_list_p, list_data_p );
 
 #endif
+            //  Did we find the start of a recipe ?
+            if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
+            {
+                //  NO:     Maybe this is a recipe start.
+                rcb_p->recipe_format = recipe_is_start( list_data_p );
+
+                //  Is this the start of a recipe ?
+                if ( rcb_p->recipe_format != RECIPE_FORMAT_NONE )
+                {
+                    //  YES:    Prepare for the new recipe
+                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+                }
+                else
+                {
+                    //  This is trash data so throw it away
+                    mem_free( list_data_p );
+                }
+            }
+            else
+            {
+                //  YES:    Add this data buffer to the recipe list.
+                list_put_last( new_rcb_p->import_list_p, list_data_p );
+
+                //  Is this the end of the recipe
+                if ( recipe_is_end( rcb_p->recipe_format, list_data_p ) )
+                {
+                    //  YES:    Set the packet destination
+                    rcb_p->dst_thread = DST_DECODE;
+
+                    //  Put it in one of the ROUTER queue
+                    queue_put_payload( router_queue_id, rcb_p  );
+                }
+            }
+
+
 
             //  @ToDo:  This is only here to avoid compile warnings
             if (    ( email_flag    ==     true )
@@ -510,16 +587,10 @@ email(
                  && ( encoding_type == CTE_NONE ) )
             {
                 //  YES:
-                printf( "Compile warning hack\n" );
+                tmp_c_type = content_type;
             }
 
         }
-
-
-
-
-
-
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

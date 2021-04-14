@@ -157,9 +157,6 @@ import(
         //  Open the file for reading
         rcb_p->file_p = file_open_read( file_name );
 
-        //  Create a new list
-        rcb_p->import_list_p = list_new( );
-
         log_write( MID_DEBUG_0, tcb_p->thread_name,
                       "Allocate a new list structure 'import_list_p' [%p].\n",
                       rcb_p->import_list_p );

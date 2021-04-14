@@ -614,7 +614,7 @@ main(
      ************************************************************************/
 
     //  Allocate storage for a Thread Control Block
-    router_tcb = tcb_new( THREAD_NAME_ROUTER, MAX_QUEUE_DEPTH );
+    router_tcb = tcb_new( THREAD_NAME_ROUTER, 0, MAX_QUEUE_DEPTH );
 
     //  The router queue id needs to be global
     router_queue_id = router_tcb->queue_id;
@@ -640,7 +640,9 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        import_tcb[ thread_id ] = tcb_new( THREAD_NAME_IMPORT, MAX_QUEUE_DEPTH );
+        import_tcb[ thread_id ] = tcb_new( THREAD_NAME_IMPORT,
+                                           thread_id,
+                                           MAX_QUEUE_DEPTH );
 
         //  Launch the import thread
         thread_new( import, import_tcb[ thread_id ] );
@@ -664,7 +666,9 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        email_tcb[ thread_id ] = tcb_new( THREAD_NAME_EMAIL, MAX_QUEUE_DEPTH );
+        email_tcb[ thread_id ] = tcb_new( THREAD_NAME_EMAIL,
+                                          thread_id,
+                                          MAX_QUEUE_DEPTH );
 
         //  Launch the EMAIL thread
         thread_new( email, email_tcb[ thread_id ] );
@@ -688,7 +692,9 @@ main(
          thread_id += 1 )
     {
         //  Allocate storage for a Thread Control Block
-        decode_tcb[ thread_id ] = tcb_new( THREAD_NAME_DECODE, MAX_QUEUE_DEPTH );
+        decode_tcb[ thread_id ] = tcb_new( THREAD_NAME_DECODE,
+                                           thread_id,
+                                           MAX_QUEUE_DEPTH );
 
         //  Launch the decode thread
         thread_new( decode, decode_tcb[ thread_id ] );
@@ -754,7 +760,7 @@ main(
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
-            rcb_p = rcb_new( );
+            rcb_p = rcb_new( NULL, RECIPE_FORMAT_NONE );
 
             //  Put the file info pointer into the recipe control block
             rcb_p->file_info_p = file_info_p;

@@ -40,6 +40,7 @@
  ****************************************************************************/
 
                                 //*******************************************
+#include "recipe_api.h"         //  API for all recipe_*            PUBLIC
                                 //*******************************************
 
 /****************************************************************************
@@ -56,7 +57,7 @@
 #define THREAD_NAME_ENCODE      "ENCODE:"
 #define THREAD_NAME_EXPORT      "EXPORT:"
 //-----
-#define THREAD_COUNT_IMPORT     (   3 )
+#define THREAD_COUNT_IMPORT     (   1 )
 #define THREAD_COUNT_EMAIL      (   1 )
 #define THREAD_COUNT_DECODE     (   1 )
 #define THREAD_COUNT_ENCODE     (   1 )
@@ -98,44 +99,6 @@ enum    destination_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-/**
- *  @param  rcb                 Recipe Control Block                        */
-struct  rcb_t
-{
-    /**
-     *  @param  file_info_p     Pointer to a file information structure     */
-    struct  file_info_t     *   file_info_p;
-    /**
-     *  @param  display_name    Display file name                           */
-    char                        display_name[ FILENAME_MAX ];
-    /**
-     *  @param  destination     Destination Thread                          */
-    enum    destination_e       dst_thread;
-    /**
-     * @param file_ll_p         Pointer to a list where the file is stored  */
-    struct  list_base_t     *   import_list_p;
-    /**
-     *  @param  file_p          File pointer for the import file            */
-    FILE                    *   file_p;
-};
-//----------------------------------------------------------------------------
-/**
- *  @param  tcb                 Thread Control Block                        */
-struct  tcb_t
-{
-    /**
-     *  @param  queue_id        Data queue id                               */
-    int                         queue_id;
-    /**
-     *  @param  thread_id       Identifies the thread                       */
-    int                         thread_id;
-    /**
-     *  @param  thread_name     Name of this thread                         */
-    char                        thread_name[ THREAD_NAME_SIZE ];
-    /**
-     *  @param  thread_state    State of the thread                         */
-    enum    thread_stat_e       thread_state;
-};
 //----------------------------------------------------------------------------
 
 /****************************************************************************

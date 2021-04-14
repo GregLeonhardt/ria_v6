@@ -56,6 +56,32 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+/**
+ *  @param  rcb                 Recipe Control Block                        */
+struct  rcb_t
+{
+    /**
+     *  @param  file_info_p     Pointer to a file information structure     */
+    struct  file_info_t     *   file_info_p;
+    /**
+     *  @param  display_name    Display file name                           */
+    char                        display_name[ FILENAME_MAX ];
+    /**
+     *  @param  destination     Destination Thread                          */
+    enum    destination_e       dst_thread;
+    /**
+     * @param file_ll_p         Pointer to a list where the file is stored  */
+    struct  list_base_t     *   import_list_p;
+    /**
+     *  @param  file_p          File pointer for the import file            */
+    FILE                    *   file_p;
+    /**
+     *  @param  recipe_p        Pointer to a recipe structure               */
+    struct  recipe_t          *   recipe_p;
+    /**
+     *  @param  recipe_format   See recipe_format_e for details             */
+    enum    recipe_format_e     recipe_format;
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -71,13 +97,14 @@
 
 //---------------------------------------------------------------------------
 void
-rcb_free(
+rcb_kill(
     struct  rcb_t           *   rcb_p
     );
 //---------------------------------------------------------------------------
 struct  rcb_t   *
 rcb_new(
-    void
+    struct  rcb_t           *   rcb_p,
+    enum    recipe_format_e     recipe_format
     );
 //---------------------------------------------------------------------------
 

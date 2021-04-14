@@ -116,7 +116,8 @@ tcb_free(
 /**
  *  Initialize the Translations tables.
  *
- *  @param  group_name          Thread group name
+ *  @param  group_name          Group thread name
+ *  @param  group_thread_num    Group Thread Number
  *  @param  max_depth           MAXIMUM queue depth before blocking.
  *
  *  @return tcb_p               Pointer to a Thread Control Block
@@ -128,6 +129,7 @@ tcb_free(
 struct  tcb_t   *
 tcb_new(
     char                    *   group_name,
+    int                         group_thread_num,
     int                         max_depth
     )
 {
@@ -152,7 +154,7 @@ tcb_new(
     //  Build the queue name
     snprintf( tcb_p->thread_name,
               sizeof( router_tcb->thread_name ),
-              "%s%02d", THREAD_NAME_ROUTER, 0 );
+              "%s%02d", group_name, group_thread_num );
 
     //  Create the queue
     tcb_p->queue_id = queue_new( tcb_p->thread_name, max_depth );

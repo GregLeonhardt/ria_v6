@@ -30,6 +30,8 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <string.h>             //  Functions for managing strings
+#include <ctype.h>              //  Determine the type contained
                                 //*******************************************
 
 /****************************************************************************
@@ -81,6 +83,89 @@
 
 /****************************************************************************/
 /**
+ *  The decode_save_chapter will identify which category subsection is
+ *  identified and store the data in that section.
+ *
+ *  @param  data_p              Pointer to the raw data category
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *
+ *  @return void                No return code from this function.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+void
+decode_save_chapter(
+    char                        *   data_p,
+    struct   recipe_t           *   recipe_p
+    )
+{
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Do we have a category to save ?
+    if ( data_p != NULL )
+    {
+        //  Appliance ?
+        if ( strncmp( APPLIANCE, data_p, APPLIANCE_L ) == 0 )
+        {
+            recipe_append( recipe_p->appliance,
+                           ( data_p + APPLIANCE_L ) );
+        }
+        //  Diet ?
+        else
+        if ( strncmp( DIET, data_p, DIET_L ) == 0 )
+        {
+            recipe_append( recipe_p->diet,
+                           ( data_p + DIET_L ) );
+        }
+        //  Course ?
+        else
+        if ( strncmp( COURSE, data_p, COURSE_L ) == 0 )
+        {
+            recipe_append( recipe_p->course,
+                           ( data_p + COURSE_L ) );
+        }
+        //  Cuisine ?
+        else
+        if ( strncmp( CUISINE, data_p, CUISINE_L ) == 0 )
+        {
+            recipe_append( recipe_p->cuisine,
+                           ( data_p + CUISINE_L ) );
+        }
+        //  Occasion ?
+        else
+        if ( strncmp( OCCASION, data_p, OCCASION_L ) == 0 )
+        {
+            recipe_append( recipe_p->occasion,
+                           ( data_p + OCCASION_L ) );
+        }
+        //  Category ?
+        else
+        if ( strncmp( CATEGORY, data_p, CATEGORY_L ) == 0 )
+        {
+            recipe_append( recipe_p->chapter,
+                           ( data_p + CATEGORY_L ) );
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+}
+
+/****************************************************************************/
+/**
  *  Initialize the Translations tables.
  *
  *  @param  void                No parameters are passed in.
@@ -100,6 +185,9 @@ decode(
     /**
      *  @param  tcb_p           Pointer to a Thread Control Block           */
     struct  tcb_t           *   tcb_p;
+    /**
+     *  @param  rcb_p           Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   rcb_p;
 
     /************************************************************************
      *  Function Initialization
@@ -123,16 +211,132 @@ decode(
     {
 
         /********************************************************************
-         *  Get a new set of addresses
+         *  Get a new file to import
          ********************************************************************/
 
         //  Get the current File-ID.
-//      file_id_p = queue_get_payload( tcb_p->queue_id );
+        rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-//      log_write( MID_LOGONLY, tcb_p->thread_name,
-//                 "Q-%03d: Rcv: FILE-ID: %s\n",
-//                 tcb_p->queue_id, file_id_p );
+        log_write( MID_LOGONLY, tcb_p->thread_name,
+                   "Q-%03d: Rcv: FILE-ID: %s\n",
+                   tcb_p->queue_id, rcb_p->display_name );
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WORKING;
+
+        /********************************************************************
+         *  Decoder selection
+         ********************************************************************/
+
+        //  Based on the recipe format of the recipe start
+        switch( rcb_p->recipe_format )
+        {
+            case    RECIPE_FORMAT_MXP:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'MXP' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_MX2:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'MX2' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_MMF:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'MMF' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_RXF:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'RXF' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_NYC:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'NYC' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_BOF:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'BOF' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_CP2:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'CP2' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_GRF:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'GRF' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_GF2:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'GF2' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_ERD:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'ERD' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            case    RECIPE_FORMAT_TXT:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Decode for recipe format 'TXT' is not available\n" );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }   break;
+            default:
+            {
+                //  OOPS.
+                log_write( MID_WARNING, tcb_p->thread_name,
+                           "Q-%03d: Rcv: UNKNOWN recipe format (%d)\n",
+                           tcb_p->queue_id, rcb_p->recipe_format );
+                //  Clean out the recipe control block
+                rcb_kill( rcb_p );
+            }
+        }
+
+
+
+
+
+        //  Change execution state to "INITIALIZED" for work.
+        tcb_p->thread_state = TS_WAIT;
     }
 
     /************************************************************************

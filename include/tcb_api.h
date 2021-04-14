@@ -56,6 +56,23 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+/**
+ *  @param  tcb                 Thread Control Block                        */
+struct  tcb_t
+{
+    /**
+     *  @param  queue_id        Data queue id                               */
+    int                         queue_id;
+    /**
+     *  @param  thread_id       Identifies the thread                       */
+    int                         thread_id;
+    /**
+     *  @param  thread_name     Name of this thread                         */
+    char                        thread_name[ THREAD_NAME_SIZE ];
+    /**
+     *  @param  thread_state    State of the thread                         */
+    enum    thread_stat_e       thread_state;
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -78,6 +95,7 @@ tcb_free(
 struct  tcb_t   *
 tcb_new(
     char                    *   group_name,
+    int                         group_thread_num,
     int                         max_depth
     );
 //---------------------------------------------------------------------------

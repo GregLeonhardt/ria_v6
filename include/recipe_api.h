@@ -219,6 +219,15 @@ struct   recipe_t
     /**
      *  @param  notes           Additional notes or modification options    */
     struct  list_base_t         *   notes;
+    //------------------------------------------------------------------------
+    //  Used by the decoders
+    //------------------------------------------------------------------------
+    /**
+     * @param blank_line        The previous input line has no data         */
+    int                         blank_line;
+    /**
+     * @param first_auip        We have located the first AUIP line         */
+    int                         first_auip;
 };
 //----------------------------------------------------------------------------
 struct  auip_t
@@ -254,6 +263,17 @@ recipe_new(
 void
 recipe_kill(
     struct   recipe_t           *   recipe_p
+    );
+//---------------------------------------------------------------------------
+enum    recipe_format_e
+recipe_is_start(
+    char                    *   data_p
+    );
+int
+//---------------------------------------------------------------------------
+recipe_is_end(
+    enum    recipe_format_e         recipe_format,
+    char                        *   data_p
     );
 //---------------------------------------------------------------------------
 void

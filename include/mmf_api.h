@@ -6,13 +6,13 @@
  *
  ****************************************************************************/
 
-#ifndef TMP_API_H
-#define TMP_API_H
+#ifndef MMF_API_H
+#define MMF_API_H
 
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains public definitions (etc.) that apply to external
- *  library components of the 'tmp' library.
+ *  library components of the 'mmf' library.
  *
  *  @note
  *
@@ -79,8 +79,8 @@ int
 mmf_is_end(
     char                        *   data_p
     );
-//---------------------------------------------------------------------------
+//----------------------------------------------------------------------------
 
 /****************************************************************************/
 
-#endif                      //    TMP_API_H
+#endif                      //    MMF_API_H

@@ -44,6 +44,7 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "email_api.h"          //  API for all email_*             PUBLIC
 #include "mmf_api.h"            //  API for all mmf_*               PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
@@ -591,6 +592,86 @@ recipe_is_start(
 
     //  DONE!
     return( recipe_format );
+}
+
+/****************************************************************************/
+/**
+ *  Analyze the data and determine if it contains something that can be
+ *  interpreted as the end of a recipe other than a normal termination line.
+ *
+ *  @param  recipe_format       The current recipe format
+ *  @param  data_p              Pointer to the raw data category
+ *
+ *  @return recipe_rc           TRUE when the data is the end of a recipe
+ *                              else FALSE is returned.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+recipe_is_end(
+    enum    recipe_format_e         recipe_format,
+    char                        *   data_p
+    )
+{
+    /**
+     *  @param  decode_rc       Return code from this function              */
+    int                             decode_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  The assumption is that all tests will fail
+    decode_rc = false;
+
+    //  Remove any trailing white space from the data buffer
+    text_strip_whitespace( data_p );
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  NOTE:
+    //  When a MXP formatted recipe is embedded inside a MX2, this was producing
+    //  a false positive for a recipe break.  If this creates a problem then
+    //  I will have to pass the current recipe type for additional testing.
+
+    //  NOTE:
+    //  MX2 is a special case because it may contain an embedded MXP recipe
+    //  inside it.
+
+    //  Is this something that can end a recipe ?
+    if (    ( email_is_group_break( data_p ) == true )
+//       || ( bof_is_start(         data_p ) == true )
+//       || ( cp2_is_start(         data_p ) == true )
+//       || ( gf2_is_start(         data_p ) == true )
+//       || ( grf_is_start(         data_p ) == true )
+         || ( mmf_is_end(           data_p ) == true )
+//       || ( mx2_is_start(         data_p ) == true )
+//       || (    ( recipe_format != RECIPE_FORMAT_MX2 )
+//            && ( mxp_is_start(    data_p ) == true ) )
+//       || ( nyc_is_start(         data_p ) == true ) )
+                                                        )
+    {
+        //  YES:    Change the return code
+        decode_rc = true;
+    }
+    else
+    //  Maybe we missed the recipe end.
+    if ( recipe_is_start( data_p ) != RECIPE_FORMAT_NONE )
+    {
+        //  YES:    Change the return code
+        decode_rc = true;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( decode_rc );
 }
 
 /****************************************************************************/

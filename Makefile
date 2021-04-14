@@ -11,7 +11,6 @@ LIBTOOLS	=	../libtools
 CFLAGS		=	-DDEBUG -Wall -g -MMD
 CFLAGS		+=	-I. -Iinclude
 CFLAGS		+=	-I$(LIBTOOLS)/include/
-CFLAGS		+=	-Idecode/include
 #-----------------------------------------------------------------------
 LFLAGS		=	-o 
 #-----------------------------------------------------------------------

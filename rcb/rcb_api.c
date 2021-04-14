@@ -30,6 +30,7 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <string.h>             //  Functions for managing strings
                                 //*******************************************
 
 /****************************************************************************
@@ -89,10 +90,13 @@
  ****************************************************************************/
 
 void
-rcb_free(
+rcb_kill(
     struct  rcb_t           *   rcb_p
     )
 {
+    /**
+     * @param list_data_p       Pointer to the read data                    */
+    char                    *   data_p;
 
 
     /************************************************************************
@@ -104,12 +108,47 @@ rcb_free(
      *  Function Body
      ************************************************************************/
 
+    //  Is the FILE-INFORMATION structure present ?
+    if ( rcb_p->file_info_p != NULL )
+    {
+        //  Free it
+        mem_free( rcb_p->file_info_p );
+        rcb_p->file_info_p = NULL;
+    }
+    //------------------------------------------------------------------------
+    //  Clear the display name string
+    memset( rcb_p->display_name, '\0', sizeof( rcb_p->display_name ) );
+    //------------------------------------------------------------------------
+    //  Reset the destination thread id.
+    rcb_p->dst_thread = DST_INVALID;
+    //------------------------------------------------------------------------
+    //  Clear all imported data
+    if ( rcb_p->import_list_p != NULL )
+    {
+        if ( list_query_count( rcb_p->import_list_p ) > 0 )
+        {
+            while( ( data_p = list_get_first( rcb_p->import_list_p ) ) != NULL )
+            {
+                list_delete( rcb_p->import_list_p, data_p );
+                mem_free( data_p );
+            }
+        }
+        list_kill( rcb_p->import_list_p );
+        rcb_p->import_list_p = NULL;
+    }
+    //------------------------------------------------------------------------
     //  Is there an open file ?
     if ( rcb_p->file_p != 0 )
     {
         //  YES:    Close it.
         file_close( rcb_p->file_p ); rcb_p->file_p = 0;
     }
+    //------------------------------------------------------------------------
+    //  Delete the recipe structure
+    recipe_kill( rcb_p->recipe_p );
+    //------------------------------------------------------------------------
+    //  Reset the destination thread id.
+    rcb_p->recipe_format = RECIPE_FORMAT_NONE;
 
     /************************************************************************
      *  Function Exit
@@ -122,9 +161,10 @@ rcb_free(
 /**
  *  Initialize the Translations tables.
  *
- *  @param  void                No information is passed to this function
+ *  @param  rcb_p               Pointer to the current Recipe Control Block
+ *  @param  recipe_format       The recipe format for this recipe.
  *
- *  @return rcb_p               Recipe Control Block
+ *  @return new_rcb_p           Pointer to a new Recipe Control Block
  *
  *  @note
  *
@@ -132,32 +172,49 @@ rcb_free(
 
 struct  rcb_t   *
 rcb_new(
-    void
+    struct  rcb_t           *   rcb_p,
+    enum    recipe_format_e     recipe_format
     )
 {
     /**
-     *  @param  rcb_p           Pointer to a Recipe Control Block           */
-    struct  rcb_t           *   rcb_p;
+     *  @param  new_rcb_p       Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   new_rcb_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Just in case everything goes south.
-    rcb_p = NULL;
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
     //  YES:    Allocate a new recipe control block
-    rcb_p = mem_malloc( sizeof( struct rcb_t ) );
+    new_rcb_p = mem_malloc( sizeof( struct rcb_t ) );
+
+    //  Is this going to be a split of an existing Recipe Control Block
+    if ( rcb_p != NULL )
+    {
+        //  YES:    Copy the file stats to the new RCB
+        new_rcb_p->file_info_p = rcb_p->file_info_p;
+
+        //  Copy the display file name
+        memcpy( new_rcb_p->display_name,
+                rcb_p->display_name,
+                sizeof( rcb_p->display_name ) );
+    }
+
+    //  Create a new list
+    new_rcb_p->import_list_p = list_new( );
+
+    //  Set the recipe format
+    new_rcb_p->recipe_format = recipe_format;
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
     //  DONE!
-    return( rcb_p );
+    return( new_rcb_p );
 }
 /****************************************************************************/

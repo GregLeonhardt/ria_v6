@@ -570,10 +570,10 @@ email(
                 if ( recipe_is_end( rcb_p->recipe_format, list_data_p ) )
                 {
                     //  YES:    Set the packet destination
-                    rcb_p->dst_thread = DST_DECODE;
+                    new_rcb_p->dst_thread = DST_DECODE;
 
                     //  Put it in one of the ROUTER queue
-                    queue_put_payload( router_queue_id, rcb_p  );
+                    queue_put_payload( router_queue_id, new_rcb_p  );
                 }
             }
 

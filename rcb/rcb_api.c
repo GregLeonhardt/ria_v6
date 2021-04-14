@@ -149,6 +149,12 @@ rcb_kill(
     //------------------------------------------------------------------------
     //  Reset the destination thread id.
     rcb_p->recipe_format = RECIPE_FORMAT_NONE;
+    //------------------------------------------------------------------------
+    //  Reset the destination thread id.
+    if ( rcb_p->email_info_p != NULL )
+    {
+        mem_free( rcb_p->email_info_p );
+    }
 
     /************************************************************************
      *  Function Exit

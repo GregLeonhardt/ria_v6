@@ -42,6 +42,10 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+#define SOURCE_L                ( 1024 )
+#define FROM_L                  ( 1024 )
+#define DATETIME_L              ( 1024 )
+#define SUBJECT_L               ( 1024 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -56,6 +60,42 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+struct  email_info_t
+{
+    //------------------------------------------------------------------------
+    /**
+     *  @param  e_source        Group-From                                  */
+    char                            g_from[      FROM_L      + 1 ];
+    /**
+     *  @param  e_subject       Group_Subject                               */
+    char                            g_subject[   SUBJECT_L   + 1 ];
+    /**
+     *  @param  e_datetime      Group sent Date/Time                        */
+    char                            g_datetime[  DATETIME_L  + 1 ];
+    //------------------------------------------------------------------------
+    /**
+     *  @param  e_from          Who posted the e-Mail message               */
+    char                            e_from[      FROM_L      + 1 ];
+    /**
+     *  @param  e_subject       Subject of the original e-Mail              */
+    char                            e_subject[   SUBJECT_L   + 1 ];
+    /**
+     *  @param  e_datetime      When the e-Mail was originally posted       */
+    char                            e_datetime[  DATETIME_L  + 1 ];
+    //------------------------------------------------------------------------
+    /**
+     *  @param  f_dir_name      Directory the file was when it was decoded  */
+    char                            f_dir_name[  FILE_NAME_L + 1 ];
+    /**
+     *  @param  e_file_name     The file name that was decoded              */
+    char                            f_file_name[ FILE_NAME_L + 1 ];
+    /**
+     *  @param  f_date_time     Date & Time stamp of the file               */
+    char                            f_date_time[ FILE_DATE_L + 1 ];
+    /**
+     *  @param  f_size          Size of the file that was decoded           */
+    char                            f_file_size[ FILE_SIZE_L + 1 ];
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************

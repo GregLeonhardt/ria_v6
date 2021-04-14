@@ -52,6 +52,16 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+enum    mmf_decode_state_e
+{
+    MMF_DS_IDLE                 =   0,
+    MMF_DS_TITLE                =   1,
+    MMF_DS_CATEGORIES           =   2,
+    MMF_DS_YIELD                =   3,
+    MMF_DS_AUIP                 =   4,
+    MMF_DS_DIRECTIONS           =   5,
+    MMF_DS_END                  =   6
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -93,12 +103,12 @@
 
 int
 mmf_is_start(
-    char                        *   data_p
+    char                    *   data_p
     )
 {
     /**
      * @param mmf_rc            Return Code                                 */
-    int                             mmf_rc;
+    int                         mmf_rc;
 
     /************************************************************************
      *  Function Initialization
@@ -134,12 +144,12 @@ mmf_is_start(
 
 int
 mmf_is_end(
-    char                        *   data_p
+    char                    *   data_p
     )
 {
     /**
      * @param mmf_rc            Return Code                                 */
-    int                             mmf_rc;
+    int                         mmf_rc;
 
     /************************************************************************
      *  Function Initialization
@@ -163,43 +173,194 @@ mmf_is_end(
 
 /****************************************************************************/
 /**
- *  Initialize the Translations tables.
+ *  Decode a MealMaster formatted recipe
  *
- *  @param  void                No parameters are passed in.
+ *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return void                Upon successful completion TRUE is returned
- *                              else FALSE is returned.
+ *  @return void                No information is returned.
  *
  *  @note
  *
  ****************************************************************************/
 
-int
-mmf_init(
-    void
+void
+mmf_decode(
+    struct  rcb_t           *   rcb_p
     )
 {
     /**
-     *  The assumption is that this function will pass                      */
-    int                             mmf_rc;
+     * @param state             Current decode state                        */
+    enum    mmf_decode_state_e  mmf_state;
+    /**
+     * @param list_lock_key     File list key                               */
+    int                         list_lock_key;
+    /**
+     * @param list_data_p       Pointer to the read data                    */
+    char                    *   list_data_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Assume a successful initialization
-    mmf_rc = true;
+    //  Debug log the current activity.
+    log_write( MID_DEBUG_0, "mmf_decode",
+                  "Entering with %6d lines of text\n",
+                  list_query_count( rcb_p->import_list_p ) );
+
+    //  Lock the list for fast(er) access
+    list_lock_key = list_user_lock( rcb_p->import_list_p );
+
+    //  Change state to looking for the recipe title.
+    mmf_state = MMF_DS_TITLE;
+
+#if 0
+    //  Initialize the decode flags
+    MMF_first_auip = false;
+    MMF_blank_line = true;
+#endif
+
+    /************************************************************************
+     *  Copy e-Mail information
+     ************************************************************************/
+
+    //  Allocate a new recipe data structure
+    rcb_p->recipe_p = recipe_new( RECIPE_FORMAT_MMF );
+
+#if 0
+    //  Copy source information to the recipe structure
+    decode_copy_info_to_recipe( rcb_p->recipe_p, source_info_p );
+#endif
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
+    //  Scan the list
+    for( list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
+         list_data_p != NULL;
+         list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
+    {
+        //  Remove the line from the list
+        list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
+
+        //  Debug log output
+        log_write( MID_DEBUG_0, "mmf_decode",
+                      "'%.60s'\n", list_data_p );
+
+        //  Process the new data
+        switch( mmf_state )
+        {
+
+            /****************************************************************
+             *  Search for the recipe title
+             ****************************************************************/
+
+            case MMF_DS_TITLE:
+            {
+                //  Locate and process the recipe title
+                if ( MMF__title( rcb_p->recipe_p, list_data_p ) == true )
+                {
+                    //  When rc == true, the title search is complete.
+                    //  Change state to looking for the recipe categories.
+                    mmf_state = MMF_DS_CATEGORIES;
+                }
+            }   break;
+
+            /****************************************************************
+             *  Search for recipe categories
+             ****************************************************************/
+
+            case MMF_DS_CATEGORIES:
+            {
+                //  Locate and process the recipe title
+                if ( MMF__categories( rcb_p->recipe_p, list_data_p ) == true )
+                {
+                    //  Change to Title Case
+                    text_title_case( rcb_p->recipe_p->name, rcb_p->recipe_p->name );
+
+                    //  Log the new title
+                    log_write( MID_INFO, "mmf_decode",
+                               "'%s'\n", rcb_p->recipe_p->name );
+
+                    //  Change decode state
+                    mmf_state = MMF_DS_YIELD;
+                }
+            }   break;
+
+            /****************************************************************
+             *  Search for recipe yield
+             ****************************************************************/
+
+            case MMF_DS_YIELD:
+            {
+                //  Locate and process the recipe title
+                if ( MMF__yield( rcb_p->recipe_p, list_data_p ) == true )
+                {
+                    //  Change decode state
+                    mmf_state = MMF_DS_AUIP;
+                }
+            }   break;
+
+            /****************************************************************
+             *  Process AUIP
+             ****************************************************************/
+
+            case MMF_DS_AUIP:
+            {
+                //  Locate and process the recipe title
+                if ( MMF__auip( rcb_p->recipe_p, list_data_p ) == true )
+                {
+                    //  Change decode state
+                    mmf_state = MMF_DS_DIRECTIONS;
+                }
+            }   break;
+
+            /****************************************************************
+             *  Process Directions
+             ****************************************************************/
+
+            case MMF_DS_DIRECTIONS:
+            {
+                //  Locate and process the recipe title
+                if ( MMF__directions( rcb_p->recipe_p, list_data_p ) == true )
+                {
+                    //  Change decode state
+                    mmf_state = MMF_DS_END;
+                }
+            }   break;
+
+            /****************************************************************
+             *  End of recipe decode.
+             ****************************************************************/
+
+            case MMF_DS_END:
+            {
+                //  There may be some data in the directions processing buffer.
+                //  This call will flush it out.
+                MMF__directions( rcb_p->recipe_p, "   " );
+            }   break;
+
+
+            /****************************************************************
+             *  Here to catch the unused case
+             ****************************************************************/
+
+            default:
+            {
+            }
+        }
+
+        //  Free the buffer
+        mem_free( list_data_p );
+    }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
+    //  Release the lock on the level 3 list
+    list_user_unlock( rcb_p->import_list_p, list_lock_key );
+
     //  DONE!
-    return( mmf_rc );
 }
 /****************************************************************************/

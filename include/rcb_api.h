@@ -77,9 +77,12 @@ struct  rcb_t
     FILE                    *   file_p;
     /**
      *  @param  recipe_p        Pointer to a recipe structure               */
-    struct  recipe_t          *   recipe_p;
+    struct  recipe_t        *   recipe_p;
     /**
-     *  @param  recipe_format   See recipe_format_e for details             */
+     *  @param  email_info_p    e-Mail from, date, time etc                 */
+    struct  source_info_t   *   email_info_p;
+    /**
+     *  @param  recipe_format   Format code for this recipe                 */
     enum    recipe_format_e     recipe_format;
 };
 //----------------------------------------------------------------------------

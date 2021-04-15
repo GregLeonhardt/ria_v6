@@ -302,11 +302,6 @@ recipe_add_instructions(
     );
 //---------------------------------------------------------------------------
 void
-recipe_fmt_directions(
-    struct   recipe_t           *   recipe_p
-    );
-//---------------------------------------------------------------------------
-void
 recipe_fmt_notes(
     struct   recipe_t           *   recipe_p,
     char                        *   data_p

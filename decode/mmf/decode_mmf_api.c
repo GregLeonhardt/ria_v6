@@ -43,8 +43,8 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "mmf_api.h"            //  API for all mmf_*               PUBLIC
-#include "mmf_lib.h"            //  API for all MMF__*              PRIVATE
+#include "decode_mmf_api.h"     //  API for all decode_mmf_*        PUBLIC
+#include "decode_mmf_lib.h"     //  API for all DECODE_MMF__*       PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -184,7 +184,7 @@ mmf_is_end(
  ****************************************************************************/
 
 void
-mmf_decode(
+decode_mmf(
     struct  rcb_t           *   rcb_p
     )
 {

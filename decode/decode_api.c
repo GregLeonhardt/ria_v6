@@ -44,8 +44,9 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
-#include "mmf_api.h"            //  API for all mmf_*               PUBLIC
                                 //*******************************************
+#include "decode_mmf_api.h"     //  API for all mmf_*               PUBLIC
+#include "decode_post_api.h"    //  API for all post_*              PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
 #include "decode_lib.h"         //  API for all DECODE__*           PRIVATE
                                 //*******************************************
@@ -252,7 +253,7 @@ decode(
             case    RECIPE_FORMAT_MMF:
             {
                 //  Decode a Meal-Master recipe
-                mmf_decode( rcb_p );
+                decode_mmf( rcb_p );
             }   break;
             case    RECIPE_FORMAT_RXF:
             {
@@ -328,6 +329,9 @@ decode(
                 rcb_kill( rcb_p );
             }
         }
+
+        //  Post recipe format specific decode processing
+        decode_post( rcb_p );
 
         //  Set the packet destination
         rcb_p->dst_thread = DST_ENCODE;

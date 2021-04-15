@@ -45,7 +45,7 @@
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
 #include "email_api.h"          //  API for all email_*             PUBLIC
-#include "mmf_api.h"            //  API for all mmf_*               PUBLIC
+#include "decode_mmf_api.h"            //  API for all mmf_*               PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
 #include "recipe_api.h"         //  API for all recipe_*            PUBLIC
@@ -689,6 +689,8 @@ recipe_is_end(
  *
  ****************************************************************************/
 
+//  @ToDo:  recipe_fmt_auip     Move to decode_fmt_auip
+
 void
 recipe_fmt_auip(
     struct   recipe_t       *   recipe_p,
@@ -869,6 +871,8 @@ recipe_fmt_auip(
  *  @note
  *
  ****************************************************************************/
+
+//  @ToDo:  recipe_name_cleanup     Move to decode_name_cleanup
 
 void
 recipe_name_cleanup(
@@ -1137,6 +1141,8 @@ recipe_name_cleanup(
  *
  ****************************************************************************/
 
+//  @ToDo:  recipe_append     Move to decode_append
+
 void
 recipe_append(
     struct  list_base_t     *   list_p,
@@ -1229,6 +1235,8 @@ recipe_append(
  *
  ****************************************************************************/
 
+//  @ToDo:  recipe_add_instructions     Move to decode_add_instructions
+
 void
 recipe_add_instructions(
     struct   recipe_t       *   recipe_p,
@@ -1288,382 +1296,6 @@ recipe_add_instructions(
 
 /****************************************************************************/
 /**
- *  Append a new line of text to the directions data.
- *
- *  @param  recipe_p            Primary structure for a recipe.
- *
- *  @return void                No return code from this function.
- *
- *  @note
- *
- ****************************************************************************/
-
-void
-recipe_fmt_directions(
-    struct   recipe_t       *   recipe_p
-    )
-{
-    /**
-     *  @param  scan_buffer_p   A local pointer to the input buffer         */
-    char                    *   scan_buffer_p;
-    /**
-     *  @param  formatted_text  Temp buffer - formatted directions line     */
-    char                        formatted_text[ MAX_LINE_L + 1 ];
-    /**
-     *  @param  next_word       A local bucket for the next directions word */
-    char                        next_word[ MAX_LINE_L ];
-    /**
-     *  @param  index           Scan index                                  */
-    int                         index;
-    /**
-     *  @param  fwos            First Word of Sentence                      */
-    static
-    int                         fwos;
-    /**
-     *  @param  fwol            First Word of Line                          */
-    static
-    int                         fwol;
-    /**
-     *  @param  tmp_p           Pointer to a temporary buffer               */
-    char                    *   tmp_p;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-    //  Are we starting the directions for a new recipe ?
-    if ( list_query_count( recipe_p->directions ) == 0 )
-    {
-        //  YES:    Reset the first word flags
-        fwos = true;
-        fwol = true;
-    }
-
-    //  Is the first word of a new line ?
-    if ( fwol == true )
-    {
-        //  YES:    Clear the formatted line buffer
-        memset( formatted_text, '\0', sizeof( formatted_text ) );
-    }
-    else
-    if ( list_query_count( recipe_p->directions ) != 0 )
-    {
-        //  NO:     Get the saved partial line of text from the list.
-        tmp_p = list_get_last( recipe_p->directions );
-
-        //  Move the data to the scan formatted text buffer
-        strncpy( formatted_text, tmp_p, ( sizeof( formatted_text ) - 1 ) );
-
-        //  Remove the last line of text from the list.
-        list_delete( recipe_p->directions, tmp_p );
-
-        //  Release the storage used by the temporary buffer
-        mem_free( tmp_p );
-    }
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Did we just get passed a blank line ?
-    if ( text_is_blank_line( recipe_p->instructions ) == false )
-    {
-        //  NO:     Clean the next word buffer
-        memset( next_word, '\0', sizeof( next_word ) );
-
-        //  Process all words in the input buffer
-        for( scan_buffer_p = text_next_word( recipe_p->instructions, next_word );
-             scan_buffer_p != NULL;
-             scan_buffer_p = text_next_word( scan_buffer_p, next_word ) )
-        {
-
-            /****************************************************************
-             *  Replace 0x14 with a NULL
-             ****************************************************************/
-
-            //  Is this a matching character sequence ?
-            if ( next_word[ strlen( next_word ) - 1 ] == 0x14 )
-            {
-                //  YES:    Replace with CR and terminate the line.
-                next_word[ strlen( next_word ) - 1 ] = '\n';
-            }
-
-            /****************************************************************
-             *  Replace '~-' with a CR
-             ****************************************************************/
-
-            //  Is this a matching character sequence ?
-            if (    ( next_word[ 0 ] == '~' )
-                 && ( next_word[ 1 ] == '-' ) )
-            {
-                //  YES:    Replace with CR and terminate the line.
-                next_word[ 0 ] = '\n';
-                next_word[ 1 ] = '\0';
-            }
-
-            /****************************************************************
-             *  Remove format bars of all dashes.
-             ****************************************************************/
-
-            for( index = 0;
-                 index < strlen( next_word );
-                 index++ )
-            {
-                if ( next_word[ index ] != '-' )
-                {
-                    break;
-                }
-            }
-            //  Was it just a line of dashes ?
-            if ( index == strlen( next_word ) )
-            {
-                //  YES:    Ignore it..
-                continue;
-            }
-
-            /****************************************************************
-             *  Special transformation of a numbered directions list.
-             ****************************************************************/
-
-             // Is this a numbered directions sequence ?
-            if (    ( fwos == true )
-                 && ( isdigit( next_word[ 0 ] ) !=  0  )
-                 && (    ( next_word[ 1 ]   == '.' )
-                      || ( next_word[ 1 ]   == ')' )
-                      || ( next_word[ 1 ]   == ']' )
-                      || ( next_word[ 1 ]   == ';' )
-                      || ( next_word[ 1 ]   == ':' ) ) )
-            {
-                //  YES:    Throw it away
-                next_word[ 0 ] = '\0';
-
-                //  That also makes whatever is next the First-Word-of-Line
-                fwol = true;
-            }
-
-            /****************************************************************
-             *  Anything that starts with a asterisk ( * ) is also the
-             *  start of a new paragraph.
-             ****************************************************************/
-
-            if ( next_word[ 0 ] == '*' )
-            {
-                fwos = true;
-                fwol = false;
-            }
-
-            /****************************************************************
-             *  If the next string causes the formatted line to be to large,
-             *  write it and start a new line.
-             ****************************************************************/
-
-            //  Will this word overflow the formatted output buffer ?
-            if (   ( strlen( formatted_text ) + strlen( next_word ) + 1 )
-                > MAX_LINE_L )
-            {
-                //  YES:    Save the current buffer and start a new buffer.
-                tmp_p = text_copy_to_new( formatted_text );
-                log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
-
-                //  Add it to the list.
-                list_put_last( recipe_p->directions, tmp_p );
-
-                //  Clear the formatted text buffer.
-                memset( formatted_text, '\0', sizeof( formatted_text ) );
-            }
-
-//  @note:  This was initially put in to assist in formatting sections of the
-//          directions such as 'Dough:'.  However all to frequently the recipe
-//          is written something like 'For the dough:' which will leave 'For the'
-//          on the current line and start a new line with 'Dough:'.
-//          Anyhow for now it's more trouble then it's worth so I am disabling
-//          the code.
-#if 0
-            /****************************************************************
-             *  ANY word that ends with a colon (:) is the start of a new
-             *  sentence and line.
-             ****************************************************************/
-
-            // Does this word end with a colon ?
-            if ( strchr( next_word, ':' ) != NULL )
-            {
-                //  YES:    Set the flags.
-                fwos = true;
-                fwol = true;
-
-                //  Is there anything in the formatted text buffer ?
-                if ( strlen( formatted_text ) > 0 )
-                {
-                    //  YES:    Copy it to an allocated buffer
-                    tmp_p = text_copy_to_new( formatted_text );
-                    log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
-
-                    //  Add it to the list.
-                    list_put_last( recipe_p->directions, tmp_p );
-
-                    //  Clear the formatted text buffer.
-                    memset( formatted_text, '\0', sizeof( formatted_text ) );
-                    }
-            }
-#endif
-
-            /****************************************************************
-             *  First Word of Sentence and First-Word-of-Line
-             ****************************************************************/
-
-            //  First-Word-Of-Sentence && First-Word-Of-Line && something to save
-            if (    ( fwos == true )
-                 && ( fwol == true )
-                 && ( strlen( next_word ) > 0 ) )
-            {
-                //  YES:    Drop the new word in the output buffer.
-                strncpy( formatted_text, next_word, MAX_LINE_L );
-                strncat( formatted_text, " ",
-                         MAX_LINE_L - strlen( formatted_text ) );
-                formatted_text[ 0 ] = toupper( formatted_text[ 0 ] );
-
-                //  It is no lonfer the first word of anything.
-                fwos = false;
-                fwol = false;
-            }
-
-            /****************************************************************
-             *  First Word of Sentence AND NOT First-Word-of-Line
-             ****************************************************************/
-
-            else
-            if (    ( fwos == true  )
-                 && ( fwol == false )
-                 && ( strlen( next_word ) > 0 ) )
-            {
-                //  This is the first word of a new sentence but not
-                //  the first word of a new output line.  Test the
-                //  word for a paragraph starter.
-                if ( xlate_paragraph_starters( next_word ) )
-                {
-                    //  Make sure there is something in the current line
-                    if ( text_is_blank_line( formatted_text ) == false )
-                    {
-                        //  This word marks the start of a new sentence.
-                        //  Write the current output line and start a new one
-                        tmp_p = text_copy_to_new( formatted_text );
-                        log_write( MID_DEBUG_1, "recipe_api.c",
-                                "Line: %d\n", __LINE__ );
-
-                        //  Add it to the list.
-                        list_put_last( recipe_p->directions, tmp_p );
-
-                        //  Clear the formatted text buffer.
-                        memset( formatted_text, '\0', sizeof( formatted_text ) );
-                    }
-                }
-                strncat( formatted_text, next_word, MAX_LINE_L );
-                strncat( formatted_text, " ",
-                         MAX_LINE_L - strlen( formatted_text ) );
-                formatted_text[ 0 ] = toupper( formatted_text[ 0 ] );
-                fwos = false;
-                fwol = false;
-            }
-
-            /****************************************************************
-             *  NOT First-Word-of-Sentence AND First-Word-of-Line
-             ****************************************************************/
-
-            else
-            if (    ( fwos == false )
-                 && ( fwol == true  )
-                 && ( strlen( next_word ) > 0 ) )
-            {
-                //  Append the new word to an existing sentence.
-                strncat( formatted_text, next_word, MAX_LINE_L );
-                strncat( formatted_text, " ", MAX_LINE_L - strlen( formatted_text ) );
-                fwos = false;
-                fwol = false;
-            }
-
-            /****************************************************************
-             *  NOT First-Word-of-Sentence and NOT First-Word-of-Line
-             ****************************************************************/
-
-            else
-            if (    ( fwos == false )
-                 && ( fwol == false )
-                 && ( strlen( next_word ) > 0 ) )
-            {
-                //  Append the new word to an existing sentence.
-                strncat( formatted_text, next_word, MAX_LINE_L );
-                strncat( formatted_text, " ",
-                         MAX_LINE_L - strlen( formatted_text ) );
-                fwos = false;
-                fwol = false;
-            }
-            //  Is this the end of a sentence ?
-            if ( next_word[ strlen( next_word ) - 1 ] == '.' )
-            {
-                //  YES:    Insert an extra space in the formatted text.
-                strncat( formatted_text, " ",
-                         MAX_LINE_L - strlen( formatted_text ) );
-                fwos = true;
-            }
-            //  Is this a special ?
-            if (    ( fwos == true )
-                 && ( formatted_text[ 0 ] == '*' ) )
-            {
-                //  YES:    Make sure there is something in the current line
-                if ( text_is_blank_line( formatted_text ) == false )
-                {
-                    //  This word marks the start of a new sentence.
-                    //  Write the current output line and start a new one
-                    tmp_p = text_copy_to_new( formatted_text );
-                    log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
-
-                    //  Add it to the list.
-                    list_put_last( recipe_p->directions, tmp_p );
-
-                    //  Clear the formatted text buffer.
-                    memset( formatted_text, '\0', sizeof( formatted_text ) );
-                    fwol = true;
-                }
-            }
-
-            //  Clean the next word buffer
-            memset( next_word, '\0', sizeof( next_word ) );
-        }
-    }
-    else
-    {
-        //  YES:    Whatever (if anything else) is next will start a new line.
-        fwos = true;
-        fwol = true;
-    }
-
-    /************************************************************************
-     *  We are done with the input line of text.  Save it on the list.
-     ************************************************************************/
-
-    //  Is there something in the formatted text buffer ?
-    if ( strlen( formatted_text ) > 0 )
-    {
-        //  YES:    Copy it to a temporary buffer.
-        tmp_p = text_copy_to_new( formatted_text );
-        log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
-
-        //  Add it to the list.
-        list_put_last( recipe_p->directions, tmp_p );
-
-        //  Clear the formatted text buffer.
-        memset( formatted_text, '\0', sizeof( formatted_text ) );
-    }
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-}
-
-/****************************************************************************/
-/**
  *  Append a new line of text to the notes data.
  *
  *  @param  recipe_p            Primary structure for a recipe.
@@ -1674,6 +1306,8 @@ recipe_fmt_directions(
  *  @note
  *
  ****************************************************************************/
+
+//  @ToDo:  recipe_fmt_notes     Move to decode_fmt_notes
 
 void
 recipe_fmt_notes(
@@ -1989,6 +1623,8 @@ recipe_fmt_notes(
  *  @note
  *
  ****************************************************************************/
+
+//  @ToDo:  recipe_next_id     Move to decode_next_id
 
 void
 recipe_next_id(

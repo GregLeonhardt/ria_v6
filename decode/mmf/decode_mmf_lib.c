@@ -48,8 +48,8 @@
                                 //*******************************************
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
-#include "mmf_api.h"            //  API for all mmf_*               PUBLIC
-#include "mmf_lib.h"            //  API for all MMF__*              PRIVATE
+#include "decode_mmf_api.h"     //  API for all decode_mmf_*        PUBLIC
+#include "decode_mmf_lib.h"     //  API for all DECODE_MMF__*       PRIVATE
                                 //*******************************************
 
 /****************************************************************************

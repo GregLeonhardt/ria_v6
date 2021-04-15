@@ -822,7 +822,7 @@ main(
             usleep( 100 );
 
             //  Loop until the thread is 'WAIT'ing for work
-        }   while( import_tcb[ thread_id ]->thread_state != TS_WAIT );
+        }   while( email_tcb[ thread_id ]->thread_state != TS_WAIT );
     }
 
     /************************************************************************

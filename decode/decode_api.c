@@ -329,10 +329,6 @@ decode(
             }
         }
 
-
-
-
-
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;
     }

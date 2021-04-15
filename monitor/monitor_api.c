@@ -125,12 +125,6 @@ monitor(
      *  Function Initialization
      ************************************************************************/
 
-    //  Initialize all the total counts to zero
-    import_total = 0;
-    email_total  = 0;
-    decode_total = 0;
-    encode_total = 0;
-
     //  Set the pointer
     tcb_p = void_p;
 
@@ -147,6 +141,16 @@ monitor(
         /**
          *  @param  tmp_buffer      Temproary data buffer                   */
         char                        tmp_buffer[ 10 ];
+
+        /********************************************************************
+         *  Reset the totals
+         ********************************************************************/
+
+        //  Initialize all the total counts to zero
+        import_total = 0;
+        email_total  = 0;
+        decode_total = 0;
+        encode_total = 0;
 
         /********************************************************************
          *  Gather the queue depth data
@@ -205,7 +209,7 @@ monitor(
         //  IMPORT
         memset( out_data, '\0', sizeof( out_data ) );
         snprintf( out_data, ( sizeof( out_data ) - strlen( out_data ) ),
-                  "IMPORT: [%6d] ", import_total );
+                  "IMPORT: [%6d]", import_total );
         for( thread_id = 0; thread_id < THREAD_COUNT_IMPORT; thread_id += 1 )
         {
             snprintf( tmp_buffer, sizeof(tmp_buffer ),
@@ -217,7 +221,7 @@ monitor(
         //  EMAIL
         memset( out_data, '\0', sizeof( out_data ) );
         snprintf( out_data, ( sizeof( out_data ) - strlen( out_data ) ),
-                  "EMAIL:  [%6d] ", email_total );
+                  "EMAIL:  [%6d]", email_total );
         for( thread_id = 0; thread_id < THREAD_COUNT_EMAIL; thread_id += 1 )
         {
             snprintf( tmp_buffer, sizeof(tmp_buffer ),
@@ -229,7 +233,7 @@ monitor(
         //  DECODE
         memset( out_data, '\0', sizeof( out_data ) );
         snprintf( out_data, ( sizeof( out_data ) - strlen( out_data ) ),
-                  "DECODE: [%6d] ", decode_total );
+                  "DECODE: [%6d]", decode_total );
         for( thread_id = 0; thread_id < THREAD_COUNT_DECODE; thread_id += 1 )
         {
             snprintf( tmp_buffer, sizeof(tmp_buffer ),
@@ -241,7 +245,7 @@ monitor(
         //  ENCODE
         memset( out_data, '\0', sizeof( out_data ) );
         snprintf( out_data, ( sizeof( out_data ) - strlen( out_data ) ),
-                  "ENCODE: [%6d] ", encode_total );
+                  "ENCODE: [%6d]", encode_total );
         for( thread_id = 0; thread_id < THREAD_COUNT_ENCODE; thread_id += 1 )
         {
             snprintf( tmp_buffer, sizeof(tmp_buffer ),

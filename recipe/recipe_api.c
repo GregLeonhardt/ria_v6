@@ -499,7 +499,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_BOF;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  cp2_is_start()
     //-------------------------------------------------------------------
     //  CookenPro 2.0
     else
@@ -510,7 +510,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_CP2;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  erd_is_start()
     //-------------------------------------------------------------------
     //  Easy Recipe Deluxe
     else
@@ -521,7 +521,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_ERD;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  gf2_is_start()
     //-------------------------------------------------------------------
     //  Generic-Recipe-Format @@@@@
     else
@@ -532,7 +532,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_GF2;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  grf_is_start()
     //-------------------------------------------------------------------
     //  Generic-Recipe-Format [[[[[
     else
@@ -552,7 +552,7 @@ recipe_is_start(
         //  YES:    Set the format to use
         recipe_format = RECIPE_FORMAT_MMF;
     }
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  mx2_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MX2
     else
@@ -563,7 +563,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MX2;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  mxp_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MXP
     else
@@ -574,7 +574,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MXP;
     }
 #endif
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo:  nyc_is_start()
     //-------------------------------------------------------------------
     //  Now You're Cooking!
     else

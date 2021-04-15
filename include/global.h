@@ -141,6 +141,22 @@ char                        *   recipe_id_p;
  *  @param  file_list           Pointer to a list of files                  */
 struct  list_base_t         *   file_list_p;
 //----------------------------------------------------------------------------
+/**
+ * @param in_file_name_p        Pointer to the input file name              */
+char                        *   in_file_name_p;
+//----------------------------------------------------------------------------
+/**
+ * @param in_dir_name_p         Pointer to the input directory name         */
+char                        *   in_dir_name_p;
+//----------------------------------------------------------------------------
+/**
+ * @param out_dir_name_p        Pointer to the output directory name       */
+char                        *   out_dir_name_p;
+//----------------------------------------------------------------------------
+/**
+ * @param delete_flag           Delete input file when true                 */
+int                             delete_flag;
+//----------------------------------------------------------------------------
 
 /****************************************************************************
  * Global Prototypes

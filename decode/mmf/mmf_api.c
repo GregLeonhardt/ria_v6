@@ -213,23 +213,12 @@ mmf_decode(
     //  Change state to looking for the recipe title.
     mmf_state = MMF_DS_TITLE;
 
-#if 0
-    //  Initialize the decode flags
-    MMF_first_auip = false;
-    MMF_blank_line = true;
-#endif
-
     /************************************************************************
      *  Copy e-Mail information
      ************************************************************************/
 
     //  Allocate a new recipe data structure
     rcb_p->recipe_p = recipe_new( RECIPE_FORMAT_MMF );
-
-#if 0
-    //  Copy source information to the recipe structure
-    decode_copy_info_to_recipe( rcb_p->recipe_p, source_info_p );
-#endif
 
     /************************************************************************
      *  Function Body

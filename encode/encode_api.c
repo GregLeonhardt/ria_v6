@@ -30,6 +30,8 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <unistd.h>             //  UNIX standard library.
+#include <string.h>             //  Functions for managing strings
                                 //*******************************************
 
 /****************************************************************************
@@ -43,8 +45,9 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "encode_api.h"            //  API for all encode_*               PUBLIC
-#include "encode_lib.h"            //  API for all ENCODE__*              PRIVATE
+#include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
+#include "encode_api.h"         //  API for all encode_*            PUBLIC
+#include "encode_lib.h"         //  API for all ENCODE__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -78,6 +81,130 @@
 /****************************************************************************
  * Public API Functions
  ****************************************************************************/
+
+/****************************************************************************/
+/**
+ *  Get the input file name.
+ *
+ *  @param  void                No parameters are passed in.
+ *
+ *  @return data_p              Pointer to the input file name string.
+ *
+ *  @note
+ *      @ToDo:  encode_get_if
+ *
+ ****************************************************************************/
+
+char    *
+encode_get_if(
+    void
+    )
+{
+    /**
+     *  @param  data_p          Pointer to the output file name string.     */
+//  char                    *   data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Save the input file name
+//  data_p = in_file_name_p;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+//  return( data_p );
+    return( NULL );
+}
+
+/****************************************************************************/
+/**
+ *  Set the input directory name.
+ *
+ *  @param  data_p              Pointer to the input directory name string.
+ *
+ *  @return void                No return code from this function.
+ *
+ *  @note
+ *      @ToDo:  encode_set_dir
+ *
+ ****************************************************************************/
+
+void
+encode_set_dir(
+    char                    *   data_p
+    )
+{
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Save the input file name
+//  in_dir_name_p = data_p;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+}
+
+/****************************************************************************/
+/**
+ *  Get the input directory name.
+ *
+ *  @param  void                No parameters are passed in.
+ *
+ *  @return data_p              Pointer to the input directory name string.
+ *
+ *  @note
+ *      @ToDo:  encode_get_dir
+ *
+ ****************************************************************************/
+
+char    *
+encode_get_dir(
+    void
+    )
+{
+    /**
+     *  @param  data_p          Pointer to the output file name string.     */
+//  char                    *   data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Save the input file name
+//  data_p = in_dir_name_p;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+//  return( data_p );
+    return( NULL );
+}
 
 /****************************************************************************/
 /**
@@ -141,16 +268,20 @@ encode(
         tcb_p->thread_state = TS_WORKING;
 
         /********************************************************************
-         *  FUNCTIONAL CODE FOR THIS THREAD GOES HERE
+         *  Use one of the following encoders
          ********************************************************************/
 
-
-
-
-
-
-
-
+        //  Did we get a new recipe to encode ?
+        if ( rcb_p->recipe_p != NULL )
+        {
+            //  YES:    Go encode it.
+//          encode_mmf( rcb_p );    //  @ToDo:  encode_mmf
+//          encode_mx2( rcb_p );    //  @ToDo:  encode_mx2
+//          encode_mxp( rcb_p );    //  @ToDo:  encode_mxp
+//          encode_rxf( rcb_p );    //  @ToDo:  encode_rxf
+//          encode_ria( rcb_p );    //  @ToDo:  encode_ria
+            encode_txt( rcb_p );    //  Universal text input format
+        }
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

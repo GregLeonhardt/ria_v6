@@ -329,6 +329,12 @@ decode(
             }
         }
 
+        //  Set the packet destination
+        rcb_p->dst_thread = DST_ENCODE;
+
+        //  Put it in one of the IMPORT queue's
+        queue_put_payload( router_queue_id, rcb_p  );
+
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;
     }

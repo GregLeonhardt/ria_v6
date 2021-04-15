@@ -1,15 +1,13 @@
 /*******************************  COPYRIGHT  ********************************/
-/**
- *  Author? "Gregory N. Leonhardt"
- *  License? "CC BY-NC 2.0"
- *           "https://creativecommons.org/licenses/by-nc/2.0/"
+/*
+ *  Copyright (c) 2019 Gregory N. Leonhardt All rights reserved.
  *
  ****************************************************************************/
 
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains private functions that makeup the internal
- *  library components of the 'encode' library.
+ *  library components of the 'encode_txt' library.
  *
  *  @note
  *
@@ -29,7 +27,6 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
-                                //*******************************************
 
 /****************************************************************************
  * Application APIs
@@ -37,13 +34,13 @@
 
                                 //*******************************************
 #include "global.h"             //  Global stuff for this application
-#include "libtools_api.h"       //  My Tools Library
+#include <libtools_api.h>       //  My Tools Library
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "encode_api.h"         //  API for all encode_*            PUBLIC
-#include "encode_lib.h"         //  API for all ENCODE__*           PRIVATE
+#include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
+#include "encode_txt_lib.h"     //  API for all ENCODE_TXT__*       PRIVATE
                                 //*******************************************
 
 /****************************************************************************

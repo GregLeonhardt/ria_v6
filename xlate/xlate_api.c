@@ -283,11 +283,7 @@ xlate_units(
     if ( found_string_p == NULL )
     {
         //  NO:     Write it to the log
-#if 0
-        log_write( MID_INFO, "xlate_units",
-#else
         log_write( MID_DEBUG_0, "xlate_units",
-#endif
                       "Could not find a units translation for '%s'\n",
                       search_string_p );
     }
@@ -340,11 +336,7 @@ xlate_chapter(
     if ( found_string_p == NULL )
     {
         //  NO:     Write it to the log
-#if 0
-        log_write( MID_INFO, "xlate_categories",
-#else
         log_write( MID_DEBUG_0, "xlate_categories",
-#endif
                       "Could not find a chapter translation for '%s'\n",
                       search_string_p );
     }

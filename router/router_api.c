@@ -14,7 +14,7 @@
  *  @note
  *
  *  @ToDo:  SLOW if the queue depth goes over something like 20,000.
- * 
+ *
  ****************************************************************************/
 
 /****************************************************************************
@@ -199,7 +199,6 @@ router(
             //================================================================
             case    DST_ENCODE:
             {
-#if 0
                 id = ROUTER__choose( encode_tcb, THREAD_COUNT_ENCODE );
 
                 //  Put it in one of the EMAIL queue's
@@ -209,7 +208,6 @@ router(
                 log_write( MID_LOGONLY, "main",
                            "Q-%03d: Snd: FILE-ID: %s\n", id,
                            rcb_p->display_name );
-#endif
             }   break;
             //================================================================
             case    DST_EXPORT:

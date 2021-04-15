@@ -51,7 +51,6 @@
 //  Version Numbers
 #define VER_MAJ                 6
 #define VER_MIN                 0
-#define VER_TMP                 2
 
 /****************************************************************************
  * System Function API
@@ -114,21 +113,6 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-/**
- * @param in_file_name_p        Pointer to the input file name              */
-char                        *   in_file_name_p;
-//----------------------------------------------------------------------------
-/**
- * @param in_dir_name_p         Pointer to the input directory name         */
-char                        *   in_dir_name_p;
-//----------------------------------------------------------------------------
-/**
- * @param out_dir_name_p        Pointer to the output directory name       */
-char                        *   out_dir_name_p;
-//----------------------------------------------------------------------------
-/**
- * @param delete_flag           Delete input file when true                 */
-int                             delete_flag;
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -681,11 +665,8 @@ main(
     log_write( MID_INFO, "main",
                          "Starting: Recipe Import Assist:\n" );
     log_write( MID_INFO, "main",
-                         "\tVersion: %02d:%02d:%02d\n",
-                         VER_MAJ, VER_MIN, VER_TMP );
-    log_write( MID_INFO, "main",
-                         "\tCompiled: %s %s.\n",
-                         __DATE__, __TIME__ );
+                         "\tVersion: %02d:%02d - %s\n",
+                         VER_MAJ, VER_MIN, __DATE__ );
 
     for ( int count = 0;
               count < argc;
@@ -934,6 +915,8 @@ main(
         //  Is there anything in the file ?
         if ( text_to_int( file_info_p->file_size ) >= 100 )
         {
+            //  @ToDo:  Use the router to send the message.
+
             /**
              *  @param  rcb_p           Recipe Control block                    */
             struct  rcb_t           *   rcb_p;

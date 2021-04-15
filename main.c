@@ -38,6 +38,8 @@
  ****************************************************************************/
 
 //  This is a global to do list:
+//  @ToDo:  Why no duplicate output files ?
+//  @ToDo:  free tokens.
 
 /****************************************************************************
  *  Compiler directives
@@ -738,7 +740,7 @@ main(
      ************************************************************************/
 
     //  Allocate storage for a Thread Control Block
-    router_tcb = tcb_new( THREAD_NAME_ROUTER, 0, MAX_QUEUE_DEPTH );
+    router_tcb = tcb_new( THREAD_NAME_ROUTER, 0, QUEUE_DEPTH_ROUTER );
 
     //  The router queue id needs to be global
     router_queue_id = router_tcb->queue_id;
@@ -766,7 +768,7 @@ main(
         //  Allocate storage for a Thread Control Block
         import_tcb[ thread_id ] = tcb_new( THREAD_NAME_IMPORT,
                                            thread_id,
-                                           MAX_QUEUE_DEPTH );
+                                           QUEUE_DEPTH_IMPORT );
 
         //  Launch the import thread
         thread_new( import, import_tcb[ thread_id ] );
@@ -792,7 +794,7 @@ main(
         //  Allocate storage for a Thread Control Block
         email_tcb[ thread_id ] = tcb_new( THREAD_NAME_EMAIL,
                                           thread_id,
-                                          MAX_QUEUE_DEPTH );
+                                          QUEUE_DEPTH_EMAIL );
 
         //  Launch the EMAIL thread
         thread_new( email, email_tcb[ thread_id ] );
@@ -818,7 +820,7 @@ main(
         //  Allocate storage for a Thread Control Block
         decode_tcb[ thread_id ] = tcb_new( THREAD_NAME_DECODE,
                                            thread_id,
-                                           MAX_QUEUE_DEPTH );
+                                           QUEUE_DEPTH_DECODE );
 
         //  Launch the decode thread
         thread_new( decode, decode_tcb[ thread_id ] );
@@ -844,7 +846,7 @@ main(
         //  Allocate storage for a Thread Control Block
         encode_tcb[ thread_id ] = tcb_new( THREAD_NAME_ENCODE,
                                            thread_id,
-                                           MAX_QUEUE_DEPTH );
+                                           QUEUE_DEPTH_ENCODE );
 
         //  Launch the decode thread
         thread_new( encode, encode_tcb[ thread_id ] );

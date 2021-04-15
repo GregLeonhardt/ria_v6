@@ -129,8 +129,20 @@ router(
     while ( 1 )
     {
         /**
-         *  @param  id              Thread ID with smallest queue           */
-        int                         id;
+         *  @param  import_id       Last used import queue id.              */
+        static  int                 import_id = 0;
+        /**
+         *  @param  email_id        Last used email  queue id.              */
+        static  int                 email_id = 0;
+        /**
+         *  @param  decode_id       Last used decode queue id.              */
+        static  int                 decode_id = 0;
+        /**
+         *  @param  encode_id       Last used encode queue id.              */
+        static  int                 encode_id = 0;
+        /**
+         *  @param  export_id       Last used export queue id.              */
+        static  int                 export_id = 0;
 
         /********************************************************************
          *  Get a new file to import
@@ -160,68 +172,78 @@ router(
             //================================================================
             case    DST_IMPORT:
             {
-                id = ROUTER__choose( import_tcb, THREAD_COUNT_IMPORT );
-
                 //  Put it in one of the EMAIL queue's
-                queue_put_payload( id, rcb_p  );
+                queue_put_payload( import_tcb[ import_id ]->queue_id, rcb_p  );
 
                 //  Progress report.
                 log_write( MID_LOGONLY, "main",
-                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           "Q-%03d: Snd: FILE-ID: %s\n",
+                           import_tcb[ import_id ]->queue_id,
                            rcb_p->display_name );
+
+                if ( ++import_id >= THREAD_COUNT_IMPORT )
+                    import_id = 0;
             }   break;
             //================================================================
             case    DST_EMAIL:
             {
-                id = ROUTER__choose( email_tcb, THREAD_COUNT_EMAIL );
-
                 //  Put it in one of the EMAIL queue's
-                queue_put_payload( id, rcb_p  );
+                queue_put_payload( email_tcb[ email_id ]->queue_id, rcb_p  );
 
                 //  Progress report.
                 log_write( MID_LOGONLY, "main",
-                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           "Q-%03d: Snd: FILE-ID: %s\n",
+                           email_tcb[ email_id ]->queue_id,
                            rcb_p->display_name );
+
+                if ( ++email_id >= THREAD_COUNT_EMAIL )
+                    email_id = 0;
             }   break;
             //================================================================
             case    DST_DECODE:
             {
-                id = ROUTER__choose( decode_tcb, THREAD_COUNT_DECODE );
-
                 //  Put it in one of the EMAIL queue's
-                queue_put_payload( id, rcb_p  );
+                queue_put_payload( decode_tcb[ decode_id ]->queue_id, rcb_p  );
 
                 //  Progress report.
                 log_write( MID_LOGONLY, "main",
-                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           "Q-%03d: Snd: FILE-ID: %s\n",
+                           decode_tcb[ decode_id ]->queue_id,
                            rcb_p->display_name );
+
+                if ( ++decode_id >= THREAD_COUNT_DECODE )
+                    decode_id = 0;
             }   break;
             //================================================================
             case    DST_ENCODE:
             {
-                id = ROUTER__choose( encode_tcb, THREAD_COUNT_ENCODE );
-
                 //  Put it in one of the EMAIL queue's
-                queue_put_payload( id, rcb_p  );
+                queue_put_payload( encode_tcb[ encode_id ]->queue_id, rcb_p  );
 
                 //  Progress report.
                 log_write( MID_LOGONLY, "main",
-                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           "Q-%03d: Snd: FILE-ID: %s\n",
+                           encode_tcb[ encode_id ]->queue_id,
                            rcb_p->display_name );
+
+                if ( ++encode_id >= THREAD_COUNT_ENCODE )
+                    encode_id = 0;
             }   break;
             //================================================================
             case    DST_EXPORT:
             {
 #if 0
-                id = ROUTER__choose( export_tcb, THREAD_COUNT_EXPORT );
-
                 //  Put it in one of the EMAIL queue's
-                queue_put_payload( id, rcb_p  );
+                queue_put_payload( export_tcb[ export_id ]->queue_id, rcb_p  );
 
                 //  Progress report.
                 log_write( MID_LOGONLY, "main",
-                           "Q-%03d: Snd: FILE-ID: %s\n", id,
+                           "Q-%03d: Snd: FILE-ID: %s\n",
+                           export_tcb[ export_id ]->queue_id,
                            rcb_p->display_name );
+
+                if ( ++export_id >= THREAD_COUNT_EXPORT )
+                    export_id = 0;
 #endif
             }   break;
         }

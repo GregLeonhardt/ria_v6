@@ -65,6 +65,12 @@
 #define THREAD_COUNT_EXPORT     (   1 )
 //----------------------------------------------------------------------------
 #define MAX_QUEUE_DEPTH         (   0 )
+#define QUEUE_DEPTH_ROUTER      (   0 )
+#define QUEUE_DEPTH_IMPORT      (   0 )
+#define QUEUE_DEPTH_EMAIL       (   0 )
+#define QUEUE_DEPTH_DECODE      (   0 )
+#define QUEUE_DEPTH_ENCODE      (   0 )
+#define QUEUE_DEPTH_EXPORT      (   0 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************

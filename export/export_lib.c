@@ -8,8 +8,8 @@
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains public function that makeup the external
- *  library components of the 'post' library.
+ *  This file contains private functions that makeup the internal
+ *  library components of the 'export' library.
  *
  *  @note
  *
@@ -19,7 +19,6 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_POST          ( "ALLOCATE STORAGE FOR POST" )
 
 /****************************************************************************
  * System Function API
@@ -43,115 +42,40 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "decode_post_api.h"    //  API for all post_*              PUBLIC
-#include "decode_post_lib.h"    //  API for all POST__*             PRIVATE
+#include "export_api.h"         //  API for all export_*            PUBLIC
+#include "export_lib.h"         //  API for all EXPORT__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
- * Private API Enumerations
+ * Enumerations local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Definitions
+ * Definitions local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Structures
+ * Structures local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Private API Storage Allocation
+ * Storage Allocation local to this file
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 
 /****************************************************************************
- * Public API Functions
+ * LIB Functions
  ****************************************************************************/
 
-/****************************************************************************/
-/**
- *  Initialize the Translations tables.
- *
- *  @param  void                No parameters are passed in.
- *
- *  @return void                Upon successful completion TRUE is returned
- *                              else FALSE is returned.
- *
- *  @note
- *
- ****************************************************************************/
-
-void
-decode_post(
-    struct  rcb_t           *   rcb_p
-    )
-{
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Recipe Title analysis
-    DECODE_POST__title_information( rcb_p );
-
-    if ( rcb_p->recipe_p->instructions != NULL )
-    {
-        //  Directions  analysis
-        DECODE_POST__directions_cleanup( rcb_p );
-
-        //  Directions format
-        DECODE_POST__fmt_directions( rcb_p );
-
-        //  Find "FROM:" in the directions
-        DECODE_POST__directions_from( rcb_p );
-
-        //  Find "SOURCE:" in the directions
-        DECODE_POST__directions_source( rcb_p );
-
-        //  Find "COPYRIGHT:" in the directions
-        DECODE_POST__directions_copyright( rcb_p );
-
-        //  Find "DESCRIPTION:" in the directions
-        DECODE_POST__directions_description( rcb_p );
-
-        //  Find "MAKES:" in the directions
-        DECODE_POST__directions_makes( rcb_p );
-
-        //  Find "TIME-wxyz:" in the directions
-        DECODE_POST__directions_time( rcb_p );
-
-        //  Find "S(Imported From):" in the directions
-        DECODE_POST__directions_import_from( rcb_p );
-
-        //  @ToDo   Ratings:
-
-        //  Find "NOTES:" in the directions
-        DECODE_POST__directions_notes( rcb_p );
-    }
-
-    //  Compute the recipe checksum (Recipe-ID)
-    DECODE_POST__recipe_id( rcb_p );
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-}
 /****************************************************************************/

@@ -121,7 +121,7 @@ email_is_group_break(
 /**
  *  Initialize the Translations tables.
  *
- *  @param  void                No parameters are passed in.
+ *  @param  void            *   Pointer
  *
  *  @return void                Upon successful completion TRUE is returned
  *                              else FALSE is returned.
@@ -192,7 +192,7 @@ email(
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_LOGONLY, tcb_p->thread_name,
+        log_write( MID_INFO, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->display_name );
 
@@ -245,8 +245,8 @@ email(
             //  Remove the data from the level 1 list
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
-            tmp_c_type = EMAIL__find_content( list_data_p );
-            tmp_e_type = EMAIL__find_encoding( list_data_p );
+            tmp_c_type = EMAIL__find_content( tcb_p, list_data_p );
+            tmp_e_type = EMAIL__find_encoding( tcb_p, list_data_p );
 
             //  Did we find the start of a recipe ?
             if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
@@ -258,7 +258,7 @@ email(
                 if ( rcb_p->recipe_format != RECIPE_FORMAT_NONE )
                 {
                     //  YES:    Prepare for the new recipe
-                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+                    new_rcb_p = rcb_new( tcb_p, rcb_p, rcb_p->recipe_format );
                 }
                 else
                 {

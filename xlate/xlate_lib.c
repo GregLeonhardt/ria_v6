@@ -244,11 +244,6 @@ XLATE__table_input(
 
                 //  Append the new entry to the table
                 list_put_last( xlate_table_p, table_data_p );
-
-                //  Log what is going into the table
-                log_write( MID_DEBUG_0, "XLATE__table_input",
-                              "TO: '%-30s'     FROM: '%-30s'\n",
-                              table_data_p->xlate_to_p, table_data_p->xlate_from_p );
             }
         }
     }

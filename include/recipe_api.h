@@ -82,143 +82,146 @@ enum    recipe_format_e
 struct   recipe_t
 {
     /**
+     *  @param  rcb_p           Pointer to a Recipe Control Block           */
+    struct  rcb_t           *   rcb_p;
+    /**
      *  @param  name            The recipe name or title                    */
-    char                        *   name;
+    char                    *   name;
     /**
      *  @param  recipe_id       A unique identifier for the recipe          */
-    char                        *   recipe_id;
+    char                    *   recipe_id;
     /**
-     *  @param  web_address     The web address the file came from         */
-    char                        *   web_address;
+     *  @param  web_address     The web address the file came from          */
+    char                    *   web_address;
     /**
-     *  @param  dir_name        The directory the recipe was imported from */
-    char                        *   dir_name;
+     *  @param  dir_name        The directory the recipe was imported from  */
+    char                    *   dir_name;
     /**
-     *  @param  file_name       The file the recipe was imported from      */
-    char                        *   file_name;
+     *  @param  file_name       The file the recipe was imported from       */
+    char                    *   file_name;
     /**
-     *  @param  file_date_time  The file creation date & time              */
-    char                        *   file_date_time;
+     *  @param  file_date_time  The file creation date & time               */
+    char                    *   file_date_time;
     /**
-     *  @param  file_size       File size (in bytes)                       */
-    char                        *   file_size;
+     *  @param  file_size       File size (in bytes)                        */
+    char                    *   file_size;
     /**
      *  @param  source_format   Encoding format from the source recipe      */
-    char                        *   source_format;
+    char                    *   source_format;
     /**
      *  @param  author          The person or company that created          */
-    char                        *   author;
+    char                    *   author;
     /**
      *  @param  copyright       (c) XyZ                                     */
-    char                        *   copyright;
+    char                    *   copyright;
     /**
      *  @param  imported_from   File or e-Mail information                  */
-    char                        *   imported_from;
+    char                    *   imported_from;
     /**
      *  @param  group_from      NewsGroup the recipe was posted to          */
-    char                        *   group_from;
+    char                    *   group_from;
     /**
      *  @param  group_subject   Subject used by the NewsGroup               */
-    char                        *   group_subject;
+    char                    *   group_subject;
     /**
      *  @param  group_date      Date & Time the NewsGroup message was sent  */
-    char                        *   group_date;
+    char                    *   group_date;
     /**
      *  @param  posted_by       Who sent the e-Mail                         */
-    char                        *   posted_by;
+    char                    *   posted_by;
     /**
      *  @param  posted_subject  Subject of the e-Mail                       */
-    char                        *   posted_subject;
+    char                    *   posted_subject;
     /**
      *  @param  posted_date     When the e-Mail was sent                    */
-    char                        *   posted_date;
+    char                    *   posted_date;
     /**
      *  @param  edited_by       Who last edited or changed                  */
-    char                        *   edited_by;
+    char                    *   edited_by;
     /**
-     *  @param  formatted by    Who originally formatted                   */
-    char                        *   formatted_by;
+     *  @param  formatted by    Who originally formatted                    */
+    char                    *   formatted_by;
     /**
      *  @param  import_from     Where the recipe was imported from          */
-    char                        *   import_from;
+    char                    *   import_from;
     /**
      *  @param  serves          Number of people                            */
-    char                        *   serves;
+    char                    *   serves;
     /**
      *  @param  serving_size    How much each person is served              */
-    char                        *   servings_size;
+    char                    *   servings_size;
     /**
      *  @param  makes           How many of something the recipe will make  */
-    char                        *   makes;
+    char                    *   makes;
     /**
      *  @param  makes_unit      Unit of measurement for 'makes'             */
-    char                        *   makes_unit;
+    char                    *   makes_unit;
     /**
      *  @param  time_prep       How long is should take to get ready        */
-    char                        *   time_prep;
+    char                    *   time_prep;
     /**
      *  @param  time_wait       After preparation and before cooking        */
-    char                        *   time_wait;
+    char                    *   time_wait;
     /**
      *  @param  time_cook       How long it should take to cook             */
-    char                        *   time_cook;
+    char                    *   time_cook;
     /**
      *  @param  time_rest       After cooked before serving                 */
-    char                        *   time_rest;
+    char                    *   time_rest;
     /**
      *  @param  time_total      All the times added up.                     */
-    char                        *   time_total;
+    char                    *   time_total;
     /**
      *  @param  serves          A short description (1024 MAX.)             */
-    char                        *   description;
+    char                    *   description;
     /**
      *  @param  based_on        Another recipe this one is based on         */
-    char                        *   based_on;
+    char                    *   based_on;
     /**
      *  @param  serve_with      Something to serve with                     */
-    char                        *   serve_with;
+    char                    *   serve_with;
     /**
-     *  @param  wine            Sone wines that would go well              */
-    char                        *   wine;
+     *  @param  wine            Sone wines that would go well               */
+    char                    *   wine;
     /**
      *  @param  rating          How good (0-9)                              */
-    char                        *   rating;
+    char                    *   rating;
     /**
      *  @param  skill           Skill needed to make (0-9)                  */
-    char                        *   skill;
+    char                    *   skill;
     /**
      *  @param  instructions    A single string of the "directions:         */
-    char                        *   instructions;
+    char                    *   instructions;
     /**
      *  @param  source          Where the recipe came from                  */
-    char                        *   source;
+    char                    *   source;
     /**
      *  @param  Appliance       List of appliances needed to make           */
-    struct  list_base_t         *   appliance;
+    struct  list_base_t     *   appliance;
     /**
      *  @param  Cuisine         List of Cuisine this recipe fits            */
-    struct  list_base_t         *   cuisine;
+    struct  list_base_t     *   cuisine;
     /**
      *  @param  Occasion        List of occasions to use this recipe        */
-    struct  list_base_t         *   occasion;
+    struct  list_base_t     *   occasion;
     /**
      *  @param  Course          List of courses to use this recipe          */
-    struct  list_base_t         *   course;
+    struct  list_base_t     *   course;
     /**
      *  @param  Diet            List of diet(s) to use this recipe          */
-    struct  list_base_t         *   diet;
+    struct  list_base_t     *   diet;
     /**
      *  @param  Chapter         List of Chapters for this recipe            */
-    struct  list_base_t         *   chapter;
+    struct  list_base_t     *   chapter;
     /**
      *  @param  ingredient      List of ingredients                         */
-    struct  list_base_t         *   ingredient;
+    struct  list_base_t     *   ingredient;
     /**
      *  @param  directions      List of directions to make                  */
-    struct  list_base_t         *   directions;
+    struct  list_base_t     *   directions;
     /**
      *  @param  notes           Additional notes or modification options    */
-    struct  list_base_t         *   notes;
+    struct  list_base_t     *   notes;
     //------------------------------------------------------------------------
     //  Used by the decoders
     //------------------------------------------------------------------------
@@ -257,12 +260,13 @@ struct  auip_t
 //---------------------------------------------------------------------------
 struct   recipe_t   *
 recipe_new(
-    enum    recipe_format_e         recipe_format
+    struct  rcb_t           *   rcb_p,
+    enum    recipe_format_e     recipe_format
     );
 //---------------------------------------------------------------------------
 void
 recipe_kill(
-    struct   recipe_t           *   recipe_p
+    struct   recipe_t       *   recipe_p
     );
 //---------------------------------------------------------------------------
 enum    recipe_format_e
@@ -272,44 +276,44 @@ recipe_is_start(
 int
 //---------------------------------------------------------------------------
 recipe_is_end(
-    enum    recipe_format_e         recipe_format,
-    char                        *   data_p
+    enum    recipe_format_e     recipe_format,
+    char                    *   data_p
     );
 //---------------------------------------------------------------------------
 void
 recipe_fmt_auip(
-    struct   recipe_t           *   recipe_p,
-    char                        *   auip_data_p,
+    struct   recipe_t       *   recipe_p,
+    char                    *   auip_data_p,
     enum    recipe_format_e         recipe_format
     );
 //---------------------------------------------------------------------------
 void
 recipe_name_cleanup(
-    char                        *   name_p,
-    int                             name_l
+    char                    *   name_p,
+    int                         name_l
     );
 //---------------------------------------------------------------------------
 void
 recipe_append(
-    struct  list_base_t         *   list_p,
-    char                        *   data_p
+    struct  list_base_t     *   list_p,
+    char                    *   data_p
     );
 //---------------------------------------------------------------------------
 void
 recipe_add_instructions(
-    struct   recipe_t           *   recipe_p,
-    char                        *   data_p
+    struct   recipe_t       *   recipe_p,
+    char                    *   data_p
     );
 //---------------------------------------------------------------------------
 void
 recipe_fmt_notes(
-    struct   recipe_t           *   recipe_p,
-    char                        *   data_p
+    struct   recipe_t       *   recipe_p,
+    char                    *   data_p
     );
 //---------------------------------------------------------------------------
 void
 recipe_next_id(
-    struct  recipe_t            *   recipe_p
+    struct  recipe_t        *   recipe_p
     );
 //---------------------------------------------------------------------------
 

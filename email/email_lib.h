@@ -224,11 +224,13 @@ EMAIL__is_group_break(
 //----------------------------------------------------------------------------
 enum    content_type_e
 EMAIL__find_content(
+    struct  tcb_t           *   tcb_p,
     char                    *   data_p
     );
 //----------------------------------------------------------------------------
 enum    encoding_type_e
 EMAIL__find_encoding(
+    struct  tcb_t           *   tcb_p,
     char                    *   data_p
     );
 //----------------------------------------------------------------------------

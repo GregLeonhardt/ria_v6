@@ -44,8 +44,10 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "tcb_api.h"            //  API for all tcb_*               PUBLIC
+#include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "email_api.h"          //  API for all email_*             PUBLIC
-#include "decode_mmf_api.h"            //  API for all mmf_*               PUBLIC
+#include "decode_mmf_api.h"     //  API for all mmf_*               PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
 #include "recipe_api.h"         //  API for all recipe_*            PUBLIC
@@ -90,6 +92,7 @@
 /**
  *  Create and initialize a new recipe structure.
  *
+ *  @param  rcb_p               Pointer to a Recipe Control Block
  *  @param  recipe_format       The recipe format being decoded
  *
  *  @return recipe_p            Primary structure for a recipe.
@@ -100,6 +103,7 @@
 
 struct   recipe_t   *
 recipe_new(
+    struct  rcb_t           *   rcb_p,
     enum    recipe_format_e     recipe_format
     )
 {
@@ -121,8 +125,8 @@ recipe_new(
 
     log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
-    //  Initialize the new storage.
-    memset( (char*)recipe_p, 0x00, sizeof( struct recipe_t ) );
+    //  Link the recipe structure to the Recipe Control Block
+    recipe_p->rcb_p = rcb_p;
 
     //  Create the lists needed by the structure
     recipe_p->appliance  = list_new( );
@@ -275,6 +279,7 @@ recipe_kill(
      *  Function
      ************************************************************************/
 
+    if ( recipe_p->rcb_p != NULL)            recipe_p->rcb_p->recipe_p = NULL;
     if ( recipe_p->name != NULL)             mem_free( recipe_p->name );
     if ( recipe_p->recipe_id != NULL)        mem_free( recipe_p->recipe_id );
     if ( recipe_p->dir_name != NULL)         mem_free( recipe_p->dir_name );
@@ -322,7 +327,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->appliance ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->appliance ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -336,7 +341,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->cuisine ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->cuisine ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -350,7 +355,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->occasion ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->occasion ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -364,7 +369,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->course ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->course ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -378,7 +383,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->diet ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->diet ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -392,7 +397,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->chapter ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->chapter ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -411,7 +416,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->ingredient ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->ingredient ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -425,7 +430,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->directions ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->directions ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -439,7 +444,7 @@ recipe_kill(
     }
     if ( list_kill( recipe_p->notes ) != true )
     {
-        log_write( MID_FATAL, "recipe_kill",
+        log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->notes ) failed\n" );
     }
     //------------------------------------------------------------------------
@@ -845,7 +850,7 @@ recipe_fmt_auip(
             RECIPE__new_auip( recipe_p, local_amount, local_unit,
                               local_ingred, local_prep );
 
-            log_write( MID_DEBUG_0, "recipe_fmt_auip",
+            log_write( MID_DEBUG_0, recipe_p->rcb_p->tcb_p->thread_name,
                           "A: '%s' U: '%s' I: '%s' P: '%s'\n",
                           local_amount, local_unit, local_ingred, local_prep );
         }

@@ -138,6 +138,10 @@ int                             router_queue_id;
 /**
  * @param decode_tcb            TCB list for all encode threads             */
     struct  tcb_t           *   encode_tcb[ THREAD_COUNT_ENCODE ];
+//----------------------------------------------------------------------------
+/**
+ * @param export_tcb            TCB list for all export threads             */
+    struct  tcb_t           *   export_tcb[ THREAD_COUNT_EXPORT ];
 //---------------------------------------------------------------------------
 /**
  *  @param  store_value_p       ID number for the DECODE queue              */

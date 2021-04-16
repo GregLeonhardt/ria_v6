@@ -42,6 +42,7 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+#include "recipe_api.h"         //  API for all recipe_*            PUBLIC
                                 //*******************************************
 #include "decode_mmf_api.h"     //  API for all decode_mmf_*        PUBLIC
 #include "decode_mmf_lib.h"     //  API for all DECODE_MMF__*       PRIVATE
@@ -203,7 +204,7 @@ decode_mmf(
      ************************************************************************/
 
     //  Debug log the current activity.
-    log_write( MID_DEBUG_0, "mmf_decode",
+    log_write( MID_DEBUG_0, rcb_p->tcb_p->thread_name,
                   "Entering with %6d lines of text\n",
                   list_query_count( rcb_p->import_list_p ) );
 
@@ -218,7 +219,7 @@ decode_mmf(
      ************************************************************************/
 
     //  Allocate a new recipe data structure
-    rcb_p->recipe_p = recipe_new( RECIPE_FORMAT_MMF );
+    rcb_p->recipe_p = recipe_new( rcb_p, RECIPE_FORMAT_MMF );
 
     /************************************************************************
      *  Function Body
@@ -233,7 +234,7 @@ decode_mmf(
         list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
         //  Debug log output
-        log_write( MID_DEBUG_0, "mmf_decode",
+        log_write( MID_DEBUG_0, rcb_p->tcb_p->thread_name,
                       "'%.60s'\n", list_data_p );
 
         //  Process the new data
@@ -268,7 +269,7 @@ decode_mmf(
                     text_title_case( rcb_p->recipe_p->name, rcb_p->recipe_p->name );
 
                     //  Log the new title
-                    log_write( MID_INFO, "mmf_decode",
+                    log_write( MID_INFO, rcb_p->tcb_p->thread_name,
                                "'%s'\n", rcb_p->recipe_p->name );
 
                     //  Change decode state

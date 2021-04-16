@@ -492,6 +492,7 @@ EMAIL__is_group_break(
 /**
  *  Discover the 'Content-Type:' of the current text string.
  *
+ *  @param  tcb_p               Pointer to Thread Control Block
  *  @param  data_p              Pointer to a line of text data
  *
  *  @return content_type        CT_NONE       = Content-Type: not found
@@ -506,15 +507,16 @@ EMAIL__is_group_break(
 
 enum    content_type_e
 EMAIL__find_content(
-    char                        *   data_p
+    struct  tcb_t           *   tcb_p,
+    char                    *   data_p
     )
 {
     /**
      * @param tmp_data_p        Pointer to a temp data buffer               */
-    char                        *   tmp_data_p;
+    char                    *   tmp_data_p;
     /**
      * @param content_type      Decoded content type.                       */
-    enum    content_type_e          content_type;
+    enum    content_type_e      content_type;
 
     /************************************************************************
      *  Function Initialization
@@ -621,7 +623,7 @@ EMAIL__find_content(
             content_type = CT_UNKNOWN;
 
             //  STOP and display the string we didn't decode.
-            log_write( MID_WARNING, "email_find_content",
+            log_write( MID_WARNING, tcb_p->thread_name,
                           "[%s]\n", data_p );
         }
     }
@@ -638,6 +640,7 @@ EMAIL__find_content(
 /**
  *  Discover the 'Content-Transfer-Encoding:' of the current text string.
  *
+ *  @param  tcb_p               Pointer to Thread Control Block
  *  @param  data_p              Pointer to a line of text data
  *
  *  @return encoding_type       CTE_NONE        Content-Transfer-Encoding: not found
@@ -653,6 +656,7 @@ EMAIL__find_content(
 
 enum    encoding_type_e
 EMAIL__find_encoding(
+    struct  tcb_t               *   tcb_p,
     char                        *   data_p
     )
 {
@@ -736,7 +740,7 @@ EMAIL__find_encoding(
             encoding_type = CTE_UNKNOWN;
 
             //  STOP and display the string we didn't decode.
-            log_write( MID_WARNING, "email_find_encoding",
+            log_write( MID_WARNING, tcb_p->thread_name,
                           "[%s]\n", data_p );
         }
     }

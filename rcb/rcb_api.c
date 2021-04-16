@@ -108,11 +108,10 @@ rcb_kill(
      *  Function Body
      ************************************************************************/
 
-    //  Is the FILE-INFORMATION structure present ?
+    //  Clear the FILE-INFORMATION structure pointer ?
     if ( rcb_p->file_info_p != NULL )
     {
         //  Free it
-        mem_free( rcb_p->file_info_p );
         rcb_p->file_info_p = NULL;
     }
     //------------------------------------------------------------------------
@@ -167,6 +166,7 @@ rcb_kill(
 /**
  *  Initialize the Translations tables.
  *
+ *  @param  tcb_p               Pointer to the current Thread Control Block
  *  @param  rcb_p               Pointer to the current Recipe Control Block
  *  @param  recipe_format       The recipe format for this recipe.
  *
@@ -178,6 +178,7 @@ rcb_kill(
 
 struct  rcb_t   *
 rcb_new(
+    struct  tcb_t           *   tcb_p,
     struct  rcb_t           *   rcb_p,
     enum    recipe_format_e     recipe_format
     )
@@ -197,6 +198,9 @@ rcb_new(
 
     //  YES:    Allocate a new recipe control block
     new_rcb_p = mem_malloc( sizeof( struct rcb_t ) );
+
+    //  Set the initial thread control block
+    new_rcb_p->tcb_p = tcb_p;
 
     //  Is this going to be a split of an existing Recipe Control Block
     if ( rcb_p != NULL )

@@ -260,7 +260,7 @@ encode(
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_LOGONLY, tcb_p->thread_name,
+        log_write( MID_INFO, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->display_name );
 
@@ -282,6 +282,9 @@ encode(
 //          encode_ria( rcb_p );    //  @ToDo:  encode_ria
             encode_txt( rcb_p );    //  Universal text input format
         }
+
+        //  Kill the Recipe Control Block
+        rcb_kill( rcb_p );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

@@ -676,9 +676,6 @@ encode_txt(
     //  Close the output file.
     file_close( out_file_fp );
 
-    //  Free all storage consumed by the recipe.
-    recipe_kill( rcb_p->recipe_p );
-
     //  DONE!
 }
 /****************************************************************************/

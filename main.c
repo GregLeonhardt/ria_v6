@@ -917,14 +917,12 @@ main(
         //  Is there anything in the file ?
         if ( text_to_int( file_info_p->file_size ) >= 100 )
         {
-            //  @ToDo:  Use the router to send the message.
-
             /**
              *  @param  rcb_p           Recipe Control block                    */
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
-            rcb_p = rcb_new( NULL, RECIPE_FORMAT_NONE );
+            rcb_p = rcb_new( NULL, NULL, RECIPE_FORMAT_NONE );
 
             //  Put the file info pointer into the recipe control block
             rcb_p->file_info_p = file_info_p;
@@ -936,6 +934,14 @@ main(
                       &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
                       file_info_p->file_name );
 
+        //  @ToDo:  Use the router to send the message.
+#if 0
+            //  Set the packet destination
+            rcb_p->dst_thread = DST_EMAIL;
+
+            //  Put it in one of the IMPORT queue's
+            queue_put_payload( router_queue_id, rcb_p  );
+#else
             //  Set the base numbers
             id = 99999999;
             queue_size = 99999999;
@@ -961,11 +967,15 @@ main(
 
             //  Put it in one of the IMPORT queue's
             queue_put_payload( id, rcb_p  );
+#endif
 
             //  Progress report.
-            log_write( MID_LOGONLY, "main",
+            log_write( MID_INFO, "main",
                        "Q-%03d: Snd: FILE-ID: %s\n", id,
                        rcb_p->display_name );
+
+            //  Slow things down
+            usleep( 5000 );
         }
         else
         {

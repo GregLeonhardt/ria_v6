@@ -270,7 +270,9 @@ decode_mmf(
 
                     //  Log the new title
                     log_write( MID_INFO, rcb_p->tcb_p->thread_name,
-                               "'%s'\n", rcb_p->recipe_p->name );
+                               "'%s - %s'\n",
+                               rcb_p->display_name,
+                               rcb_p->recipe_p->name );
 
                     //  Change decode state
                     mmf_state = MMF_DS_YIELD;

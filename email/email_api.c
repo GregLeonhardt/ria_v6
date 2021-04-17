@@ -192,7 +192,7 @@ email(
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_INFO, tcb_p->thread_name,
+        log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->display_name );
 
@@ -302,6 +302,9 @@ email(
             }
 
         }
+
+        //  Release the lock on the level 3 list
+        list_user_unlock( rcb_p->import_list_p, list_lock_key );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

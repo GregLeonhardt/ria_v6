@@ -133,7 +133,7 @@ export(
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_INFO, tcb_p->thread_name,
+        log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->display_name );
 

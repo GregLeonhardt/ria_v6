@@ -30,6 +30,7 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <unistd.h>             //  UNIX standard library.
                                 //*******************************************
 
 /****************************************************************************
@@ -141,7 +142,7 @@ import(
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
         //  Progress report.
-        log_write( MID_INFO, tcb_p->thread_name,
+        log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->display_name );
 
@@ -204,6 +205,9 @@ import(
 
         //  Put it in one of the IMPORT queue's
         queue_put_payload( router_queue_id, rcb_p  );
+
+        //  Slow things down
+        usleep( 20000 );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

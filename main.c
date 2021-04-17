@@ -970,12 +970,9 @@ main(
 #endif
 
             //  Progress report.
-            log_write( MID_INFO, "main",
+            log_write( MID_LOGONLY, "main",
                        "Q-%03d: Snd: FILE-ID: %s\n", id,
                        rcb_p->display_name );
-
-            //  Slow things down
-            usleep( 5000 );
         }
         else
         {

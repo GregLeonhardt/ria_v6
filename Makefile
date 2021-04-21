@@ -12,7 +12,9 @@ CFLAGS		=	-DDEBUG -Wall -g -MMD
 CFLAGS		+=	-I. -Iinclude
 CFLAGS		+=	-I$(LIBTOOLS)/include/
 #-----------------------------------------------------------------------
-LFLAGS		=	-o 
+LFLAGS		=	-o
+#-----------------------------------------------------------------------
+LLIBRARY	=	$(LIBTOOLS)/libtools.a -lcrypto -lpthread -ldl
 #-----------------------------------------------------------------------
 
 ########################################################################
@@ -57,7 +59,7 @@ all: $(APPNAME) Makefile
 
 $(APPNAME): $(OBJ) ../tools/libtools.a
 	@echo "BUILD THE APPLICATION:"
-	$(CC) $(LFLAGS) $(APPNAME) $(OBJ) $(LIBTOOLS)/libtools.a -lpthread -ldl
+	$(CC) $(LFLAGS) $(APPNAME) $(OBJ) $(LLIBRARY)
 
 -include $(DEP)
 

@@ -139,7 +139,7 @@ decode_post(
         //  Find "S(Imported From):" in the directions
         DECODE_POST__directions_import_from( rcb_p );
 
-        //  @ToDo   Ratings:
+        //  @ToDo: 3 Ratings:
 
         //  Find "NOTES:" in the directions
         DECODE_POST__directions_notes( rcb_p );

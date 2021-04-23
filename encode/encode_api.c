@@ -91,7 +91,7 @@
  *  @return data_p              Pointer to the input file name string.
  *
  *  @note
- *      @ToDo:  encode_get_if
+ *      @ToDo: 3 encode_get_if
  *
  ****************************************************************************/
 
@@ -134,7 +134,7 @@ encode_get_if(
  *  @return void                No return code from this function.
  *
  *  @note
- *      @ToDo:  encode_set_dir
+ *      @ToDo: 3 encode_set_dir
  *
  ****************************************************************************/
 
@@ -172,7 +172,7 @@ encode_set_dir(
  *  @return data_p              Pointer to the input directory name string.
  *
  *  @note
- *      @ToDo:  encode_get_dir
+ *      @ToDo: 3 encode_get_dir
  *
  ****************************************************************************/
 
@@ -275,11 +275,11 @@ encode(
         if ( rcb_p->recipe_p != NULL )
         {
             //  YES:    Go encode it.
-//          encode_mmf( rcb_p );    //  @ToDo:  encode_mmf
-//          encode_mx2( rcb_p );    //  @ToDo:  encode_mx2
-//          encode_mxp( rcb_p );    //  @ToDo:  encode_mxp
-//          encode_rxf( rcb_p );    //  @ToDo:  encode_rxf
-//          encode_ria( rcb_p );    //  @ToDo:  encode_ria
+//          encode_mmf( rcb_p );    //  @ToDo: 3 encode_mmf
+//          encode_mx2( rcb_p );    //  @ToDo: 3 encode_mx2
+//          encode_mxp( rcb_p );    //  @ToDo: 3 encode_mxp
+//          encode_rxf( rcb_p );    //  @ToDo: 3 encode_rxf
+//          encode_ria( rcb_p );    //  @ToDo: 3 encode_ria
             encode_txt( rcb_p );    //  Universal text input format
         }
 

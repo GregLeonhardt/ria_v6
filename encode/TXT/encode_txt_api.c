@@ -10,6 +10,26 @@
  *  library components of the 'encode_txt' library.
  *
  *  @note
+ *          @@@@@
+ *          Jules Chicken Curry
+ *                                                          (blank line)
+ *          note (such as, this is a favorite)
+ *                                                          (blank line)
+ *          1 chicken
+ *          1 jar Pataks mild curry sauce
+ *          6 sprigs cilantro for garnish
+ *                                                          (blank line)
+ *          Prepare chicken, pour curry sauce over.
+ *
+ *          Bake until done, garnishing with cilantro.
+ *
+ *          Serves 4-6
+ *                                                          (blank line)
+ *          @@@@@
+ *
+ *  @ToDo: 1 Replace "Format:" with "Source:" file with data/time.
+ *  @ToDo: 0 Conform to the published format
+ *
  *
  ****************************************************************************/
 
@@ -61,7 +81,7 @@
 //----------------------------------------------------------------------------
 #define DIR_FORMATTED           "Recipes_Formatted"
 //----------------------------------------------------------------------------
-//  @ToDo:  SUBDIRECTORY_L ?
+//  @ToDo: 3 SUBDIRECTORY_L ?
 #define SUBDIRECTORY_L          ( 4 )
 //----------------------------------------------------------------------------
 
@@ -516,7 +536,7 @@ encode_txt(
     fprintf( out_file_fp, "Copyright:      %s\n", rcb_p->recipe_p->copyright );
     //-----------------------------------------------------------------------
     //  TIME WAIT:
-    //  @TODO:  This field isn't decoded yet!
+    //  @ToDo: 2 This field isn't decoded yet!
     //          I'm using the resting time as a place holder.
     fprintf( out_file_fp, "Time Wait:      " );
     if ( rcb_p->recipe_p->time_rest != NULL )

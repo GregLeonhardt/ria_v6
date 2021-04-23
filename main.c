@@ -35,11 +35,12 @@
  *          The job data is encoded and returned back to main with a
  *          destination of export.
  *
+ *  @ToDo: 1 Enable the file delete flag.
+ *  @ToDo: 0 Create and wire in an EXPORT thread.
+ *
  ****************************************************************************/
 
 //  This is a global to do list:
-//  @ToDo:  Why no duplicate output files ?
-//  @ToDo:  free tokens.
 
 /****************************************************************************
  *  Compiler directives
@@ -52,7 +53,7 @@
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 0
+#define VER_MIN                 2
 
 /****************************************************************************
  * System Function API
@@ -638,12 +639,6 @@ main(
     /**
      * @param thread_id         Unique thread id number                     */
     int                         thread_id;
-    /**
-     *  @param  id              Thread ID with smallest queue               */
-    int                         id;
-    /**
-     *  @param  queue_size      Queue size                                  */
-    int                         queue_size;
 
     /************************************************************************
      *  Application Initialization
@@ -934,44 +929,15 @@ main(
                       &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
                       file_info_p->file_name );
 
-        //  @ToDo:  Use the router to send the message.
-#if 0
             //  Set the packet destination
-            rcb_p->dst_thread = DST_EMAIL;
+            rcb_p->dst_thread = DST_IMPORT;
 
             //  Put it in one of the IMPORT queue's
             queue_put_payload( router_queue_id, rcb_p  );
-#else
-            //  Set the base numbers
-            id = 99999999;
-            queue_size = 99999999;
-
-            //  Locate the thread with the smallest queue depth
-            for( thread_id = 0;
-                 thread_id < THREAD_COUNT_IMPORT;
-                 thread_id += 1 )
-            {
-                int                     queue_count;
-
-                //  Get the queue count for this queue
-                queue_count = queue_get_count( import_tcb[ thread_id ]->queue_id );
-
-                //  Is it smaller than the current smallest ?
-                if ( queue_count < queue_size )
-                {
-                    //  YES:    Use this queue
-                    id = import_tcb[ thread_id ]->queue_id;
-                    queue_size = queue_count;
-                }
-            }
-
-            //  Put it in one of the IMPORT queue's
-            queue_put_payload( id, rcb_p  );
-#endif
 
             //  Progress report.
             log_write( MID_LOGONLY, "main",
-                       "Q-%03d: Snd: FILE-ID: %s\n", id,
+                       "Q-%03d: Snd: FILE-ID: %s\n", router_queue_id,
                        rcb_p->display_name );
         }
         else

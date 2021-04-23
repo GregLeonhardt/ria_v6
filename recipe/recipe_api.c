@@ -494,7 +494,7 @@ recipe_is_start(
      *  Function
      ************************************************************************/
 
-#if 0   //  @ToDo:  bof_is_start()
+#if 0   //  @ToDo: 3 bof_is_start()
     //-------------------------------------------------------------------
     //  Big-Oven BOF
     if (    ( recipe_format == RECIPE_FORMAT_NONE )
@@ -504,7 +504,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_BOF;
     }
 #endif
-#if 0   //  @ToDo:  cp2_is_start()
+#if 0   //  @ToDo: 3 cp2_is_start()
     //-------------------------------------------------------------------
     //  CookenPro 2.0
     else
@@ -515,7 +515,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_CP2;
     }
 #endif
-#if 0   //  @ToDo:  erd_is_start()
+#if 0   //  @ToDo: 3 erd_is_start()
     //-------------------------------------------------------------------
     //  Easy Recipe Deluxe
     else
@@ -526,7 +526,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_ERD;
     }
 #endif
-#if 0   //  @ToDo:  gf2_is_start()
+#if 0   //  @ToDo: 3 gf2_is_start()
     //-------------------------------------------------------------------
     //  Generic-Recipe-Format @@@@@
     else
@@ -537,7 +537,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_GF2;
     }
 #endif
-#if 0   //  @ToDo:  grf_is_start()
+#if 0   //  @ToDo: 3 grf_is_start()
     //-------------------------------------------------------------------
     //  Generic-Recipe-Format [[[[[
     else
@@ -557,7 +557,7 @@ recipe_is_start(
         //  YES:    Set the format to use
         recipe_format = RECIPE_FORMAT_MMF;
     }
-#if 0   //  @ToDo:  mx2_is_start()
+#if 0   //  @ToDo: 3 mx2_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MX2
     else
@@ -568,7 +568,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MX2;
     }
 #endif
-#if 0   //  @ToDo:  mxp_is_start()
+#if 0   //  @ToDo: 2 mxp_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MXP
     else
@@ -579,7 +579,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MXP;
     }
 #endif
-#if 0   //  @ToDo:  nyc_is_start()
+#if 0   //  @ToDo: 3 nyc_is_start()
     //-------------------------------------------------------------------
     //  Now You're Cooking!
     else
@@ -694,7 +694,7 @@ recipe_is_end(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_fmt_auip     Move to decode_fmt_auip
+//  @ToDo: 1 recipe_fmt_auip    Move to decode_fmt_auip
 
 void
 recipe_fmt_auip(
@@ -877,7 +877,7 @@ recipe_fmt_auip(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_name_cleanup     Move to decode_name_cleanup
+//  @ToDo: 1 recipe_name_cleanup     Move to decode_name_cleanup
 
 void
 recipe_name_cleanup(
@@ -1146,7 +1146,7 @@ recipe_name_cleanup(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_append     Move to decode_append
+//  @ToDo: 1 recipe_append     Move to decode_append
 
 void
 recipe_append(
@@ -1240,7 +1240,7 @@ recipe_append(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_add_instructions     Move to decode_add_instructions
+//  @ToDo: 1 recipe_add_instructions     Move to decode_add_instructions
 
 void
 recipe_add_instructions(
@@ -1312,7 +1312,7 @@ recipe_add_instructions(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_fmt_notes     Move to decode_fmt_notes
+//  @ToDo: 1 recipe_fmt_notes     Move to decode_fmt_notes
 
 void
 recipe_fmt_notes(
@@ -1629,7 +1629,7 @@ recipe_fmt_notes(
  *
  ****************************************************************************/
 
-//  @ToDo:  recipe_next_id     Move to decode_next_id
+//  @ToDo: 1 recipe_next_id     Move to decode_next_id
 
 void
 recipe_next_id(

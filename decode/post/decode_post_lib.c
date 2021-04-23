@@ -295,9 +295,6 @@ DECODE_POST__title_information(
      *  Function Initialization
      ************************************************************************/
 
-    //  Allocate storage for the local copy of the recipe title
-    name_p = mem_malloc( ( strlen( rcb_p->recipe_p->name ) + 1 ) );
-    log_write( MID_DEBUG_1, "decode_lib.c", "Line: %d\n", __LINE__ );
 
     /************************************************************************
      *  Function
@@ -306,7 +303,11 @@ DECODE_POST__title_information(
     //  Is there a recipe title to analyze ?
     if ( rcb_p->recipe_p->name != NULL )
     {
-        //  YES:    Copy the recipe title to the local buffer
+        //  YES:    Allocate storage for the local copy of the recipe title
+        name_p = mem_malloc( ( strlen( rcb_p->recipe_p->name ) + 1 ) );
+        log_write( MID_DEBUG_1, "decode_lib.c", "Line: %d\n", __LINE__ );
+
+        //  Copy the recipe title to the local buffer
         memcpy( name_p, rcb_p->recipe_p->name, strlen( rcb_p->recipe_p->name ) );
 
         //  Clean the next word buffer
@@ -327,14 +328,14 @@ DECODE_POST__title_information(
                 DECODE_POST__save_chapter( chapter_p, rcb_p );
             }
         }
+
+        //  Release the recipe name buffer
+        mem_free( name_p );
     }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
-
-    //  Release the recipe name buffer
-    mem_free( name_p );
 
     //  DONE!
 }
@@ -2617,7 +2618,7 @@ DECODE_POST__directions_notes(
  *
  ****************************************************************************/
 
-#if 0
+#if 0   //  @ToDo: 1 Remove the old 'DECODE_POST__recipe_id' function code.
 void
 DECODE_POST__recipe_id(
     struct  rcb_t           *   rcb_p

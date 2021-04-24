@@ -211,7 +211,13 @@ email(
 
         //  Is there anything to scan ?
         if ( list_data_p == NULL )
+        {
+            //  Release the lock on the level 3 list
+            list_user_unlock( rcb_p->import_list_p, list_lock_key );
+
+            //  Start over again.
             continue;
+        }
 
         if ( EMAIL__is_start( list_data_p ) == true )
         {

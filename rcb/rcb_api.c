@@ -116,7 +116,7 @@ rcb_kill(
     }
     //------------------------------------------------------------------------
     //  Clear the display name string
-    memset( rcb_p->display_name, '\0', sizeof( rcb_p->display_name ) );
+    memset( rcb_p->file_path, '\0', sizeof( rcb_p->file_path ) );
     //------------------------------------------------------------------------
     //  Reset the destination thread id.
     rcb_p->dst_thread = DST_INVALID;
@@ -209,9 +209,9 @@ rcb_new(
         new_rcb_p->file_info_p = rcb_p->file_info_p;
 
         //  Copy the display file name
-        memcpy( new_rcb_p->display_name,
-                rcb_p->display_name,
-                sizeof( rcb_p->display_name ) );
+        memcpy( new_rcb_p->file_path,
+                rcb_p->file_path,
+                sizeof( rcb_p->file_path ) );
     }
 
     //  Create a new list

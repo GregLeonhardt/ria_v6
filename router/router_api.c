@@ -152,7 +152,7 @@ router(
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
-                   tcb_p->queue_id, rcb_p->display_name );
+                   tcb_p->queue_id, rcb_p->file_path );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
@@ -180,7 +180,7 @@ router(
                 log_write( MID_LOGONLY, tcb_p->thread_name,
                            "Q-%03d: Snd: FILE-ID: %s\n",
                            import_tcb[ import_id ]->queue_id,
-                           rcb_p->display_name );
+                           rcb_p->file_path );
 
                 if ( ++import_id >= THREAD_COUNT_IMPORT )
                     import_id = 0;
@@ -198,7 +198,7 @@ router(
                 log_write( MID_LOGONLY, tcb_p->thread_name,
                            "Q-%03d: Snd: FILE-ID: %s\n",
                            email_tcb[ email_id ]->queue_id,
-                           rcb_p->display_name );
+                           rcb_p->file_path );
 
                 if ( ++email_id >= THREAD_COUNT_EMAIL )
                     email_id = 0;
@@ -216,7 +216,7 @@ router(
                 log_write( MID_LOGONLY, tcb_p->thread_name,
                            "Q-%03d: Snd: FILE-ID: %s\n",
                            decode_tcb[ decode_id ]->queue_id,
-                           rcb_p->display_name );
+                           rcb_p->file_path );
 
                 if ( ++decode_id >= THREAD_COUNT_DECODE )
                     decode_id = 0;
@@ -234,7 +234,7 @@ router(
                 log_write( MID_LOGONLY, tcb_p->thread_name,
                            "Q-%03d: Snd: FILE-ID: %s\n",
                            encode_tcb[ encode_id ]->queue_id,
-                           rcb_p->display_name );
+                           rcb_p->file_path );
 
                 if ( ++encode_id >= THREAD_COUNT_ENCODE )
                     encode_id = 0;
@@ -252,7 +252,7 @@ router(
                 log_write( MID_LOGONLY, tcb_p->thread_name,
                            "Q-%03d: Snd: FILE-ID: %s\n",
                            export_tcb[ export_id ]->queue_id,
-                           rcb_p->display_name );
+                           rcb_p->file_path );
 
                 if ( ++export_id >= THREAD_COUNT_EXPORT )
                     export_id = 0;

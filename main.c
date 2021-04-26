@@ -37,6 +37,7 @@
  *
  *  @ToDo: 1 Enable the file delete flag.
  *  @ToDo: 0 Create and wire in an EXPORT thread.
+ *  @ToDo: 0 Memory Leak
  *
  ****************************************************************************/
 
@@ -923,8 +924,8 @@ main(
             rcb_p->file_info_p = file_info_p;
 
             //  Set the display file name
-            memset( rcb_p->display_name, '\0', sizeof( rcb_p->display_name ) );
-            snprintf( rcb_p->display_name, sizeof( rcb_p->display_name ),
+            memset( rcb_p->file_path, '\0', sizeof( rcb_p->file_path ) );
+            snprintf( rcb_p->file_path, sizeof( rcb_p->file_path ),
                       "%s/%s",
                       &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
                       file_info_p->file_name );
@@ -938,7 +939,7 @@ main(
             //  Progress report.
             log_write( MID_LOGONLY, "main",
                        "Q-%03d: Snd: FILE-ID: %s\n", router_queue_id,
-                       rcb_p->display_name );
+                       rcb_p->file_path );
         }
         else
         {

@@ -271,7 +271,7 @@ decode_mmf(
                     //  Log the new title
                     log_write( MID_LOGONLY, rcb_p->tcb_p->thread_name,
                                "'%s - %s'\n",
-                               rcb_p->display_name,
+                               rcb_p->file_path,
                                rcb_p->recipe_p->name );
 
                     //  Change decode state

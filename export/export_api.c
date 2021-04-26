@@ -135,7 +135,7 @@ export(
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
-                   tcb_p->queue_id, rcb_p->display_name );
+                   tcb_p->queue_id, rcb_p->file_path );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;

@@ -592,25 +592,21 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  <IMPORTED_FROM>
-    if (    ( rcb_p->recipe_p->dir_name         != NULL )
-         || ( rcb_p->recipe_p->file_name        != NULL )
-         || ( rcb_p->recipe_p->file_size        != NULL )
-         || ( rcb_p->recipe_p->file_date_time   != NULL ) )
+    if (    ( rcb_p->file_info_p->dir_name         != NULL )
+         || ( rcb_p->file_info_p->file_name        != NULL )
+         || ( rcb_p->file_info_p->file_size        != NULL )
+         || ( rcb_p->file_info_p->date_time   != NULL ) )
     {
-        if ( rcb_p->recipe_p->dir_name != NULL )
+        if ( rcb_p->file_path != NULL )
         {
-            fprintf( out_file_fp, "FileDirectory:  %s\n", rcb_p->recipe_p->dir_name );
+            fprintf( out_file_fp, "FileName:       %s\n", rcb_p->file_path );
         }
-        if ( rcb_p->recipe_p->file_name != NULL )
+        if ( rcb_p->file_info_p->date_time != NULL )
         {
-            fprintf( out_file_fp, "FileName:       %s\n", rcb_p->recipe_p->file_name );
-        }
-        if ( rcb_p->recipe_p->file_date_time != NULL )
-        {
-            fprintf( out_file_fp, "FileSize:       %s\n", rcb_p->recipe_p->file_size );
+            fprintf( out_file_fp, "FileSize:       %s\n", rcb_p->file_info_p->file_size );
         }
         {
-            fprintf( out_file_fp, "FileDateTime:   %s\n", rcb_p->recipe_p->file_date_time );
+            fprintf( out_file_fp, "FileDateTime:   %s\n", rcb_p->file_info_p->date_time );
         }
     }
     //-----------------------------------------------------------------------

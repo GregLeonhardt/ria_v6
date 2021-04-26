@@ -67,8 +67,8 @@ struct  rcb_t
      *  @param  file_info_p     Pointer to a file information structure     */
     struct  file_info_t     *   file_info_p;
     /**
-     *  @param  display_name    Display file name                           */
-    char                        display_name[ FILENAME_MAX ];
+     *  @param  file_path       File path & name                            */
+    char                        file_path[ FILENAME_MAX ];
     /**
      *  @param  destination     Destination Thread                          */
     enum    destination_e       dst_thread;

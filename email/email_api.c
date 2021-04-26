@@ -150,6 +150,7 @@ email(
     /**
      * @param list_lock_key     File list key                               */
     int                         list_lock_key;
+#if 0   //  @ToDo: 3 Enable e-Mail decode
     /**
      * @param email_flag        A mark on the wall if wr are doing an e-Mail*/
     int                         email_flag;
@@ -162,6 +163,7 @@ email(
     /**
      * @param boundary_type     e-Mail boundary type                        */
 //  enum    boundary_type_e     boundary_type;
+#endif
 
     /************************************************************************
      *  Function Initialization
@@ -206,6 +208,7 @@ email(
         //  Lock the list for fast(er) access
         list_lock_key = list_user_lock( rcb_p->import_list_p );
 
+#if 0   //  @ToDo: 3 Enable e-Mail decode
         //  Is this the start of a new e-Mail ?
         list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
 
@@ -235,24 +238,28 @@ email(
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
             mem_free( list_data_p );
         }
-
+#endif
         //  Scan the list
         for( list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
              list_data_p != NULL;
              list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
         {
+#if 0   //  @ToDo: 3 Enable e-Mail decode
             /**
              * @param tmp_c_type        e-Mail content type                 */
             enum    content_type_e          tmp_c_type;
             /**
              * @param tmp_e_type        e-Mail encoding type                */
             enum    encoding_type_e         tmp_e_type;
+#endif
 
             //  Remove the data from the level 1 list
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
+#if 0   //  @ToDo: 3 Enable e-Mail decode
             tmp_c_type = EMAIL__find_content( tcb_p, list_data_p );
             tmp_e_type = EMAIL__find_encoding( tcb_p, list_data_p );
+#endif
 
             //  Did we find the start of a recipe ?
             if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
@@ -292,19 +299,6 @@ email(
                     //  Clear the new RCB pointer
                     new_rcb_p = NULL;
                 }
-            }
-
-
-
-            //  @ToDo: 3 This is only here to avoid compile warnings
-            if (    ( email_flag    ==     true )
-                 && ( tmp_c_type    ==  CT_NONE )
-                 && ( tmp_e_type    == CTE_NONE )
-                 && ( content_type  ==  CT_NONE )
-                 && ( encoding_type == CTE_NONE ) )
-            {
-                //  YES:
-                tmp_c_type = content_type;
             }
 
         }

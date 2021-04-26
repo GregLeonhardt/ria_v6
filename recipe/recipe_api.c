@@ -282,10 +282,6 @@ recipe_kill(
     if ( recipe_p->rcb_p != NULL)            recipe_p->rcb_p->recipe_p = NULL;
     if ( recipe_p->name != NULL)             mem_free( recipe_p->name );
     if ( recipe_p->recipe_id != NULL)        mem_free( recipe_p->recipe_id );
-    if ( recipe_p->dir_name != NULL)         mem_free( recipe_p->dir_name );
-    if ( recipe_p->file_name != NULL)        mem_free( recipe_p->file_name );
-    if ( recipe_p->file_date_time != NULL)   mem_free( recipe_p->file_date_time );
-    if ( recipe_p->file_size != NULL)        mem_free( recipe_p->file_size );
     if ( recipe_p->author != NULL)           mem_free( recipe_p->author );
     if ( recipe_p->source_format != NULL)    mem_free( recipe_p->source_format );
     if ( recipe_p->group_from != NULL)       mem_free( recipe_p->group_from );

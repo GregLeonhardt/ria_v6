@@ -94,18 +94,6 @@ struct   recipe_t
      *  @param  web_address     The web address the file came from          */
     char                    *   web_address;
     /**
-     *  @param  dir_name        The directory the recipe was imported from  */
-    char                    *   dir_name;
-    /**
-     *  @param  file_name       The file the recipe was imported from       */
-    char                    *   file_name;
-    /**
-     *  @param  file_date_time  The file creation date & time               */
-    char                    *   file_date_time;
-    /**
-     *  @param  file_size       File size (in bytes)                        */
-    char                    *   file_size;
-    /**
      *  @param  source_format   Encoding format from the source recipe      */
     char                    *   source_format;
     /**

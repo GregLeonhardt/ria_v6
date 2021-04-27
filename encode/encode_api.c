@@ -259,6 +259,9 @@ encode(
         //  Get the current File-ID.
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
+        //  This thread is now the owner of the RCB
+        rcb_p->tcb_p = tcb_p;
+
         //  Progress report.
         log_write( MID_INFO, tcb_p->thread_name,
                    "%s - %s'\n",
@@ -281,7 +284,7 @@ encode(
 //          encode_mxp( rcb_p );    //  @ToDo: 3 encode_mxp
 //          encode_rxf( rcb_p );    //  @ToDo: 3 encode_rxf
 //          encode_ria( rcb_p );    //  @ToDo: 3 encode_ria
-            encode_txt( rcb_p );    //  Universal text input format
+            encode_txt( rcb_p );    //  Universal recipe text format
         }
 
         //  Kill the Recipe Control Block

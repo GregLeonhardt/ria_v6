@@ -132,6 +132,9 @@ export(
         //  Get the current File-ID.
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
+        //  This thread is now the owner of the RCB
+        rcb_p->tcb_p = tcb_p;
+
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",

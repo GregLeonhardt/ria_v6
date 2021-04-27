@@ -193,6 +193,9 @@ email(
         //  Get the current File-ID.
         rcb_p = queue_get_payload( tcb_p->queue_id );
 
+        //  This thread is now the owner of the RCB
+        rcb_p->tcb_p = tcb_p;
+
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
@@ -282,9 +285,14 @@ email(
             else
             {
                 //  @ToDo: 1 Missing recipe-end but found a recipe-start
-                
+
                 //  YES:    Add this data buffer to the recipe list.
+#if 1
                 list_put_last( new_rcb_p->import_list_p, list_data_p );
+#else
+                list_put_last( new_rcb_p->import_list_p,
+                               text_copy_to_new( list_data_p ) );
+#endif
 
                 //  Is this the end of the recipe
                 if ( recipe_is_end( rcb_p->recipe_format, list_data_p ) )
@@ -304,6 +312,12 @@ email(
             }
 
         }
+
+#if 1
+#else
+        //  Kill the Recipe Control Block
+        rcb_kill( rcb_p );
+#endif
 
         //  Release the lock on the level 3 list
         list_user_unlock( rcb_p->import_list_p, list_lock_key );

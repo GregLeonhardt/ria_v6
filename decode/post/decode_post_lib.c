@@ -33,6 +33,7 @@
 #include <unistd.h>             //  UNIX standard library.
 #include <string.h>             //  Functions for managing strings
 #include <ctype.h>              //  Determine the type contained
+#include <openssl/evp.h>        //  OpenSSL API for EVP Crypto libraries.
                                 //*******************************************
 
 /****************************************************************************
@@ -2618,117 +2619,6 @@ DECODE_POST__directions_notes(
  *
  ****************************************************************************/
 
-#if 0   //  @ToDo: 1 Remove the old 'DECODE_POST__recipe_id' function code.
-void
-DECODE_POST__recipe_id(
-    struct  rcb_t           *   rcb_p
-    )
-{
-    /**
-     *  @param  AUIP_count      Number of ingredients in this recipe        */
-    int                             AUIP_count;
-    /**
-     *  @param  AUIP_part       Temporary data buffer for an ingred part    */
-    unsigned char                   AUIP_part[ SHA1_DIGEST_SIZE + 2 ];
-    /**
-     *  @param  recipe_id       Temporary data buffer for the recipe id     */
-    unsigned char                   recipe_id[ SHA1_DIGEST_SIZE + 2 ];
-    /**
-     *  @param  id_string       Recipe-ID string to identify a recipe       */
-    char                            id_string[ ( SHA1_DIGEST_SIZE * 2 ) + 4 ];
-    /**
-     *  @param  auip_p          Pointer to AUIP structure                   */
-    struct  auip_t              *   auip_p;
-    /**
-     *  @param  context         Control structure used by SHA1 functions    */
-    SHA1_CTX                        context;
-
-    //  Query the number of ingredients for this recipe
-    AUIP_count = list_query_count( rcb_p->recipe_p->ingredient );
-
-    memset( recipe_id, 0x00, sizeof( recipe_id ) );
-
-    //  Are there any ingredients in this recipe ?
-    if ( AUIP_count > 0 )
-    {
-        //  YES:    Loop through all of the ingredients in this recipe
-        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient );
-             auip_p != NULL;
-             auip_p = list_get_next( rcb_p->recipe_p->ingredient, auip_p ) )
-        {
-            //  Is there an amount ?
-            if ( auip_p->amount_p != NULL )
-            {
-                //  YES:    Initialize SHA1
-                sha1_init( &context );
-
-                //  Build SHA1 version of the amount field
-                sha1_update( &context, auip_p->amount_p, strlen( auip_p->amount_p ) );
-
-                //  Finalize the SHA1 operation
-                sha1_final( &context, (char*)AUIP_part );
-
-                //  Add the two together
-                sha1_sum( (char*)recipe_id, (char*)recipe_id, (char*)AUIP_part );
-            }
-            //  Is there a unit of measurement ?
-            if ( auip_p->unit_p != NULL )
-            {
-                //  YES:    Initialize SHA1
-                sha1_init( &context );
-
-                //  Build SHA1 version of the unit field
-                sha1_update( &context, auip_p->unit_p, strlen( auip_p->unit_p ) );
-
-                //  Finalize the SHA1 operation
-                sha1_final( &context, (char*)AUIP_part );
-
-                //  Add the two together
-                sha1_sum( (char*)recipe_id, (char*)recipe_id, (char*)AUIP_part );
-            }
-            //  Is there an ingredient ?
-            if ( auip_p->ingredient_p != NULL )
-            {
-                //  YES:    Initialize SHA1
-                sha1_init( &context );
-
-                //  Build SHA1 version of the unit field
-                sha1_update( &context, auip_p->ingredient_p, strlen( auip_p->ingredient_p ) );
-
-                //  Finalize the SHA1 operation
-                sha1_final( &context, (char*)AUIP_part );
-
-                //  Add the two together
-                sha1_sum( (char*)recipe_id, (char*)recipe_id, (char*)AUIP_part );
-            }
-        }
-
-        //  Format the Recipe-ID as a hex string
-        snprintf( id_string, sizeof( id_string ),
-                  "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X"
-                  "%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
-                  recipe_id[  0 ], recipe_id[  1 ], recipe_id[  2 ],
-                  recipe_id[  3 ], recipe_id[  4 ], recipe_id[  5 ],
-                  recipe_id[  6 ], recipe_id[  7 ], recipe_id[  8 ],
-                  recipe_id[  9 ], recipe_id[ 10 ], recipe_id[ 11 ],
-                  recipe_id[ 12 ], recipe_id[ 13 ], recipe_id[ 14 ],
-                  recipe_id[ 15 ], recipe_id[ 16 ], recipe_id[ 17 ],
-                  recipe_id[ 18 ], recipe_id[ 19 ],
-                  AUIP_count );
-
-        //  Add it to the recipe
-        rcb_p->recipe_p->recipe_id = text_copy_to_new( id_string );
-    }
-    else
-    {
-        //  NO:     A recipe without ingredients isn't a recipe.
-        rcb_p->recipe_p->recipe_id =
-                text_copy_to_new( "000000000000000000000000000000000000000000" );
-    }
-}
-#else
- #include <openssl/evp.h>       //  OpenSSL API for EVP Crypto libraries.
-
 void
 DECODE_POST__recipe_id(
     struct  rcb_t           *   rcb_p
@@ -2847,5 +2737,4 @@ DECODE_POST__recipe_id(
 
     EVP_MD_CTX_free( mdctx );
 }
-#endif
 /****************************************************************************/

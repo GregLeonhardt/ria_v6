@@ -13,8 +13,6 @@
  *
  *  @note
  *
- *  @ToDo: 0 Add EXPORT.
- *
  ****************************************************************************/
 
 /****************************************************************************
@@ -119,6 +117,8 @@ monitor(
     int                         decode_total;
     int                         encode_count[ THREAD_COUNT_ENCODE ];
     int                         encode_total;
+    int                         export_count[ THREAD_COUNT_EXPORT ];
+    int                         export_total;
     /**
      *  @param  out_data        Output data buffer                          */
     char                        out_data[ 256 ];
@@ -153,6 +153,7 @@ monitor(
         email_total  = 0;
         decode_total = 0;
         encode_total = 0;
+        export_total = 0;
 
         /********************************************************************
          *  Gather the queue depth data
@@ -190,6 +191,13 @@ monitor(
         {
             encode_count[ thread_id ] = queue_get_count( encode_tcb[ thread_id ]->queue_id );
             encode_total += encode_count[ thread_id ];
+        }
+
+        //  EXPORT
+        for( thread_id = 0; thread_id < THREAD_COUNT_EXPORT; thread_id += 1 )
+        {
+            export_count[ thread_id ] = queue_get_count( export_tcb[ thread_id ]->queue_id );
+            export_total += export_count[ thread_id ];
         }
 
         /********************************************************************
@@ -252,6 +260,18 @@ monitor(
         {
             snprintf( tmp_buffer, sizeof(tmp_buffer ),
                       " - %6d", encode_count[ thread_id ] );
+            strncat( out_data, tmp_buffer, ( sizeof( out_data ) - strlen( out_data ) ) );
+        }
+        log_write( MID_LOGONLY, "monitor", "\t%s\n", out_data );
+
+        //  EXPORT
+        memset( out_data, '\0', sizeof( out_data ) );
+        snprintf( out_data, ( sizeof( out_data ) - strlen( out_data ) ),
+                  "EXPORT: [%6d]", export_total );
+        for( thread_id = 0; thread_id < THREAD_COUNT_EXPORT; thread_id += 1 )
+        {
+            snprintf( tmp_buffer, sizeof(tmp_buffer ),
+                      " - %6d", export_count[ thread_id ] );
             strncat( out_data, tmp_buffer, ( sizeof( out_data ) - strlen( out_data ) ) );
         }
         log_write( MID_LOGONLY, "monitor", "\t%s\n", out_data );

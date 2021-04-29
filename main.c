@@ -322,7 +322,7 @@ is_router_done(
  *
  *  @param  void                No information is passed to this function.
  *
- *  @return rc                  TRUE when the router thread group is done
+ *  @return rc                  TRUE when the import thread group is done
  *                              FALSE when still working
  *
  *  @note
@@ -394,7 +394,7 @@ is_import_done(
  *
  *  @param  void                No information is passed to this function.
  *
- *  @return rc                  TRUE when the router thread group is done
+ *  @return rc                  TRUE when the email thread group is done
  *                              FALSE when still working
  *
  *  @note
@@ -466,7 +466,7 @@ is_email_done(
  *
  *  @param  void                No information is passed to this function.
  *
- *  @return rc                  TRUE when the router thread group is done
+ *  @return rc                  TRUE when the decode thread group is done
  *                              FALSE when still working
  *
  *  @note
@@ -499,7 +499,7 @@ is_decode_done(
 
     //  Loop through all DECODE threads
     for( thread_id = 0;
-         thread_id < THREAD_COUNT_ENCODE;
+         thread_id < THREAD_COUNT_DECODE;
          thread_id += 1 )
     {
         //  Anything in the input queue ?
@@ -538,7 +538,7 @@ is_decode_done(
  *
  *  @param  void                No information is passed to this function.
  *
- *  @return rc                  TRUE when the router thread group is done
+ *  @return rc                  TRUE when the encode thread group is done
  *                              FALSE when still working
  *
  *  @note
@@ -583,6 +583,78 @@ is_encode_done(
         else
         //  NO:     Is the thread working on something
         if ( encode_tcb[ thread_id ]->thread_state == TS_WORKING )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+
+        //  Is this thread done ?
+        if ( func_rc == false )
+        {
+            //  NO:     No need to look at the others.
+            break;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( func_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Return the queue depth for a thread group
+ *
+ *  @param  void                No information is passed to this function.
+ *
+ *  @return rc                  TRUE when the export thread group is done
+ *                              FALSE when still working
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+is_export_done(
+    void
+    )
+{
+    /**
+     *  @param  func_rc         Function return code                        */
+    int                         func_rc;
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume everything is complete
+    func_rc = true;
+
+    /************************************************************************
+     *  Check for complete
+     ************************************************************************/
+
+    //  Loop through all EXPORT threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_EXPORT;
+         thread_id += 1 )
+    {
+        //  Anything in the input queue ?
+        if ( queue_get_count( export_tcb[ thread_id ]->queue_id ) != 0 )
+        {
+            //  YES:    It's still working
+            func_rc = false;
+        }
+        else
+        //  NO:     Is the thread working on something
+        if ( export_tcb[ thread_id ]->thread_state == TS_WORKING )
         {
             //  YES:    It's still working
             func_rc = false;
@@ -1018,6 +1090,9 @@ main(
 
         if ( done_flag == true )
             done_flag = is_encode_done( );
+
+        if ( done_flag == true )
+            done_flag = is_export_done( );
 
         //  DONE_FLAG can only be TRUE when EVERYTHING is done.
         if ( done_flag == true )

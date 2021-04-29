@@ -44,8 +44,8 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "export_api.h"            //  API for all export_*               PUBLIC
-#include "export_lib.h"            //  API for all EXPORT__*              PRIVATE
+#include "export_api.h"         //  API for all export_*            PUBLIC
+#include "export_lib.h"         //  API for all EXPORT__*           PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -159,6 +159,12 @@ export(
         log_write( MID_LOGONLY, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->file_path );
+
+        //  Display progress.
+        log_write( MID_INFO, tcb_p->thread_name,
+                   "%s - %s\n",
+                   rcb_p->file_path,
+                   rcb_p->recipe_p->name );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;

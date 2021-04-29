@@ -262,12 +262,10 @@ encode(
         //  This thread is now the owner of the RCB
         rcb_p->tcb_p = tcb_p;
 
-        //  @ToDo: 1 Move to EXPORT
         //  Progress report.
-        log_write( MID_INFO, tcb_p->thread_name,
-                   "%s - %s\n",
-                   rcb_p->file_path,
-                   rcb_p->recipe_p->name );
+        log_write( MID_LOGONLY, tcb_p->thread_name,
+                   "Q-%03d: Rcv: FILE-ID: %s\n",
+                   tcb_p->queue_id, rcb_p->file_path );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;

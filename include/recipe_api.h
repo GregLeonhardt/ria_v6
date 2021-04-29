@@ -77,6 +77,7 @@ enum    recipe_format_e
 
 //----------------------------------------------------------------------------
 /**
+ *  @ToDo: 0 Move e-Mail information from recipe_t to rcb_t
  *  @param recipe_t             Primary structure for a recipe
  *  @NOTE:  Changes to this structure require changes to recipe_kill( );    */
 struct   recipe_t

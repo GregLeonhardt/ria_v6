@@ -41,6 +41,8 @@
 #include "global.h"             //  Global stuff for this application
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
+#include "email_api.h"          //  API for all email_*             PUBLIC
+                                //*******************************************
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "rcb_lib.h"            //  API for all RCB__*              PRIVATE
                                 //*******************************************
@@ -108,10 +110,11 @@ rcb_kill(
      *  Function Body
      ************************************************************************/
 
-    //  Clear the FILE-INFORMATION structure pointer ?
+    //  Does a file information structure exist ?
     if ( rcb_p->file_info_p != NULL )
     {
-        //  Free it
+        //  YES:    Free it
+        mem_free( rcb_p->file_info_p );
         rcb_p->file_info_p = NULL;
     }
     //------------------------------------------------------------------------
@@ -143,16 +146,22 @@ rcb_kill(
         file_close( rcb_p->file_p ); rcb_p->file_p = 0;
     }
     //------------------------------------------------------------------------
-    //  Delete the recipe structure
-    recipe_kill( rcb_p->recipe_p );
+    //  Does an recipe structure exist ?
+    if ( rcb_p->recipe_p != NULL )
+    {
+        //  YES:    Free it
+        recipe_kill( rcb_p->recipe_p );
+    }
     //------------------------------------------------------------------------
     //  Reset the destination thread id.
     rcb_p->recipe_format = RECIPE_FORMAT_NONE;
     //------------------------------------------------------------------------
-    //  Reset the destination thread id.
+    //  Does an e-Mail information structure exist ?
     if ( rcb_p->email_info_p != NULL )
     {
+        //  YES:    Free it
         mem_free( rcb_p->email_info_p );
+        rcb_p->email_info_p = NULL;
     }
     //------------------------------------------------------------------------
     //  Release the structure
@@ -169,7 +178,6 @@ rcb_kill(
 /**
  *  Initialize the Translations tables.
  *
- *  @param  tcb_p               Pointer to the current Thread Control Block
  *  @param  rcb_p               Pointer to the current Recipe Control Block
  *  @param  recipe_format       The recipe format for this recipe.
  *
@@ -181,8 +189,7 @@ rcb_kill(
 
 struct  rcb_t   *
 rcb_new(
-    struct  tcb_t           *   tcb_p,
-    struct  rcb_t           *   rcb_p,
+    struct  rcb_t           *   old_rcb_p,
     enum    recipe_format_e     recipe_format
     )
 {
@@ -202,23 +209,41 @@ rcb_new(
     //  YES:    Allocate a new recipe control block
     new_rcb_p = mem_malloc( sizeof( struct rcb_t ) );
 
-    //  Set the initial thread control block
-    new_rcb_p->tcb_p = tcb_p;
-
     //  Is this going to be a split of an existing Recipe Control Block
-    if ( rcb_p != NULL )
+    if ( old_rcb_p != NULL )
     {
-        //  YES:    Copy the file stats to the new RCB
-        new_rcb_p->file_info_p = rcb_p->file_info_p;
+        //  YES:    Copy Thread Control Block pointer
+        new_rcb_p->tcb_p = old_rcb_p->tcb_p;
+
+        //  Copy the file stats to the new RCB
+        new_rcb_p->file_info_p = mem_malloc( sizeof( struct file_info_t ) );
+        memcpy( new_rcb_p->file_info_p,
+                old_rcb_p->file_info_p,
+                sizeof( struct file_info_t ) );
 
         //  Copy the display file name
         memcpy( new_rcb_p->file_path,
-                rcb_p->file_path,
-                sizeof( rcb_p->file_path ) );
+                old_rcb_p->file_path,
+                sizeof( old_rcb_p->file_path ) );
+
+        //  Copy the e-Mail information to the new RCB
+        if ( new_rcb_p->email_info_p != NULL )
+        {
+            new_rcb_p->email_info_p = mem_malloc( sizeof( struct email_info_t ) );
+            memcpy( new_rcb_p->email_info_p,
+                    old_rcb_p->email_info_p,
+                    sizeof( struct email_info_t ) );
+        }
     }
+
+    //  No destination thread yet.
+    new_rcb_p->dst_thread = DST_INVALID;
 
     //  Create a new list
     new_rcb_p->import_list_p = list_new( );
+
+    //  There isn't an open file
+    new_rcb_p->file_p = NULL;
 
     //  Set the recipe format
     new_rcb_p->recipe_format = recipe_format;

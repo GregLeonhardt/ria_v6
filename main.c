@@ -918,7 +918,7 @@ main(
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
-            rcb_p = rcb_new( NULL, NULL, RECIPE_FORMAT_NONE );
+            rcb_p = rcb_new( NULL, RECIPE_FORMAT_NONE );
 
             //  Put the file info pointer into the recipe control block
             rcb_p->file_info_p = file_info_p;
@@ -930,7 +930,7 @@ main(
                       &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
                       file_info_p->file_name );
 
-            //  Set the packet destination
+            //  Set the RCB destination
             rcb_p->dst_thread = DST_IMPORT;
 
             //  Put it in one of the IMPORT queue's

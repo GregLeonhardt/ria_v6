@@ -336,7 +336,7 @@ decode(
         //  Post recipe format specific decode processing
         decode_post( rcb_p );
 
-        //  Set the packet destination
+        //  Set the RCB destination
         rcb_p->dst_thread = DST_ENCODE;
 
         //  Put it in one of the IMPORT queue's

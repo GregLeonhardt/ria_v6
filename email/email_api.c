@@ -267,14 +267,14 @@ email(
             //  Did we find the start of a recipe ?
             if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
             {
-                //  NO:     Maybe this is a recipe start.
+                //  NO:     Maybe this is a recipe start tag.
                 rcb_p->recipe_format = recipe_is_start( list_data_p );
 
                 //  Is this the start of a recipe ?
                 if ( rcb_p->recipe_format != RECIPE_FORMAT_NONE )
                 {
                     //  YES:    Prepare for the new recipe
-                    new_rcb_p = rcb_new( tcb_p, rcb_p, rcb_p->recipe_format );
+                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
                 }
                 else
                 {
@@ -284,20 +284,42 @@ email(
             }
             else
             {
-                //  @ToDo: 1 Missing recipe-end but found a recipe-start
+                /**
+                 *  @param  recipe_format   Format code for this recipe     */
+                enum    recipe_format_e     tmp_format;
 
-                //  YES:    Add this data buffer to the recipe list.
-#if 1
+                //  YES:    Maybe this is a recipe start tag
+                tmp_format = recipe_is_start( list_data_p );
+
+                //  Is this the start of a recipe ?
+                if ( tmp_format != RECIPE_FORMAT_NONE )
+                {
+                    //  YES:    Then the current recipe must have ended
+                    new_rcb_p->dst_thread = DST_DECODE;
+
+                    //  Put it in one of the ROUTER queue
+                    queue_put_payload( router_queue_id, new_rcb_p  );
+
+                    //  Clear the current recipe format
+                    rcb_p->recipe_format = RECIPE_FORMAT_NONE;
+
+                    //  Clear the new RCB pointer
+                    new_rcb_p = NULL;
+
+                    //  Prepare for the new recipe
+                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+
+                    //  Add this data buffer to the recipe list.
+                    list_put_last( new_rcb_p->import_list_p, list_data_p );
+                }
+
+                //  Add this data buffer to the recipe list.
                 list_put_last( new_rcb_p->import_list_p, list_data_p );
-#else
-                list_put_last( new_rcb_p->import_list_p,
-                               text_copy_to_new( list_data_p ) );
-#endif
 
                 //  Is this the end of the recipe
                 if ( recipe_is_end( rcb_p->recipe_format, list_data_p ) )
                 {
-                    //  YES:    Set the packet destination
+                    //  YES:    Set the RCB destination
                     new_rcb_p->dst_thread = DST_DECODE;
 
                     //  Put it in one of the ROUTER queue
@@ -313,14 +335,14 @@ email(
 
         }
 
-#if 1
+        //  Release the lock on the level 3 list
+        list_user_unlock( rcb_p->import_list_p, list_lock_key );
+
+#if 0
 #else
         //  Kill the Recipe Control Block
         rcb_kill( rcb_p );
 #endif
-
-        //  Release the lock on the level 3 list
-        list_user_unlock( rcb_p->import_list_p, list_lock_key );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

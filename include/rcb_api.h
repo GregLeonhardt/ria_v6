@@ -109,7 +109,6 @@ rcb_kill(
 //---------------------------------------------------------------------------
 struct  rcb_t   *
 rcb_new(
-    struct  tcb_t           *   tcb_p,
     struct  rcb_t           *   rcb_p,
     enum    recipe_format_e     recipe_format
     );

@@ -264,7 +264,7 @@ encode(
 
         //  Progress report.
         log_write( MID_INFO, tcb_p->thread_name,
-                   "%s - %s'\n",
+                   "%s - %s\n",
                    rcb_p->file_path,
                    rcb_p->recipe_p->name );
 

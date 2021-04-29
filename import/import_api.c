@@ -203,14 +203,14 @@ import(
         //  Close the import file
         file_close( rcb_p->file_p ); rcb_p->file_p = 0;
 
-        //  Set the packet destination
+        //  Set the RCB destination
         rcb_p->dst_thread = DST_EMAIL;
 
         //  Put it in one of the IMPORT queue's
         queue_put_payload( router_queue_id, rcb_p  );
 
         //  Slow things down
-        usleep( 20000 );
+//      usleep( 20000 );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

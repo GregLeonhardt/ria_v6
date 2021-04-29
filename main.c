@@ -35,8 +35,6 @@
  *          The job data is encoded and returned back to main with a
  *          destination of export.
  *
- *  @ToDo: 1 Enable the file delete flag.
- *
  ****************************************************************************/
 
 //  This is a global to do list:
@@ -932,8 +930,18 @@ main(
          file_info_p != NULL;
          file_info_p = list_get_next( file_list_p, file_info_p ) )
     {
+        /**
+         *  @param  file_path       File path & name                            */
+        char                        file_path[ FILENAME_MAX ];
+
         //  Remove this file from the list.
         list_delete( file_list_p, file_info_p );
+
+        //  Build the file path & name
+        memset( file_path, '\0', sizeof( file_path ) );
+        snprintf( file_path, sizeof( file_path ), "%s/%s",
+                  &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
+                  file_info_p->file_name );
 
         //  Is there anything in the file ?
         if ( text_to_int( file_info_p->file_size ) >= 100 )
@@ -950,10 +958,7 @@ main(
 
             //  Set the display file name
             memset( rcb_p->file_path, '\0', sizeof( rcb_p->file_path ) );
-            snprintf( rcb_p->file_path, sizeof( rcb_p->file_path ),
-                      "%s/%s",
-                      &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
-                      file_info_p->file_name );
+            memcpy( rcb_p->file_path, file_path, strlen( file_path ) );
 
             //  Set the RCB destination
             rcb_p->dst_thread = DST_IMPORT;
@@ -970,9 +975,15 @@ main(
         {
             //  NO:     Log the Empty or small file
             log_write( MID_INFO, "main",
-                       "Skipping empty or small file: '%s/%s'\n",
-                       &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
-                       file_info_p->file_name );
+                       "Skipping empty or small file: '%s'\n",
+                       file_path );
+
+            //  Is the delete flag set ?
+            if ( delete_flag == true )
+            {
+                //  YES:    Delete the file
+                unlink( file_path );
+            }
 
             //  Release the storage for this file
             mem_free( file_info_p );

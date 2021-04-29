@@ -203,6 +203,13 @@ import(
         //  Close the import file
         file_close( rcb_p->file_p ); rcb_p->file_p = 0;
 
+        //  Is the delete flag set ?
+        if ( delete_flag == true )
+        {
+            //  YES:    Delete the file
+            unlink( file_name );
+        }
+
         //  Set the RCB destination
         rcb_p->dst_thread = DST_EMAIL;
 

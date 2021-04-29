@@ -124,7 +124,7 @@ rcb_kill(
     //  Reset the destination thread id.
     rcb_p->dst_thread = DST_INVALID;
     //------------------------------------------------------------------------
-    //  Clear all imported data
+    //  Clear all import data
     if ( rcb_p->import_list_p != NULL )
     {
         if ( list_query_count( rcb_p->import_list_p ) > 0 )
@@ -137,6 +137,21 @@ rcb_kill(
         }
         list_kill( rcb_p->import_list_p );
         rcb_p->import_list_p = NULL;
+    }
+    //------------------------------------------------------------------------
+    //  Clear all export data
+    if ( rcb_p->export_list_p != NULL )
+    {
+        if ( list_query_count( rcb_p->export_list_p ) > 0 )
+        {
+            while( ( data_p = list_get_first( rcb_p->export_list_p ) ) != NULL )
+            {
+                list_delete( rcb_p->export_list_p, data_p );
+                mem_free( data_p );
+            }
+        }
+        list_kill( rcb_p->export_list_p );
+        rcb_p->export_list_p = NULL;
     }
     //------------------------------------------------------------------------
     //  Is there an open file ?
@@ -239,8 +254,11 @@ rcb_new(
     //  No destination thread yet.
     new_rcb_p->dst_thread = DST_INVALID;
 
-    //  Create a new list
+    //  Create a new import list
     new_rcb_p->import_list_p = list_new( );
+
+    //  Create a new export list
+    new_rcb_p->export_list_p = list_new( );
 
     //  There isn't an open file
     new_rcb_p->file_p = NULL;

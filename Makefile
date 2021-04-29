@@ -38,6 +38,8 @@ SRC		+=	$(wildcard decode/*/*.c)
 SRC		+=	$(wildcard encode/*.c)
 SRC		+=	$(wildcard encode/*/*.c)
 #
+SRC		+=	$(wildcard export/*.c)
+#
 SRC		+=	$(wildcard monitor/*.c)
 #
 SRC		+=	$(wildcard recipe/*.c)

@@ -230,7 +230,7 @@ decode_mmf(
          list_data_p != NULL;
          list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
     {
-        //  Remove the line from the list
+        //  Remove the data from the list
         list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
         //  Debug log output

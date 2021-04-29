@@ -1,6 +1,8 @@
 /*******************************  COPYRIGHT  ********************************/
 /*
- *  Copyright (c) 2019,2018 Gregory N. Leonhardt All rights reserved.
+ *  Author? "Gregory N. Leonhardt"
+ *  License? "CC BY-NC 2.0"
+ *           "https://creativecommons.org/licenses/by-nc/2.0/"
  *
  ****************************************************************************/
 
@@ -34,6 +36,8 @@
  ****************************************************************************/
 
 #define ALLOC_ENCODE_TXT        ( "ALLOCATE STORAGE FOR ENCODE_TXT" )
+
+#define _GNU_SOURCE             // See feature_test_macros(7)
 
 /****************************************************************************
  * System Function API
@@ -75,10 +79,6 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-#define DIR_FORMATTED           "Recipes_Formatted"
-//----------------------------------------------------------------------------
-//  @ToDo: 3 SUBDIRECTORY_L ?
-#define SUBDIRECTORY_L          ( 4 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -117,74 +117,19 @@ encode_txt(
     )
 {
     /**
-     * @param out_name          Encoded output file name                    */
-    char                        out_name[ FILE_NAME_L + 1 ];
-    /**
-     * @param subdirectory      Sub Directory name based on the Recipe-ID   */
-    char                        subdirectory[ SUBDIRECTORY_L + 1 ];
-    /**
-     * @param input_file_fp     Output File pointer                         */
-    FILE                    *   out_file_fp;
-    /**
-     * @param list_data_p       Pointer to the read data                    */
-    char                    *   data_p;
-    /**
      *  @param  auip_p          Pointer to AUIP structure                   */
     struct  auip_t          *   auip_p;
+    /**
+     *  @param  tmp_data_p      Pointer to a temporary data buffer          */
+    char                    *   tmp_data_p;
+    /**
+     *  @param  write_data_p    Pointer to a write data buffer              */
+    char                    *   write_data_p;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Build the subdirectory name
-    snprintf( subdirectory, sizeof( subdirectory ),
-              "%s", rcb_p->recipe_p->recipe_id );
-
-    /************************************************************************
-     *  Open the output file
-     ************************************************************************/
-
-    //  Start building the output name
-    snprintf( out_name, sizeof( out_name ),
-              "%s", out_dir_name_p );
-
-    //  If the directory does not already exist, create it.
-    file_dir_exist( out_name, true );
-
-    //  Append DIR_FORMATTED to the output name
-    snprintf( out_name, sizeof( out_name ),
-              "%s/%s", out_dir_name_p, DIR_FORMATTED );
-
-    //  If the directory does not already exist, create it.
-    file_dir_exist( out_name, true );
-
-    //  Append the subdirectory to the output name
-    snprintf( out_name, sizeof( out_name ),
-              "%s/%s/%s", out_dir_name_p, DIR_FORMATTED, subdirectory );
-
-    //  If the directory does not already exist, create it.
-    file_dir_exist( out_name, true );
-
-    //  Append the file name to the output name
-    snprintf( out_name, sizeof( out_name ),
-              "%s/%s/%s/%s.txt", out_dir_name_p, DIR_FORMATTED,
-              subdirectory, rcb_p->recipe_p->recipe_id );
-
-    /************************************************************************
-     *  Open the output file
-     ************************************************************************/
-
-    //  Is this a recipe with no instructions ?
-    if ( strncmp( rcb_p->recipe_p->recipe_id, "0000000000", 10 ) == 0 )
-    {
-        //  YES:    Append to whatever is already there
-        out_file_fp = file_open_append( out_name );
-    }
-    else
-    {
-        //  NO:     Open a unique file for the output.
-        out_file_fp = file_open_write_no_dup( out_name, "duplicate_" );
-    }
 
     /************************************************************************
      *  Write TXT-XML to the file
@@ -192,26 +137,32 @@ encode_txt(
 
     //-----------------------------------------------------------------------
     //  TXT Recipe start tag
-    fprintf( out_file_fp, "@@@@@\n" );
+    asprintf( &write_data_p, "@@@@@\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  NAME
-    fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->name );
+    asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->name );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  DESCRIPTION:
     if ( rcb_p->recipe_p->description != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->description );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->description );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "Description: ?\n" );
+        asprintf( &write_data_p, "Description: ?\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  <AUIP>
     if ( list_query_count( rcb_p->recipe_p->ingredient ) > 0 )
@@ -223,375 +174,472 @@ encode_txt(
             //  Is there an amount ?
             if ( auip_p->amount_p != NULL )
             {
-                fprintf( out_file_fp, "%-8s",     auip_p->amount_p );
+                asprintf( &write_data_p, "%-8s",     auip_p->amount_p );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             else
             {
-                fprintf( out_file_fp, "        " );
+                asprintf( &write_data_p, "        " );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             //  Is there a unit of measurement ?
             if ( auip_p->unit_p != NULL )
             {
-                fprintf( out_file_fp, "%-12s",     auip_p->unit_p );
+                asprintf( &write_data_p, "%-12s",     auip_p->unit_p );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             else
             {
-                fprintf( out_file_fp, "            " );
+                asprintf( &write_data_p, "            " );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             //  Is there an ingredient ?
             if ( auip_p->ingredient_p != NULL )
             {
-                fprintf( out_file_fp, "%s",     auip_p->ingredient_p );
+                asprintf( &write_data_p, "%s",     auip_p->ingredient_p );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             //  Is there a preparation method ?
             if ( auip_p->preparation_p != NULL )
             {
-                fprintf( out_file_fp, " %s",     auip_p->preparation_p );
+                asprintf( &write_data_p, " %s",     auip_p->preparation_p );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
             //  End-of-Line
-            fprintf( out_file_fp, "\n" );
+            asprintf( &write_data_p, "\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }
     else
     {
         //  No AUIP
-        fprintf( out_file_fp, "** TEXT ONLY - NO INGREDIENTS **\n" );
+        asprintf( &write_data_p, "** TEXT ONLY - NO INGREDIENTS **\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  DIRECTIONS
     if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
     {
-        for( data_p = list_get_first( rcb_p->recipe_p->directions );
-             data_p != NULL;
-             data_p = list_get_next( rcb_p->recipe_p->directions, data_p ) )
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->directions );
+             tmp_data_p != NULL;
+             tmp_data_p = list_get_next( rcb_p->recipe_p->directions, tmp_data_p ) )
         {
             //  Is there something to write ?
-            if ( text_is_blank_line( data_p ) != true )
+            if ( text_is_blank_line( tmp_data_p ) != true )
             {
                 //  YES:    Write the directions text.
-                fprintf( out_file_fp, "%s\n\n", data_p );
+                asprintf( &write_data_p, "%s\n\n", tmp_data_p );
+                list_put_last( rcb_p->export_list_p, write_data_p );
             }
         }
     }
     //-----------------------------------------------------------------------
     //  Recipe Data:
-    fprintf( out_file_fp, "\n----- Recipe Data -----\n\n" );
+    asprintf( &write_data_p, "\n----- Recipe Data -----\n\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  AUTHOR:
-    fprintf( out_file_fp, "AUTHOR: " );
+    asprintf( &write_data_p, "AUTHOR: " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->author != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->author );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->author );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  SERVES:
-    fprintf( out_file_fp, "SERVES: " );
+    asprintf( &write_data_p, "SERVES: " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->serves != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->serves );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->serves );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  TIME PREP:
-    fprintf( out_file_fp, "TIME PREP: " );
+    asprintf( &write_data_p, "TIME PREP: " );
+
+    list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->time_prep != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_prep );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_prep );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "0:00\n" );
+        asprintf( &write_data_p, "0:00\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  TIME COOK:
-    fprintf( out_file_fp, "TIME COOK: " );
+    asprintf( &write_data_p, "TIME COOK: " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->time_cook != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_cook );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_cook );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "0:00\n" );
+        asprintf( &write_data_p, "0:00\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  YIELD:
-    fprintf( out_file_fp, "YIELD: " );
+    asprintf( &write_data_p, "YIELD: " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->makes != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->makes );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->makes );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //  Is there a unit of measurement ?
     if ( rcb_p->recipe_p->makes_unit != NULL )
     {
         //  YES:    Write it
-        fprintf( out_file_fp, " %s\n", rcb_p->recipe_p->makes_unit );
+        asprintf( &write_data_p, " %s\n", rcb_p->recipe_p->makes_unit );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
         //  NO:     End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  SOURCE:
-    fprintf( out_file_fp, "SOURCE: " );
+    asprintf( &write_data_p, "SOURCE: " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->source != NULL )
     {
-        fprintf( out_file_fp, "%s\n\n", rcb_p->recipe_p->source );
+        asprintf( &write_data_p, "%s\n\n", rcb_p->recipe_p->source );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  NOTES:
-    fprintf( out_file_fp, "NOTES:\n" );
+    asprintf( &write_data_p, "NOTES:\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( list_query_count( rcb_p->recipe_p->notes ) > 0 )
     {
-        for( data_p = list_get_first( rcb_p->recipe_p->notes );
-             data_p != NULL;
-             data_p = list_get_next( rcb_p->recipe_p->notes, data_p ) )
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->notes );
+             tmp_data_p != NULL;
+             tmp_data_p = list_get_next( rcb_p->recipe_p->notes, tmp_data_p ) )
         {
-            fprintf( out_file_fp, "%s\n", data_p );
+            asprintf( &write_data_p, "%s\n", tmp_data_p );
+            list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }
     //-----------------------------------------------------------------------
     //  CATEGORIES
-    fprintf( out_file_fp, "CATEGORIES:\n" );
+    asprintf( &write_data_p, "CATEGORIES:\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     {
         int                             first_category;
 
         //  ####################
         //  type=CUISINE
-        fprintf( out_file_fp, "    CUISINE:    " );
+        asprintf( &write_data_p, "    CUISINE:    " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->cuisine ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->cuisine );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->cuisine, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->cuisine );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->cuisine, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", write_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
         //  type=OCCASION
-        fprintf( out_file_fp, "    OCCASION:   " );
+        asprintf( &write_data_p, "    OCCASION:   " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->occasion ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->occasion );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->occasion, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->occasion );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->occasion, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", write_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
         //  type=COURSE
-        fprintf( out_file_fp, "    COURSE:     " );
+        asprintf( &write_data_p, "    COURSE:     " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->course ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->course );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->course, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->course );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->course, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", write_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
         //  type=DIET
-        fprintf( out_file_fp, "    DIET:       " );
+        asprintf( &write_data_p, "    DIET:       " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->diet ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->diet );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->diet, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->diet );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->diet, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", write_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
         //  type=APPLIANCE
-        fprintf( out_file_fp, "    APPLIANCE:  " );
+        asprintf( &write_data_p, "    APPLIANCE:  " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->appliance ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->appliance );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->appliance, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->appliance );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->appliance, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", write_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
         //  type=CHAPTER
-        fprintf( out_file_fp, "    CHAPTER:    " );
+        asprintf( &write_data_p, "    CHAPTER:    " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+
         if ( list_query_count( rcb_p->recipe_p->chapter ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( data_p = list_get_first( rcb_p->recipe_p->chapter );
-                 data_p != NULL;
-                 data_p = list_get_next( rcb_p->recipe_p->chapter, data_p ) )
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->chapter );
+                 tmp_data_p != NULL;
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->chapter, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
-                    fprintf( out_file_fp, "%s", data_p );
+                    asprintf( &write_data_p, "%s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                     first_category = false;
                 }
                 else
                 {
-                    fprintf( out_file_fp, ", %s", data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
+                    list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
         }
         //  End-of-Line
-        fprintf( out_file_fp, "\n" );
-
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  COPYRIGHT:
-    fprintf( out_file_fp, "COPYRIGHT:      %s\n", rcb_p->recipe_p->copyright );
-    //-----------------------------------------------------------------------
-    //  TIME WAIT:
-    //  @ToDo: 2 This field isn't decoded yet!
-    //          I'm using the resting time as a place holder.
-    fprintf( out_file_fp, "TIME WAIT:      " );
-    if ( rcb_p->recipe_p->time_rest != NULL )
+    if ( rcb_p->recipe_p->copyright != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_rest );
+        asprintf( &write_data_p, "COPYRIGHT:      %s\n", rcb_p->recipe_p->copyright );
     }
     else
     {
-        fprintf( out_file_fp, "0:00\n" );
+        asprintf( &write_data_p, "COPYRIGHT:      %s\n",
+                  "CC BY-NC 2.0 https://creativecommons.org/licenses/by-nc/2.0/" );
+    }
+    list_put_last( rcb_p->export_list_p, write_data_p );
+    //-----------------------------------------------------------------------
+    //  TIME WAIT:
+    //  @ToDo: 3 This field isn't decoded yet!
+    //          I'm using the resting time as a place holder.
+    asprintf( &write_data_p, "TIME WAIT:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+    if ( rcb_p->recipe_p->time_rest != NULL )
+    {
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+    }
+    else
+    {
+        asprintf( &write_data_p, "0:00\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  TIME REST:
-    fprintf( out_file_fp, "TIME REST:      " );
+    asprintf( &write_data_p, "TIME REST:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->time_rest != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_rest );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "0:00\n" );
+        asprintf( &write_data_p, "0:00\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  SKILL LEVEL:
-    fprintf( out_file_fp, "SKILL LEVEL:    " );
+    asprintf( &write_data_p, "SKILL LEVEL:    " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->skill != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->skill );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->skill );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "*\n" );
+        asprintf( &write_data_p, "*\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  RATING:
-    fprintf( out_file_fp, "RATING:         " );
+    asprintf( &write_data_p, "RATING:         " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->rating != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->rating );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->rating );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "*\n" );
+        asprintf( &write_data_p, "*\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
-    //  Recipe Info:
-    fprintf( out_file_fp, "\n----- Recipe Info -----\n\n" );
+    //  Source Info:
+    asprintf( &write_data_p, "\n----- Source Info -----\n\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Recipe-Id
-    fprintf( out_file_fp, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id );
+    asprintf( &write_data_p, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  SOURCE FORMAT:
-    if ( rcb_p->recipe_p->source_format == NULL )
+    if ( rcb_p->recipe_format == RECIPE_FORMAT_TXT )
     {
-        fprintf( out_file_fp, "SOURCE FORMAT:  TXT\n" );
+        asprintf( &write_data_p, "SOURCE FORMAT:  TXT\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
+    if ( rcb_p->recipe_format == RECIPE_FORMAT_MMF )
     {
-        fprintf( out_file_fp, "SOURCE FORMAT:  %s\n", rcb_p->recipe_p->source_format );
+        asprintf( &write_data_p, "SOURCE FORMAT:  Meal-Master\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  <IMPORTED_FROM>
@@ -602,98 +650,129 @@ encode_txt(
     {
         if ( rcb_p->file_path != NULL )
         {
-            fprintf( out_file_fp, "FileName:       %s\n", rcb_p->file_path );
+            asprintf( &write_data_p, "FileName:       %s\n", rcb_p->file_path );
+            list_put_last( rcb_p->export_list_p, write_data_p );
         }
         if ( rcb_p->file_info_p->date_time != NULL )
         {
-            fprintf( out_file_fp, "FileSize:       %s\n", rcb_p->file_info_p->file_size );
+            asprintf( &write_data_p, "FileSize:       %s\n", rcb_p->file_info_p->file_size );
+        list_put_last( rcb_p->export_list_p, write_data_p );
         }
         {
-            fprintf( out_file_fp, "FileDateTime:   %s\n", rcb_p->file_info_p->date_time );
+            asprintf( &write_data_p, "FileDateTime:   %s\n", rcb_p->file_info_p->date_time );
+            list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }
     //-----------------------------------------------------------------------
     //  <E-MAIL>
     //  ####################
     //  GROUP-NAME:
-    fprintf( out_file_fp, "G-Name:         " );
+    asprintf( &write_data_p, "G-Name:         " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->group_from != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->group_from );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_from );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  GROUP-SUBJECT:
-    fprintf( out_file_fp, "G-Subject:      " );
+    asprintf( &write_data_p, "G-Subject:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->group_subject != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->group_subject );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_subject );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  GROUP-DATE:
-    fprintf( out_file_fp, "G-Date:         " );
+    asprintf( &write_data_p, "G-Date:         " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->group_date != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->group_date );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_date );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  POSTED-BY:
-    fprintf( out_file_fp, "P-By:           " );
+    asprintf( &write_data_p, "P-By:           " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->posted_by != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->posted_by );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_by );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  POSTED-SUBJECT:
-    fprintf( out_file_fp, "P-Subject:      " );
+    asprintf( &write_data_p, "P-Subject:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->posted_subject != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->posted_subject );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_subject );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  POSTED-DATE:
-    fprintf( out_file_fp, "P-Date:         " );
+    asprintf( &write_data_p, "P-Date:         " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->posted_date != NULL )
     {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->posted_date );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_date );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    fprintf( out_file_fp, "\n" );
+    asprintf( &write_data_p, "\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Formatted By:
-    fprintf( out_file_fp, "FormattedBy:    " );
+    asprintf( &write_data_p, "FormattedBy:    " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->formatted_by != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->formatted_by );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->formatted_by );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "Recipe Import Assistant\n" );
+        asprintf( &write_data_p, "Recipe Import Assistant\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  Edited By:
-    fprintf( out_file_fp, "EditedBy:       " );
+    asprintf( &write_data_p, "EditedBy:       " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+
     if ( rcb_p->recipe_p->edited_by != NULL )
     {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->edited_by );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->edited_by );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
     {
-        fprintf( out_file_fp, "\n" );
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
     //  TXT Recipe end tag
-    fprintf( out_file_fp, "\n@@@@@\n" );
+    asprintf( &write_data_p, "\n@@@@@\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
-
-    //  Close the output file.
-    file_close( out_file_fp );
 
     //  DONE!
 }

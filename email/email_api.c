@@ -237,7 +237,7 @@ email(
             log_write( MID_DEBUG_0, tcb_p->thread_name,
                           "Start      %p - '%.80s'\n", list_data_p, list_data_p );
 
-            //  Done with this text line
+            //  Remove the data from the list
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
             mem_free( list_data_p );
         }

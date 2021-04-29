@@ -73,8 +73,11 @@ struct  rcb_t
      *  @param  destination     Destination Thread                          */
     enum    destination_e       dst_thread;
     /**
-     * @param file_ll_p         Pointer to a list where the file is stored  */
+     * @param import_list_p     Pointer to a list for import data           */
     struct  list_base_t     *   import_list_p;
+    /**
+     * @param export_list_p     Pointer to a list for export data           */
+    struct  list_base_t     *   export_list_p;
     /**
      *  @param  file_p          File pointer for the import file            */
     FILE                    *   file_p;

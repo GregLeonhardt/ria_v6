@@ -36,8 +36,6 @@
  *          destination of export.
  *
  *  @ToDo: 1 Enable the file delete flag.
- *  @ToDo: 0 Create and wire in an EXPORT thread.
- *  @ToDo: 0 Memory Leak
  *
  ****************************************************************************/
 
@@ -87,6 +85,7 @@
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
 #include "encode_api.h"         //  API for all encode_*            PUBLIC
+#include "export_api.h"         //  API for all export_*            PUBLIC
                                 //*******************************************
 
 /****************************************************************************
@@ -808,7 +807,7 @@ main(
      *  DECODE      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all IMPORT threads
+    //  Loop through all DECODE threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_DECODE;
          thread_id += 1 )
@@ -834,7 +833,7 @@ main(
      *  ENCODE      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all IMPORT threads
+    //  Loop through all ENCODE threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_ENCODE;
          thread_id += 1 )
@@ -844,7 +843,7 @@ main(
                                            thread_id,
                                            QUEUE_DEPTH_ENCODE );
 
-        //  Launch the decode thread
+        //  Launch the encode thread
         thread_new( encode, encode_tcb[ thread_id ] );
 
         //  Wait for the thread to be initialized
@@ -854,6 +853,32 @@ main(
 
             //  Loop until the thread is 'WAIT'ing for work
         }   while( encode_tcb[ thread_id ]->thread_state != TS_WAIT );
+    }
+
+    /************************************************************************
+     *  EXPORT      Thread and Queue Initialization
+     ************************************************************************/
+
+    //  Loop through all EXPORT threads
+    for( thread_id = 0;
+         thread_id < THREAD_COUNT_EXPORT;
+         thread_id += 1 )
+    {
+        //  Allocate storage for a Thread Control Block
+        export_tcb[ thread_id ] = tcb_new( THREAD_NAME_EXPORT,
+                                           thread_id,
+                                           QUEUE_DEPTH_EXPORT );
+
+        //  Launch the export thread
+        thread_new( export, export_tcb[ thread_id ] );
+
+        //  Wait for the thread to be initialized
+        do
+        {
+            usleep( 100 );
+
+            //  Loop until the thread is 'WAIT'ing for work
+        }   while( export_tcb[ thread_id ]->thread_state != TS_WAIT );
     }
 
     /************************************************************************

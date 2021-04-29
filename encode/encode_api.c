@@ -287,8 +287,11 @@ encode(
             encode_txt( rcb_p );    //  Universal recipe text format
         }
 
-        //  Kill the Recipe Control Block
-        rcb_kill( rcb_p );
+        //  Set the RCB destination
+        rcb_p->dst_thread = DST_EXPORT;
+
+        //  Put it in one of the ROUTER queue
+        queue_put_payload( router_queue_id, rcb_p  );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

@@ -27,10 +27,6 @@
  *                                                          (blank line)
  *          @@@@@
  *
- *  @ToDo: 1 Replace "Format:" with "Source:" file with data/time.
- *  @ToDo: 0 Conform to the published format
- *
- *
  ****************************************************************************/
 
 /****************************************************************************
@@ -202,79 +198,20 @@ encode_txt(
     fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->name );
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "|\n" );
+    fprintf( out_file_fp, "\n" );
     //-----------------------------------------------------------------------
     //  DESCRIPTION:
     if ( rcb_p->recipe_p->description != NULL )
     {
         fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->description );
     }
-    //-----------------------------------------------------------------------
-    //  AUTHOR:
-    fprintf( out_file_fp, "Author: " );
-    if ( rcb_p->recipe_p->author != NULL )
-    {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->author );
-    }
     else
     {
-        fprintf( out_file_fp, "\n" );
-    }
-    //-----------------------------------------------------------------------
-    //  Serves:
-    fprintf( out_file_fp, "Serves: " );
-    if ( rcb_p->recipe_p->serves != NULL )
-    {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->serves );
-    }
-    else
-    {
-        fprintf( out_file_fp, "\n" );
-    }
-    //-----------------------------------------------------------------------
-    //  TIME PREP:
-    fprintf( out_file_fp, "Prep Time: " );
-    if ( rcb_p->recipe_p->time_prep != NULL )
-    {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_prep );
-    }
-    else
-    {
-        fprintf( out_file_fp, "0:00\n" );
-    }
-    //-----------------------------------------------------------------------
-    //  TIME COOK:
-    fprintf( out_file_fp, "Cook Time: " );
-    if ( rcb_p->recipe_p->time_cook != NULL )
-    {
-        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_cook );
-    }
-    else
-    {
-        fprintf( out_file_fp, "0:00\n" );
-    }
-    //-----------------------------------------------------------------------
-    //  Yield:
-    fprintf( out_file_fp, "Yield: " );
-
-    if ( rcb_p->recipe_p->makes != NULL )
-    {
-        fprintf( out_file_fp, "%s", rcb_p->recipe_p->makes );
-    }
-    //  Is there a unit of measurement ?
-    if ( rcb_p->recipe_p->makes_unit != NULL )
-    {
-        //  YES:    Write it
-        fprintf( out_file_fp, " %s\n", rcb_p->recipe_p->makes_unit );
-    }
-    else
-    {
-        //  NO:     End-of-Line
-        fprintf( out_file_fp, "\n" );
+        fprintf( out_file_fp, "Description: ?\n" );
     }
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "|\n" );
+    fprintf( out_file_fp, "\n" );
     //-----------------------------------------------------------------------
     //  <AUIP>
     if ( list_query_count( rcb_p->recipe_p->ingredient ) > 0 )
@@ -322,7 +259,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  Section break:
-    fprintf( out_file_fp, "|\n" );
+    fprintf( out_file_fp, "\n" );
     //-----------------------------------------------------------------------
     //  DIRECTIONS
     if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
@@ -340,8 +277,74 @@ encode_txt(
         }
     }
     //-----------------------------------------------------------------------
-    //  Source:
-    fprintf( out_file_fp, "Source: " );
+    //  Recipe Data:
+    fprintf( out_file_fp, "\n----- Recipe Data -----\n\n" );
+    //-----------------------------------------------------------------------
+    //  AUTHOR:
+    fprintf( out_file_fp, "AUTHOR: " );
+    if ( rcb_p->recipe_p->author != NULL )
+    {
+        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->author );
+    }
+    else
+    {
+        fprintf( out_file_fp, "\n" );
+    }
+    //-----------------------------------------------------------------------
+    //  SERVES:
+    fprintf( out_file_fp, "SERVES: " );
+    if ( rcb_p->recipe_p->serves != NULL )
+    {
+        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->serves );
+    }
+    else
+    {
+        fprintf( out_file_fp, "\n" );
+    }
+    //-----------------------------------------------------------------------
+    //  TIME PREP:
+    fprintf( out_file_fp, "TIME PREP: " );
+    if ( rcb_p->recipe_p->time_prep != NULL )
+    {
+        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_prep );
+    }
+    else
+    {
+        fprintf( out_file_fp, "0:00\n" );
+    }
+    //-----------------------------------------------------------------------
+    //  TIME COOK:
+    fprintf( out_file_fp, "TIME COOK: " );
+    if ( rcb_p->recipe_p->time_cook != NULL )
+    {
+        fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_cook );
+    }
+    else
+    {
+        fprintf( out_file_fp, "0:00\n" );
+    }
+    //-----------------------------------------------------------------------
+    //  YIELD:
+    fprintf( out_file_fp, "YIELD: " );
+
+    if ( rcb_p->recipe_p->makes != NULL )
+    {
+        fprintf( out_file_fp, "%s", rcb_p->recipe_p->makes );
+    }
+    //  Is there a unit of measurement ?
+    if ( rcb_p->recipe_p->makes_unit != NULL )
+    {
+        //  YES:    Write it
+        fprintf( out_file_fp, " %s\n", rcb_p->recipe_p->makes_unit );
+    }
+    else
+    {
+        //  NO:     End-of-Line
+        fprintf( out_file_fp, "\n" );
+    }
+    //-----------------------------------------------------------------------
+    //  SOURCE:
+    fprintf( out_file_fp, "SOURCE: " );
     if ( rcb_p->recipe_p->source != NULL )
     {
         fprintf( out_file_fp, "%s\n\n", rcb_p->recipe_p->source );
@@ -350,12 +353,6 @@ encode_txt(
     {
         fprintf( out_file_fp, "\n" );
     }
-    //-----------------------------------------------------------------------
-    //  Extra Stuff:
-    fprintf( out_file_fp, "\n----------------------------------------\n\n" );
-    //-----------------------------------------------------------------------
-    //  Recipe-Id
-    fprintf( out_file_fp, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id );
     //-----------------------------------------------------------------------
     //  NOTES:
     fprintf( out_file_fp, "NOTES:\n" );
@@ -370,7 +367,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  CATEGORIES
-    fprintf( out_file_fp, "Categories:\n" );
+    fprintf( out_file_fp, "CATEGORIES:\n" );
     {
         int                             first_category;
 
@@ -533,12 +530,12 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  COPYRIGHT:
-    fprintf( out_file_fp, "Copyright:      %s\n", rcb_p->recipe_p->copyright );
+    fprintf( out_file_fp, "COPYRIGHT:      %s\n", rcb_p->recipe_p->copyright );
     //-----------------------------------------------------------------------
     //  TIME WAIT:
     //  @ToDo: 2 This field isn't decoded yet!
     //          I'm using the resting time as a place holder.
-    fprintf( out_file_fp, "Time Wait:      " );
+    fprintf( out_file_fp, "TIME WAIT:      " );
     if ( rcb_p->recipe_p->time_rest != NULL )
     {
         fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_rest );
@@ -549,7 +546,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  TIME REST:
-    fprintf( out_file_fp, "Time Rest:      " );
+    fprintf( out_file_fp, "TIME REST:      " );
     if ( rcb_p->recipe_p->time_rest != NULL )
     {
         fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->time_rest );
@@ -560,7 +557,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  SKILL LEVEL:
-    fprintf( out_file_fp, "Skill Level:    " );
+    fprintf( out_file_fp, "SKILL LEVEL:    " );
     if ( rcb_p->recipe_p->skill != NULL )
     {
         fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->skill );
@@ -571,7 +568,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  RATING:
-    fprintf( out_file_fp, "Rating:         " );
+    fprintf( out_file_fp, "RATING:         " );
     if ( rcb_p->recipe_p->rating != NULL )
     {
         fprintf( out_file_fp, "%s\n", rcb_p->recipe_p->rating );
@@ -581,14 +578,20 @@ encode_txt(
         fprintf( out_file_fp, "*\n" );
     }
     //-----------------------------------------------------------------------
-    //  FORMAT:
+    //  Recipe Info:
+    fprintf( out_file_fp, "\n----- Recipe Info -----\n\n" );
+    //-----------------------------------------------------------------------
+    //  Recipe-Id
+    fprintf( out_file_fp, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id );
+    //-----------------------------------------------------------------------
+    //  SOURCE FORMAT:
     if ( rcb_p->recipe_p->source_format == NULL )
     {
-        fprintf( out_file_fp, "Format:         TXT\n" );
+        fprintf( out_file_fp, "SOURCE FORMAT:  TXT\n" );
     }
     else
     {
-        fprintf( out_file_fp, "Format:         %s\n", rcb_p->recipe_p->source_format );
+        fprintf( out_file_fp, "SOURCE FORMAT:  %s\n", rcb_p->recipe_p->source_format );
     }
     //-----------------------------------------------------------------------
     //  <IMPORTED_FROM>
@@ -683,7 +686,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  TXT Recipe end tag
-    fprintf( out_file_fp, "_____\n" );
+    fprintf( out_file_fp, "\n@@@@@\n" );
 
     /************************************************************************
      *  Function Exit

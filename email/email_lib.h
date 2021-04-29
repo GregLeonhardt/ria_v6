@@ -98,6 +98,9 @@
 #define SRCH_SOURCE                 "From - "
 #define SRCH_SOURCE_L               strlen( SRCH_SOURCE )
 //----------------------------------------------------------------------------
+#define SRCH_PATH                   "Path: "
+#define SRCH_PATH_L                 strlen( SRCH_PATH )
+//----------------------------------------------------------------------------
 #define SRCH_PGO                    "PGO-ID:"
 #define SRCH_PGO_L                  strlen( SRCH_PGO )
 //----------------------------------------------------------------------------

@@ -125,6 +125,7 @@ EMAIL__is_start(
     {
         //  Is this the start of a new e-Mail ?
         if (    ( strncmp( start_p, SRCH_SOURCE, SRCH_SOURCE_L ) == 0 )
+             || ( strncmp( start_p, SRCH_PATH,   SRCH_PATH_L   ) == 0 )
              || ( strncmp( start_p, SRCH_PGO,    SRCH_PGO_L    ) == 0 ) )
         {
             //  YES:    Change the return code

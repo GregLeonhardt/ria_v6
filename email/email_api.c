@@ -213,13 +213,15 @@ email(
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
             //  Test for the start of an e-Mail thread
-            if ( EMAIL__is_start( list_data_p ) == true )
+            if (    ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
+                 && ( EMAIL__is_start( list_data_p ) == true ) )
             {
                 email_start_flag = true;
             }
 
             //  Are we processing an e-Mail message ?
-            if ( email_start_flag == true )
+            if (    ( email_start_flag     ==               true )
+                 && ( rcb_p->recipe_format == RECIPE_FORMAT_NONE ) )
             {
                 //  "NEWSGROUPS:"
                 tmp_data_p = EMAIL__find_newsgroup( list_data_p );
@@ -266,6 +268,9 @@ email(
                 {
                     //  YES:    Prepare for the new recipe
                     new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+
+                    //  Add this data buffer to the new recipe list.
+                    list_put_last( new_rcb_p->import_list_p, list_data_p );
                 }
                 else
                 {
@@ -292,16 +297,13 @@ email(
                     queue_put_payload( router_queue_id, new_rcb_p  );
 
                     //  Clear the current recipe format
-                    rcb_p->recipe_format = RECIPE_FORMAT_NONE;
+                    rcb_p->recipe_format = tmp_format;
 
                     //  Clear the new RCB pointer
                     new_rcb_p = NULL;
 
-                    //  Prepare for the new recipe
+                    //  Allocate a new RCB for the new recipe
                     new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
-
-                    //  Add this data buffer to the recipe list.
-                    list_put_last( new_rcb_p->import_list_p, list_data_p );
                 }
 
                 //  Add this data buffer to the recipe list.

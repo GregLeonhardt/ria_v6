@@ -125,6 +125,7 @@ EMAIL__is_start(
     {
         //  Is this the start of a new e-Mail ?
         if (    ( strncmp( start_p, SRCH_SOURCE, SRCH_SOURCE_L ) == 0 )
+             || ( strncmp( start_p, SRCH_S_FROM, SRCH_S_FROM_L ) == 0 )
              || ( strncmp( start_p, SRCH_PATH,   SRCH_PATH_L   ) == 0 )
              || ( strncmp( start_p, SRCH_PGO,    SRCH_PGO_L    ) == 0 ) )
         {
@@ -875,6 +876,15 @@ EMAIL__find_newsgroup(
     {
         //  YES:    Move the pointer past the search text
         tmp_data_p += SRCH_NEWSGROUPS_L;
+
+        //  Also move past any whitespace to eventually point to the data
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+    }
+    else
+    if ( strncmp( tmp_data_p, SRCH_TO, SRCH_TO_L ) == 0 )
+    {
+        //  YES:    Move the pointer past the search text
+        tmp_data_p += SRCH_TO_L;
 
         //  Also move past any whitespace to eventually point to the data
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );

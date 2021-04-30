@@ -95,6 +95,9 @@
 #define SRCH_CTE_BINARY             "binary"
 #define SRCH_CTE_BINARY_L           strlen( SRCH_CTE_BINARY )
 //----------------------------------------------------------------------------
+#define SRCH_S_FROM                 "From "
+#define SRCH_S_FROM_L               strlen( SRCH_S_FROM )
+//----------------------------------------------------------------------------
 #define SRCH_SOURCE                 "From - "
 #define SRCH_SOURCE_L               strlen( SRCH_SOURCE )
 //----------------------------------------------------------------------------
@@ -109,6 +112,9 @@
 //----------------------------------------------------------------------------
 #define SRCH_RXF_BREAK              "........................................"
 #define SRCH_RXF_BREAK_L            strlen( SRCH_RXF_BREAK )
+//----------------------------------------------------------------------------
+#define SRCH_TO                     "To: "
+#define SRCH_TO_L                   strlen( SRCH_TO )
 //----------------------------------------------------------------------------
 #define SRCH_NEWSGREUPS             "Newsgroups: "
 #define SRCH_NEWSGROUPS_L           strlen( SRCH_NEWSGREUPS )

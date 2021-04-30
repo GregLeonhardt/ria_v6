@@ -77,7 +77,6 @@ enum    recipe_format_e
 
 //----------------------------------------------------------------------------
 /**
- *  @ToDo: 0 Move e-Mail information from recipe_t to rcb_t
  *  @param recipe_t             Primary structure for a recipe
  *  @NOTE:  Changes to this structure require changes to recipe_kill( );    */
 struct   recipe_t
@@ -103,27 +102,6 @@ struct   recipe_t
     /**
      *  @param  copyright       (c) XyZ                                     */
     char                    *   copyright;
-    /**
-     *  @param  imported_from   File or e-Mail information                  */
-    char                    *   imported_from;
-    /**
-     *  @param  group_from      NewsGroup the recipe was posted to          */
-    char                    *   group_from;
-    /**
-     *  @param  group_subject   Subject used by the NewsGroup               */
-    char                    *   group_subject;
-    /**
-     *  @param  group_date      Date & Time the NewsGroup message was sent  */
-    char                    *   group_date;
-    /**
-     *  @param  posted_by       Who sent the e-Mail                         */
-    char                    *   posted_by;
-    /**
-     *  @param  posted_subject  Subject of the e-Mail                       */
-    char                    *   posted_subject;
-    /**
-     *  @param  posted_date     When the e-Mail was sent                    */
-    char                    *   posted_date;
     /**
      *  @param  edited_by       Who last edited or changed                  */
     char                    *   edited_by;

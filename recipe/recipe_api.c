@@ -284,15 +284,8 @@ recipe_kill(
     if ( recipe_p->recipe_id != NULL)        mem_free( recipe_p->recipe_id );
     if ( recipe_p->author != NULL)           mem_free( recipe_p->author );
     if ( recipe_p->source_format != NULL)    mem_free( recipe_p->source_format );
-    if ( recipe_p->group_from != NULL)       mem_free( recipe_p->group_from );
-    if ( recipe_p->group_subject != NULL)    mem_free( recipe_p->group_subject );
-    if ( recipe_p->group_date != NULL)       mem_free( recipe_p->group_date );
     if ( recipe_p->wine != NULL)             mem_free( recipe_p->wine );
     if ( recipe_p->copyright != NULL)        mem_free( recipe_p->copyright );
-    if ( recipe_p->imported_from != NULL)    mem_free( recipe_p->imported_from );
-    if ( recipe_p->posted_by != NULL)        mem_free( recipe_p->posted_by );
-    if ( recipe_p->posted_date != NULL)      mem_free( recipe_p->posted_date );
-    if ( recipe_p->posted_subject != NULL)   mem_free( recipe_p->posted_subject );
     if ( recipe_p->edited_by != NULL)        mem_free( recipe_p->edited_by );
     if ( recipe_p->formatted_by != NULL)     mem_free( recipe_p->formatted_by );
     if ( recipe_p->import_from != NULL)      mem_free( recipe_p->import_from );

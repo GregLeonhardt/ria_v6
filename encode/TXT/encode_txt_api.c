@@ -61,6 +61,7 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+#include "email_api.h"          //  API for all email_*             PUBLIC
                                 //*******************************************
 #include <encode_api.h>         //  API for all encode_*            PUBLIC
 #include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
@@ -667,71 +668,71 @@ encode_txt(
     //  <E-MAIL>
     //  ####################
     //  GROUP-NAME:
-    asprintf( &write_data_p, "G-Name:         " );
+    asprintf( &write_data_p, "GROUP-NAME:     " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->group_from != NULL )
+    if ( rcb_p->email_info_p->g_from != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_from );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_from );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  GROUP-SUBJECT:
-    asprintf( &write_data_p, "G-Subject:      " );
+    asprintf( &write_data_p, "GROUP_SUBJET:   " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->group_subject != NULL )
+    if ( rcb_p->email_info_p->g_subject != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_subject );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_subject );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
     //  GROUP-DATE:
-    asprintf( &write_data_p, "G-Date:         " );
+    asprintf( &write_data_p, "GROUP_DATE:     " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->group_date != NULL )
+    if ( rcb_p->email_info_p->g_datetime != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->group_date );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_datetime );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
-    //  POSTED-BY:
-    asprintf( &write_data_p, "P-By:           " );
+    //  eMail-FROM:
+    asprintf( &write_data_p, "eMail-FROM:     " );
     list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->posted_by != NULL )
+    if ( rcb_p->email_info_p->e_from != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_by );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_from );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
-    //  POSTED-SUBJECT:
-    asprintf( &write_data_p, "P-Subject:      " );
+    //  eMAIL-SUBJECT:
+    asprintf( &write_data_p, "eMAIL-SUBJECT:  " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->posted_subject != NULL )
+    if ( rcb_p->email_info_p->e_subject != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_subject );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_subject );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //  ####################
-    //  POSTED-DATE:
-    asprintf( &write_data_p, "P-Date:         " );
+    //  eMAIL-DATE:
+    asprintf( &write_data_p, "eMAIL-DATE:     " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->posted_date != NULL )
+    if ( rcb_p->email_info_p->e_datetime != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->posted_date );
+        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_datetime );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     asprintf( &write_data_p, "\n" );

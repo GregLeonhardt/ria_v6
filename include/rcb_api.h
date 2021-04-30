@@ -86,7 +86,7 @@ struct  rcb_t
     struct  recipe_t        *   recipe_p;
     /**
      *  @param  email_info_p    e-Mail from, date, time etc                 */
-    struct  source_info_t   *   email_info_p;
+    struct  email_info_t    *   email_info_p;
     /**
      *  @param  recipe_format   Format code for this recipe                 */
     enum    recipe_format_e     recipe_format;

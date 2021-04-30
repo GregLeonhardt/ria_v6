@@ -190,6 +190,9 @@ decode(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+    /**
+     *  @param  ok_to_encode    TRUE = OK to encode the recipe              */
+    int                         ok_to_encode;
 
     /************************************************************************
      *  Function Initialization
@@ -244,6 +247,7 @@ decode(
                            "Decode for recipe format 'MXP' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_MX2:
             {
@@ -252,11 +256,13 @@ decode(
                            "Decode for recipe format 'MX2' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_MMF:
             {
                 //  Decode a Meal-Master recipe
                 decode_mmf( rcb_p );
+                ok_to_encode = true;
             }   break;
             case    RECIPE_FORMAT_RXF:
             {
@@ -265,6 +271,7 @@ decode(
                            "Decode for recipe format 'RXF' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_NYC:
             {
@@ -273,6 +280,7 @@ decode(
                            "Decode for recipe format 'NYC' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_BOF:
             {
@@ -281,6 +289,7 @@ decode(
                            "Decode for recipe format 'BOF' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_CP2:
             {
@@ -289,6 +298,7 @@ decode(
                            "Decode for recipe format 'CP2' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_GRF:
             {
@@ -297,6 +307,7 @@ decode(
                            "Decode for recipe format 'GRF' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_GF2:
             {
@@ -305,6 +316,7 @@ decode(
                            "Decode for recipe format 'GF2' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_ERD:
             {
@@ -313,6 +325,7 @@ decode(
                            "Decode for recipe format 'ERD' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             case    RECIPE_FORMAT_TXT:
             {
@@ -321,6 +334,7 @@ decode(
                            "Decode for recipe format 'TXT' is not available\n" );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }   break;
             default:
             {
@@ -330,17 +344,22 @@ decode(
                            tcb_p->queue_id, rcb_p->recipe_format );
                 //  Clean out the recipe control block
                 rcb_kill( rcb_p );
+                ok_to_encode = false;
             }
         }
 
-        //  Post recipe format specific decode processing
-        decode_post( rcb_p );
+        //  Is it OK to encode this recipe ?
+        if ( ok_to_encode == true )
+        {
+            //  Post recipe format specific decode processing
+            decode_post( rcb_p );
 
-        //  Set the RCB destination
-        rcb_p->dst_thread = DST_ENCODE;
+            //  Set the RCB destination
+            rcb_p->dst_thread = DST_ENCODE;
 
-        //  Put it in one of the IMPORT queue's
-        queue_put_payload( router_queue_id, rcb_p  );
+            //  Put it in one of the IMPORT queue's
+            queue_put_payload( router_queue_id, rcb_p  );
+        }
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

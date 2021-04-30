@@ -30,6 +30,7 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <string.h>             //  Functions for managing strings
                                 //*******************************************
 
 /****************************************************************************
@@ -150,20 +151,12 @@ email(
     /**
      * @param list_lock_key     File list key                               */
     int                         list_lock_key;
-#if 0   //  @ToDo: 3 Enable e-Mail decode
     /**
-     * @param email_flag        A mark on the wall if wr are doing an e-Mail*/
-    int                         email_flag;
+     * @param email_start_flag  TRUE = e-mail processing                    */
+    int                         email_start_flag;
     /**
-     * @param content_type      e-Mail content type                         */
-    enum    content_type_e      content_type;
-    /**
-     * @param encoding_type     e-Mail encoding type                        */
-    enum    encoding_type_e     encoding_type;
-    /**
-     * @param boundary_type     e-Mail boundary type                        */
-//  enum    boundary_type_e     boundary_type;
-#endif
+     * @param tmp_data_p        Temporary data pointer                      */
+    char                    *   tmp_data_p;
 
     /************************************************************************
      *  Function Initialization
@@ -211,58 +204,56 @@ email(
         //  Lock the list for fast(er) access
         list_lock_key = list_user_lock( rcb_p->import_list_p );
 
-#if 0   //  @ToDo: 3 Enable e-Mail decode
-        //  Is this the start of a new e-Mail ?
-        list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
-
-        //  Is there anything to scan ?
-        if ( list_data_p == NULL )
-        {
-            //  Release the lock on the level 3 list
-            list_user_unlock( rcb_p->import_list_p, list_lock_key );
-
-            //  Start over again.
-            continue;
-        }
-
-        if ( EMAIL__is_start( list_data_p ) == true )
-        {
-            //  YES:    Set a flag so we can track it.
-            email_flag = true;
-
-            //  Reset the content types.
-            content_type   = CT_NONE;
-            encoding_type  = CTE_NONE;
-
-            log_write( MID_DEBUG_0, tcb_p->thread_name,
-                          "Start      %p - '%.80s'\n", list_data_p, list_data_p );
-
-            //  Remove the data from the list
-            list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
-            mem_free( list_data_p );
-        }
-#endif
         //  Scan the list
         for( list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
              list_data_p != NULL;
              list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
         {
-#if 0   //  @ToDo: 3 Enable e-Mail decode
-            /**
-             * @param tmp_c_type        e-Mail content type                 */
-            enum    content_type_e          tmp_c_type;
-            /**
-             * @param tmp_e_type        e-Mail encoding type                */
-            enum    encoding_type_e         tmp_e_type;
-#endif
-
             //  Remove the data from the level 1 list
             list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
-#if 0   //  @ToDo: 3 Enable e-Mail decode
-            tmp_c_type = EMAIL__find_content( tcb_p, list_data_p );
-            tmp_e_type = EMAIL__find_encoding( tcb_p, list_data_p );
-#endif
+            //  Test for the start of an e-Mail thread
+            if ( EMAIL__is_start( list_data_p ) == true )
+            {
+                email_start_flag = true;
+            }
+
+            //  Are we processing an e-Mail message ?
+            if ( email_start_flag == true )
+            {
+                //  "NEWSGROUPS:"
+                tmp_data_p = EMAIL__find_newsgroup( list_data_p );
+                if ( tmp_data_p != NULL )
+                {
+                    //  YES:    Save the information
+                    memset( rcb_p->email_info_p->g_from, '\0', FROM_L );
+                    memcpy( rcb_p->email_info_p->g_from, tmp_data_p, FROM_L );
+                }
+                //  "SUBJECT:"
+                tmp_data_p = EMAIL__find_subject( list_data_p );
+                if ( tmp_data_p != NULL )
+                {
+                    //  YES:    Save the information
+                    memset( rcb_p->email_info_p->e_subject, '\0', SUBJECT_L );
+                    memcpy( rcb_p->email_info_p->e_subject, tmp_data_p, SUBJECT_L );
+                }
+                //  "FROM:"
+                tmp_data_p = EMAIL__find_from( list_data_p );
+                if ( tmp_data_p != NULL )
+                {
+                    //  YES:    Save the information
+                    memset( rcb_p->email_info_p->e_from, '\0', FROM_L );
+                    memcpy( rcb_p->email_info_p->e_from, tmp_data_p, FROM_L );
+                }
+                //  "DATE:"
+                tmp_data_p = EMAIL__find_datetime( list_data_p );
+                if ( tmp_data_p != NULL )
+                {
+                    //  YES:    Save the information
+                    memset( rcb_p->email_info_p->e_datetime, '\0', DATETIME_L );
+                    memcpy( rcb_p->email_info_p->e_datetime, tmp_data_p, DATETIME_L );
+                }
+            }
 
             //  Did we find the start of a recipe ?
             if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
@@ -338,11 +329,8 @@ email(
         //  Release the lock on the level 3 list
         list_user_unlock( rcb_p->import_list_p, list_lock_key );
 
-#if 0
-#else
         //  Kill the Recipe Control Block
         rcb_kill( rcb_p );
-#endif
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

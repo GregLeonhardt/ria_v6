@@ -838,6 +838,63 @@ EMAIL__find_source(
 
 /****************************************************************************/
 /**
+ *  Test the text line to see if it contains a "Newsgroups: ' statement.
+ *
+ *  @param  data_p              Pointer to a line of text data
+ *
+ *  @return email_rc            TRUE when the text is the start of an e-Mail
+ *                              message, else FALSE is returned
+ *
+ *  @note
+ *      Newsgroups: rec.food.recipes
+ *
+ ****************************************************************************/
+
+char    *
+EMAIL__find_newsgroup(
+    char                        *   data_p
+    )
+{
+    /**
+     * @param tmp_data_p        Pointer to a temp data buffer               */
+    char                        *   tmp_data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Locate the first character in the buffer
+    tmp_data_p = text_skip_past_whitespace( data_p );
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  From: ?
+    if ( strncmp( tmp_data_p, SRCH_NEWSGREUPS, SRCH_NEWSGROUPS_L ) == 0 )
+    {
+        //  YES:    Move the pointer past the search text
+        tmp_data_p += SRCH_NEWSGROUPS_L;
+
+        //  Also move past any whitespace to eventually point to the data
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+    }
+    else
+    {
+        //  NO:     Set the pointer to 'NULL'
+        tmp_data_p = NULL;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( tmp_data_p );
+}
+
+/****************************************************************************/
+/**
  *  Test the text line to see if it contains where the e-Mail came from.
  *
  *  @param  data_p              Pointer to a line of text data

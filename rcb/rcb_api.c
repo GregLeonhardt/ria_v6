@@ -89,6 +89,8 @@
  *
  *  @note
  *
+ *  @ToDo: 2 Segment fault after unknown recipe format.
+ *
  ****************************************************************************/
 
 void
@@ -224,6 +226,9 @@ rcb_new(
     //  YES:    Allocate a new recipe control block
     new_rcb_p = mem_malloc( sizeof( struct rcb_t ) );
 
+    //  Create a new e-Mail information structure for the new RCB
+    new_rcb_p->email_info_p = mem_malloc( sizeof( struct email_info_t ) );
+
     //  Is this going to be a split of an existing Recipe Control Block
     if ( old_rcb_p != NULL )
     {
@@ -242,13 +247,9 @@ rcb_new(
                 sizeof( old_rcb_p->file_path ) );
 
         //  Copy the e-Mail information to the new RCB
-        if ( new_rcb_p->email_info_p != NULL )
-        {
-            new_rcb_p->email_info_p = mem_malloc( sizeof( struct email_info_t ) );
-            memcpy( new_rcb_p->email_info_p,
-                    old_rcb_p->email_info_p,
-                    sizeof( struct email_info_t ) );
-        }
+        memcpy( new_rcb_p->email_info_p,
+                old_rcb_p->email_info_p,
+                sizeof( struct email_info_t ) );
     }
 
     //  No destination thread yet.

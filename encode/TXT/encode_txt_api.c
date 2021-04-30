@@ -668,75 +668,78 @@ encode_txt(
     //  <E-MAIL>
     //  ####################
     //  GROUP-NAME:
-    asprintf( &write_data_p, "GROUP-NAME:     " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
+    if ( rcb_p->email_info_p != NULL )
+    {
+        asprintf( &write_data_p, "GROUP-NAME:     " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->email_info_p->g_from != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_from );
+        if ( rcb_p->email_info_p->g_from != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_from );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    //  ####################
-    //  GROUP-SUBJECT:
-    asprintf( &write_data_p, "GROUP_SUBJET:   " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
+        //  ####################
+        //  GROUP-SUBJECT:
+        asprintf( &write_data_p, "GROUP_SUBJET:   " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->email_info_p->g_subject != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_subject );
+        if ( rcb_p->email_info_p->g_subject != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_subject );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    //  ####################
-    //  GROUP-DATE:
-    asprintf( &write_data_p, "GROUP_DATE:     " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
+        //  ####################
+        //  GROUP-DATE:
+        asprintf( &write_data_p, "GROUP_DATE:     " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->email_info_p->g_datetime != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_datetime );
+        if ( rcb_p->email_info_p->g_datetime != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->g_datetime );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    //  ####################
-    //  eMail-FROM:
-    asprintf( &write_data_p, "eMail-FROM:     " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->email_info_p->e_from != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_from );
+        //  ####################
+        //  eMail-FROM:
+        asprintf( &write_data_p, "eMail-FROM:     " );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    //  ####################
-    //  eMAIL-SUBJECT:
-    asprintf( &write_data_p, "eMAIL-SUBJECT:  " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
+        if ( rcb_p->email_info_p->e_from != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_from );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+        //  ####################
+        //  eMAIL-SUBJECT:
+        asprintf( &write_data_p, "eMAIL-SUBJECT:  " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->email_info_p->e_subject != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_subject );
+        if ( rcb_p->email_info_p->e_subject != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_subject );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    //  ####################
-    //  eMAIL-DATE:
-    asprintf( &write_data_p, "eMAIL-DATE:     " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
+        //  ####################
+        //  eMAIL-DATE:
+        asprintf( &write_data_p, "eMAIL-DATE:     " );
+        list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->email_info_p->e_datetime != NULL )
-    {
-        asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_datetime );
+        if ( rcb_p->email_info_p->e_datetime != NULL )
+        {
+            asprintf( &write_data_p, "%s", rcb_p->email_info_p->e_datetime );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }
+        asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
-    asprintf( &write_data_p, "\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Formatted By:
     asprintf( &write_data_p, "FormattedBy:    " );

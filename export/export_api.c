@@ -232,6 +232,9 @@ export(
 
             //  Write the line of text to the output file
             fprintf( out_file_fp, "%s", list_data_p );
+
+            //  Free the data buffer
+            mem_free( list_data_p );
         }
 
         //  Close the output file.
@@ -239,6 +242,9 @@ export(
 
         //  Release the lock on the level 3 list
         list_user_unlock( rcb_p->export_list_p, list_lock_key );
+
+        //  Kill the Recipe Control Block
+        rcb_kill( rcb_p );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

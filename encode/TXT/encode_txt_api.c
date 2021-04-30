@@ -682,7 +682,7 @@ encode_txt(
         list_put_last( rcb_p->export_list_p, write_data_p );
         //  ####################
         //  GROUP-SUBJECT:
-        asprintf( &write_data_p, "GROUP_SUBJET:   " );
+        asprintf( &write_data_p, "GROUP_SUBJECT:  " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         if ( rcb_p->email_info_p->g_subject != NULL )

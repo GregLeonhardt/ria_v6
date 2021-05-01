@@ -152,7 +152,7 @@ tcb_new(
 
     //  Build the queue name
     snprintf( tcb_p->thread_name,
-              sizeof( router_tcb->thread_name ),
+              sizeof( import_tcb->thread_name ),
               "%s%02d", group_name, group_thread_num );
 
     //  Create the queue

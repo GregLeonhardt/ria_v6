@@ -19,7 +19,9 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_IMPORT          ( "ALLOCATE STORAGE FOR IMPORT" )
+#define ALLOC_IMPORT            ( "ALLOCATE STORAGE FOR IMPORT" )
+
+#define DEBUG_STUB              ( 0 )
 
 /****************************************************************************
  * System Function API
@@ -145,7 +147,7 @@ import(
         rcb_p->tcb_p = tcb_p;
 
         //  Progress report.
-        log_write( MID_LOGONLY, tcb_p->thread_name,
+        log_write( MID_INFO, tcb_p->thread_name,
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->file_path );
 
@@ -210,14 +212,12 @@ import(
             unlink( file_name );
         }
 
-        //  Set the RCB destination
-        rcb_p->dst_thread = DST_EMAIL;
-
+#if DEBUG_STUB
+        rcb_kill( rcb_p );
+#else
         //  Put it in one of the IMPORT queue's
-        queue_put_payload( router_queue_id, rcb_p  );
-
-        //  Slow things down
-//      usleep( 20000 );
+        queue_put_payload( email_tcb->queue_id, rcb_p  );
+#endif
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

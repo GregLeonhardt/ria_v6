@@ -656,11 +656,13 @@ encode_txt(
         }
         if ( rcb_p->file_info_p->date_time != NULL )
         {
-            asprintf( &write_data_p, "FileSize:       %s\n", rcb_p->file_info_p->file_size );
+            asprintf( &write_data_p, "FileSize:       %s\n",
+                      rcb_p->file_info_p->file_size );
         list_put_last( rcb_p->export_list_p, write_data_p );
         }
         {
-            asprintf( &write_data_p, "FileDateTime:   %s\n", rcb_p->file_info_p->date_time );
+            asprintf( &write_data_p, "FileDateTime:   %s\n",
+                      rcb_p->file_info_p->date_time );
             list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }

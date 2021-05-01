@@ -50,7 +50,7 @@
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 3
+#define VER_MIN                 4
 
 /****************************************************************************
  * System Function API
@@ -78,7 +78,6 @@
 #include "monitor_api.h"        //  API for all monitor_*           PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
-#include "router_api.h"         //  API for all router_*            PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
@@ -266,62 +265,6 @@ command_line(
  *
  *  @param  void                No information is passed to this function.
  *
- *  @return rc                  TRUE when the router thread group is done
- *                              FALSE when still working
- *
- *  @note
- *
- ****************************************************************************/
-
-static
-int
-is_router_done(
-    void
-    )
-{
-    /**
-     *  @param  func_rc         Function return code                        */
-    int                         func_rc;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-    //  Assume everything is complete
-    func_rc = true;
-
-    /************************************************************************
-     *  Check for complete
-     ************************************************************************/
-
-    //  Anything in the input queue ?
-    if ( queue_get_count( router_tcb->queue_id ) != 0 )
-    {
-        //  YES:    It's still working
-        func_rc = false;
-    }
-    else
-        //  NO:     Is the thread working on something
-    if ( router_tcb->thread_state == TS_WORKING )
-    {
-        //  YES:    It's still working
-        func_rc = false;
-    }
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-    return( func_rc );
-}
-
-/****************************************************************************/
-/**
- *  Return the queue depth for a thread group
- *
- *  @param  void                No information is passed to this function.
- *
  *  @return rc                  TRUE when the import thread group is done
  *                              FALSE when still working
  *
@@ -338,9 +281,6 @@ is_import_done(
     /**
      *  @param  func_rc         Function return code                        */
     int                         func_rc;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Function Initialization
@@ -353,6 +293,10 @@ is_import_done(
      *  Check for complete
      ************************************************************************/
 
+#if 0
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
     //  Loop through all IMPORT threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_IMPORT;
@@ -379,6 +323,21 @@ is_import_done(
             break;
         }
     }
+#else
+    //  Anything in the input queue ?
+    if ( queue_get_count( import_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+    //  NO:     Is the thread working on something
+    if ( import_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+#endif
 
     /************************************************************************
      *  Function Exit
@@ -410,9 +369,6 @@ is_email_done(
     /**
      *  @param  func_rc         Function return code                        */
     int                         func_rc;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Function Initialization
@@ -425,6 +381,10 @@ is_email_done(
      *  Check for complete
      ************************************************************************/
 
+#if 0
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
     //  Loop through all EMAIL threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_EMAIL;
@@ -451,6 +411,21 @@ is_email_done(
             break;
         }
     }
+#else
+    //  Anything in the input queue ?
+    if ( queue_get_count( email_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+    //  NO:     Is the thread working on something
+    if ( email_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+#endif
 
     /************************************************************************
      *  Function Exit
@@ -482,9 +457,6 @@ is_decode_done(
     /**
      *  @param  func_rc         Function return code                        */
     int                         func_rc;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Function Initialization
@@ -497,6 +469,10 @@ is_decode_done(
      *  Check for complete
      ************************************************************************/
 
+#if 0
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
     //  Loop through all DECODE threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_DECODE;
@@ -523,6 +499,21 @@ is_decode_done(
             break;
         }
     }
+#else
+    //  Anything in the input queue ?
+    if ( queue_get_count( decode_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+    //  NO:     Is the thread working on something
+    if ( decode_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+#endif
 
     /************************************************************************
      *  Function Exit
@@ -554,9 +545,6 @@ is_encode_done(
     /**
      *  @param  func_rc         Function return code                        */
     int                         func_rc;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Function Initialization
@@ -569,6 +557,10 @@ is_encode_done(
      *  Check for complete
      ************************************************************************/
 
+#if 0
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
     //  Loop through all ENCODE threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_ENCODE;
@@ -595,6 +587,21 @@ is_encode_done(
             break;
         }
     }
+#else
+    //  Anything in the input queue ?
+    if ( queue_get_count( encode_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+    //  NO:     Is the thread working on something
+    if ( encode_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+#endif
 
     /************************************************************************
      *  Function Exit
@@ -626,9 +633,6 @@ is_export_done(
     /**
      *  @param  func_rc         Function return code                        */
     int                         func_rc;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Function Initialization
@@ -641,6 +645,10 @@ is_export_done(
      *  Check for complete
      ************************************************************************/
 
+#if 0
+    /**
+     * @param thread_id         Unique thread id number                     */
+    int                         thread_id;
     //  Loop through all EXPORT threads
     for( thread_id = 0;
          thread_id < THREAD_COUNT_EXPORT;
@@ -667,6 +675,21 @@ is_export_done(
             break;
         }
     }
+#else
+    //  Anything in the input queue ?
+    if ( queue_get_count( export_tcb->queue_id ) != 0 )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+    else
+    //  NO:     Is the thread working on something
+    if ( export_tcb->thread_state == TS_WORKING )
+    {
+        //  YES:    It's still working
+        func_rc = false;
+    }
+#endif
 
     /************************************************************************
      *  Function Exit
@@ -691,10 +714,7 @@ is_export_done(
  *  @return                     Zero for success. Any other value is an error.
  *
  *  @note
- *
- *  @ToDo: 0 MEMORY LEAK
- *      There is a memory leak somewhere and it's huge.
- *
+*
  ****************************************************************************/
 
 int
@@ -709,9 +729,6 @@ main(
     /**
      *  @param  file_info_p     Pointer to a file information structure     */
     struct  file_info_t     *   file_info_p;
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
 
     /************************************************************************
      *  Application Initialization
@@ -804,17 +821,14 @@ main(
     }
 
     /************************************************************************
-     *  ROUTER      Thread and Queue Initialization
+     *  IMPORT      Thread and Queue Initialization
      ************************************************************************/
 
     //  Allocate storage for a Thread Control Block
-    router_tcb = tcb_new( THREAD_NAME_ROUTER, 0, QUEUE_DEPTH_ROUTER );
-
-    //  The router queue id needs to be global
-    router_queue_id = router_tcb->queue_id;
+    import_tcb = tcb_new( THREAD_NAME_IMPORT, 0, QUEUE_DEPTH_IMPORT );
 
     //  Launch the import thread
-    thread_new( router, router_tcb );
+    thread_new( import, import_tcb );
 
     //  Wait for the thread to be initialized
     do
@@ -822,137 +836,79 @@ main(
         usleep( 100 );
 
         //  Loop until the thread is 'WAIT'ing for work
-    }   while( router_tcb->thread_state != TS_WAIT );
-
-    /************************************************************************
-     *  IMPORT      Thread and Queue Initialization
-     ************************************************************************/
-
-    //  Loop through all IMPORT threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_IMPORT;
-         thread_id += 1 )
-    {
-        //  Allocate storage for a Thread Control Block
-        import_tcb[ thread_id ] = tcb_new( THREAD_NAME_IMPORT,
-                                           thread_id,
-                                           QUEUE_DEPTH_IMPORT );
-
-        //  Launch the import thread
-        thread_new( import, import_tcb[ thread_id ] );
-
-        //  Wait for the thread to be initialized
-        do
-        {
-            usleep( 100 );
-
-            //  Loop until the thread is 'WAIT'ing for work
-        }   while( import_tcb[ thread_id ]->thread_state != TS_WAIT );
-    }
+    }   while( import_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  EMAIL       Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all EMAIL threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_EMAIL;
-         thread_id += 1 )
+    //  Allocate storage for a Thread Control Block
+    email_tcb = tcb_new( THREAD_NAME_EMAIL, 0, QUEUE_DEPTH_EMAIL );
+
+    //  Launch the EMAIL thread
+    thread_new( email, email_tcb );
+
+    //  Wait for the thread to be initialized
+    do
     {
-        //  Allocate storage for a Thread Control Block
-        email_tcb[ thread_id ] = tcb_new( THREAD_NAME_EMAIL,
-                                          thread_id,
-                                          QUEUE_DEPTH_EMAIL );
+        usleep( 100 );
 
-        //  Launch the EMAIL thread
-        thread_new( email, email_tcb[ thread_id ] );
-
-        //  Wait for the thread to be initialized
-        do
-        {
-            usleep( 100 );
-
-            //  Loop until the thread is 'WAIT'ing for work
-        }   while( email_tcb[ thread_id ]->thread_state != TS_WAIT );
-    }
+        //  Loop until the thread is 'WAIT'ing for work
+    }   while( email_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  DECODE      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all DECODE threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_DECODE;
-         thread_id += 1 )
+    //  Allocate storage for a Thread Control Block
+    decode_tcb = tcb_new( THREAD_NAME_DECODE, 0, QUEUE_DEPTH_DECODE );
+
+    //  Launch the decode thread
+    thread_new( decode, decode_tcb );
+
+    //  Wait for the thread to be initialized
+    do
     {
-        //  Allocate storage for a Thread Control Block
-        decode_tcb[ thread_id ] = tcb_new( THREAD_NAME_DECODE,
-                                           thread_id,
-                                           QUEUE_DEPTH_DECODE );
+        usleep( 100 );
 
-        //  Launch the decode thread
-        thread_new( decode, decode_tcb[ thread_id ] );
-
-        //  Wait for the thread to be initialized
-        do
-        {
-            usleep( 100 );
-
-            //  Loop until the thread is 'WAIT'ing for work
-        }   while( decode_tcb[ thread_id ]->thread_state != TS_WAIT );
-    }
+        //  Loop until the thread is 'WAIT'ing for work
+    }   while( decode_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  ENCODE      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all ENCODE threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_ENCODE;
-         thread_id += 1 )
+    //  Allocate storage for a Thread Control Block
+    encode_tcb = tcb_new( THREAD_NAME_ENCODE, 0, QUEUE_DEPTH_ENCODE );
+
+    //  Launch the encode thread
+    thread_new( encode, encode_tcb );
+
+    //  Wait for the thread to be initialized
+    do
     {
-        //  Allocate storage for a Thread Control Block
-        encode_tcb[ thread_id ] = tcb_new( THREAD_NAME_ENCODE,
-                                           thread_id,
-                                           QUEUE_DEPTH_ENCODE );
+        usleep( 100 );
 
-        //  Launch the encode thread
-        thread_new( encode, encode_tcb[ thread_id ] );
-
-        //  Wait for the thread to be initialized
-        do
-        {
-            usleep( 100 );
-
-            //  Loop until the thread is 'WAIT'ing for work
-        }   while( encode_tcb[ thread_id ]->thread_state != TS_WAIT );
-    }
+        //  Loop until the thread is 'WAIT'ing for work
+    }   while( encode_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  EXPORT      Thread and Queue Initialization
      ************************************************************************/
 
-    //  Loop through all EXPORT threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_EXPORT;
-         thread_id += 1 )
+    //  Allocate storage for a Thread Control Block
+    export_tcb = tcb_new( THREAD_NAME_EXPORT, 0, QUEUE_DEPTH_EXPORT );
+
+    //  Launch the export thread
+    thread_new( export, export_tcb );
+
+    //  Wait for the thread to be initialized
+    do
     {
-        //  Allocate storage for a Thread Control Block
-        export_tcb[ thread_id ] = tcb_new( THREAD_NAME_EXPORT,
-                                           thread_id,
-                                           QUEUE_DEPTH_EXPORT );
+        usleep( 100 );
 
-        //  Launch the export thread
-        thread_new( export, export_tcb[ thread_id ] );
-
-        //  Wait for the thread to be initialized
-        do
-        {
-            usleep( 100 );
-
-            //  Loop until the thread is 'WAIT'ing for work
-        }   while( export_tcb[ thread_id ]->thread_state != TS_WAIT );
-    }
+        //  Loop until the thread is 'WAIT'ing for work
+    }   while( export_tcb->thread_state != TS_WAIT );
 
     /************************************************************************
      *  Prepare input files for processing
@@ -1000,13 +956,17 @@ main(
      *  IMPORT  everything on the list
      ************************************************************************/
 
+//  @ToDo: 0 MEMORY LEAK
+//      There is a memory leak somewhere and it's huge.
+    mem_dump( );
+
     //  Scan the list
     for( file_info_p = list_get_first( file_list_p );
          file_info_p != NULL;
          file_info_p = list_get_next( file_list_p, file_info_p ) )
     {
         /**
-         *  @param  file_path       File path & name                            */
+         *  @param  file_path       File path & name                        */
         char                        file_path[ FILENAME_MAX ];
 
         //  Remove this file from the list.
@@ -1022,7 +982,7 @@ main(
         if ( text_to_int( file_info_p->file_size ) >= 100 )
         {
             /**
-             *  @param  rcb_p           Recipe Control block                    */
+             *  @param  rcb_p           Recipe Control block                */
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
@@ -1035,15 +995,12 @@ main(
             memset( rcb_p->file_path, '\0', sizeof( rcb_p->file_path ) );
             memcpy( rcb_p->file_path, file_path, strlen( file_path ) );
 
-            //  Set the RCB destination
-            rcb_p->dst_thread = DST_IMPORT;
-
             //  Put it in one of the IMPORT queue's
-            queue_put_payload( router_queue_id, rcb_p  );
+            queue_put_payload( import_tcb->queue_id, rcb_p  );
 
             //  Progress report.
             log_write( MID_LOGONLY, "main",
-                       "Q-%03d: Snd: FILE-ID: %s\n", router_queue_id,
+                       "Q-%03d: Snd: FILE-ID: %s\n", import_tcb->queue_id,
                        rcb_p->file_path );
         }
         else
@@ -1079,11 +1036,8 @@ main(
         //  Sleep a few seconds before trying again.
         usleep( 500 );
 
-        //  Is there any work running through the router ?
-        done_flag = is_router_done( );
-
-        if ( done_flag == true )
-            done_flag = is_import_done( );
+        //  Check the threads to see if they are ALL done.
+        done_flag = is_import_done( );
 
         if ( done_flag == true )
             done_flag = is_email_done( );
@@ -1105,6 +1059,10 @@ main(
     /************************************************************************
      *  Application Exit
      ************************************************************************/
+
+//  @ToDo: 0 MEMORY LEAK
+//      There is a memory leak somewhere and it's huge.
+    mem_dump( );
 
     //  DONE!
     return( 0 );

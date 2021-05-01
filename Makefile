@@ -26,8 +26,6 @@ APPNAME = ria
 #-----------------------------------------------------------------------
 SRC		=	main.c
 #
-SRC		+=	$(wildcard router/*.c)
-#
 SRC		+=	$(wildcard import/*.c)
 #
 SRC		+=	$(wildcard email/*.c)

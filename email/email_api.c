@@ -21,6 +21,8 @@
 
 #define ALLOC_EMAIL          ( "ALLOCATE STORAGE FOR EMAIL" )
 
+#define DEBUG_STUB              ( 0 )
+
 /****************************************************************************
  * System Function API
  ****************************************************************************/
@@ -197,6 +199,9 @@ email(
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
 
+        //  Clear the new RCB pointer
+        new_rcb_p = NULL;
+
         /********************************************************************
          *  FUNCTIONAL CODE FOR THIS THREAD GOES HERE
          ********************************************************************/
@@ -218,7 +223,6 @@ email(
             {
                 email_start_flag = true;
             }
-
             //  Are we processing an e-Mail message ?
             if (    ( email_start_flag     ==               true )
                  && ( rcb_p->recipe_format == RECIPE_FORMAT_NONE ) )
@@ -290,11 +294,8 @@ email(
                 //  Is this the start of a recipe ?
                 if ( tmp_format != RECIPE_FORMAT_NONE )
                 {
-                    //  YES:    Then the current recipe must have ended
-                    new_rcb_p->dst_thread = DST_DECODE;
-
-                    //  Put it in one of the ROUTER queue
-                    queue_put_payload( router_queue_id, new_rcb_p  );
+                   //  YES:    Put it in one of the DECODE queue
+                    queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
 
                     //  Clear the current recipe format
                     rcb_p->recipe_format = tmp_format;
@@ -310,13 +311,11 @@ email(
                 list_put_last( new_rcb_p->import_list_p, list_data_p );
 
                 //  Is this the end of the recipe
-                if ( recipe_is_end( rcb_p->recipe_format, list_data_p ) )
+                if (    ( recipe_is_end( rcb_p->recipe_format, list_data_p ) == true )
+                     || ( EMAIL__is_group_break( list_data_p )               == true ) )
                 {
-                    //  YES:    Set the RCB destination
-                    new_rcb_p->dst_thread = DST_DECODE;
-
-                    //  Put it in one of the ROUTER queue
-                    queue_put_payload( router_queue_id, new_rcb_p  );
+                    //  YES:    Put it in one of the DECODE queue
+                    queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
 
                     //  Clear the current recipe format
                     rcb_p->recipe_format = RECIPE_FORMAT_NONE;
@@ -326,6 +325,13 @@ email(
                 }
             }
 
+        }
+
+        //  End-Of-File with an active recipe ?
+        if ( new_rcb_p != NULL )
+        {
+            //  YES:    Put it in one of the DECODE queue
+            queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
         }
 
         //  Release the lock on the level 3 list

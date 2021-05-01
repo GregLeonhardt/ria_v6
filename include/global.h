@@ -51,26 +51,24 @@
 #define THREAD_NAME_SIZE        (  24 )
 //-----
 #define THREAD_NAME_MONITOR     "MONITOR:"
-#define THREAD_NAME_ROUTER      "ROUTER:"
 #define THREAD_NAME_IMPORT      "IMPORT:"
 #define THREAD_NAME_EMAIL       "EMAIL:"
 #define THREAD_NAME_DECODE      "DECODE:"
 #define THREAD_NAME_ENCODE      "ENCODE:"
 #define THREAD_NAME_EXPORT      "EXPORT:"
 //-----
-#define THREAD_COUNT_IMPORT     (   1 )
-#define THREAD_COUNT_EMAIL      (   1 )
-#define THREAD_COUNT_DECODE     (   1 )
-#define THREAD_COUNT_ENCODE     (   1 )
-#define THREAD_COUNT_EXPORT     (   1 )
+#define THREAD_COUNT_IMPORT     (    1 )
+#define THREAD_COUNT_EMAIL      (    1 )
+#define THREAD_COUNT_DECODE     (    1 )
+#define THREAD_COUNT_ENCODE     (    1 )
+#define THREAD_COUNT_EXPORT     (    1 )
 //----------------------------------------------------------------------------
-#define MAX_QUEUE_DEPTH         (   0 )
-#define QUEUE_DEPTH_ROUTER      (   0 )
-#define QUEUE_DEPTH_IMPORT      (   0 )
-#define QUEUE_DEPTH_EMAIL       (   0 )
-#define QUEUE_DEPTH_DECODE      (   0 )
-#define QUEUE_DEPTH_ENCODE      (   0 )
-#define QUEUE_DEPTH_EXPORT      (   0 )
+#define MAX_QUEUE_DEPTH         (    0 )
+#define QUEUE_DEPTH_IMPORT      (    1 )
+#define QUEUE_DEPTH_EMAIL       (    1 )
+#define QUEUE_DEPTH_DECODE      ( 9999 )
+#define QUEUE_DEPTH_ENCODE      (    0 )
+#define QUEUE_DEPTH_EXPORT      (    0 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -113,35 +111,29 @@ enum    destination_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-int                             router_queue_id;
-//----------------------------------------------------------------------------
 /**
- * @param monitor_tcb           TCB list for the router thread              */
+ * @param monitor_tcb           TCB list for the monitor thread             */
     struct  tcb_t           *   monitor_tcb;
 //----------------------------------------------------------------------------
 /**
- * @param router_tcb            TCB list for the router thread              */
-    struct  tcb_t           *   router_tcb;
-//----------------------------------------------------------------------------
-/**
  * @param import_tcb            TCB list for all import threads             */
-    struct  tcb_t           *   import_tcb[ THREAD_COUNT_IMPORT ];
+    struct  tcb_t           *   import_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param email_tcb             TCB list for all import threads             */
-    struct  tcb_t           *   email_tcb[ THREAD_COUNT_EMAIL ];
+    struct  tcb_t           *   email_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param decode_tcb            TCB list for all decode threads             */
-    struct  tcb_t           *   decode_tcb[ THREAD_COUNT_DECODE ];
+    struct  tcb_t           *   decode_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param decode_tcb            TCB list for all encode threads             */
-    struct  tcb_t           *   encode_tcb[ THREAD_COUNT_ENCODE ];
+    struct  tcb_t           *   encode_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param export_tcb            TCB list for all export threads             */
-    struct  tcb_t           *   export_tcb[ THREAD_COUNT_EXPORT ];
+    struct  tcb_t           *   export_tcb;
 //---------------------------------------------------------------------------
 /**
  *  @param  store_value_p       ID number for the DECODE queue              */

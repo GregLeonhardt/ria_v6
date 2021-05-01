@@ -233,7 +233,12 @@ email(
                 {
                     //  YES:    Save the information
                     memset( rcb_p->email_info_p->g_from, '\0', FROM_L );
-                    memcpy( rcb_p->email_info_p->g_from, tmp_data_p, FROM_L );
+                    if ( strlen( tmp_data_p ) < FROM_L )
+                        memcpy( rcb_p->email_info_p->g_from,
+                                tmp_data_p, strlen( tmp_data_p ) );
+                    else
+                        memcpy( rcb_p->email_info_p->g_from,
+                                tmp_data_p, FROM_L );
                 }
                 //  "SUBJECT:"
                 tmp_data_p = EMAIL__find_subject( list_data_p );
@@ -241,7 +246,12 @@ email(
                 {
                     //  YES:    Save the information
                     memset( rcb_p->email_info_p->e_subject, '\0', SUBJECT_L );
-                    memcpy( rcb_p->email_info_p->e_subject, tmp_data_p, SUBJECT_L );
+                    if ( strlen( tmp_data_p ) < FROM_L )
+                        memcpy( rcb_p->email_info_p->e_subject,
+                                tmp_data_p, strlen( tmp_data_p ) );
+                    else
+                        memcpy( rcb_p->email_info_p->e_subject,
+                                tmp_data_p, SUBJECT_L );
                 }
                 //  "FROM:"
                 tmp_data_p = EMAIL__find_from( list_data_p );
@@ -249,7 +259,12 @@ email(
                 {
                     //  YES:    Save the information
                     memset( rcb_p->email_info_p->e_from, '\0', FROM_L );
-                    memcpy( rcb_p->email_info_p->e_from, tmp_data_p, FROM_L );
+                    if ( strlen( tmp_data_p ) < FROM_L )
+                        memcpy( rcb_p->email_info_p->e_from,
+                                tmp_data_p, strlen( tmp_data_p ) );
+                    else
+                        memcpy( rcb_p->email_info_p->e_from,
+                                tmp_data_p, strlen( tmp_data_p ) );
                 }
                 //  "DATE:"
                 tmp_data_p = EMAIL__find_datetime( list_data_p );
@@ -257,7 +272,12 @@ email(
                 {
                     //  YES:    Save the information
                     memset( rcb_p->email_info_p->e_datetime, '\0', DATETIME_L );
-                    memcpy( rcb_p->email_info_p->e_datetime, tmp_data_p, DATETIME_L );
+                    if ( strlen( tmp_data_p ) < FROM_L )
+                        memcpy( rcb_p->email_info_p->e_datetime,
+                                tmp_data_p, strlen( tmp_data_p ) );
+                    else
+                        memcpy( rcb_p->email_info_p->e_datetime,
+                                tmp_data_p, DATETIME_L );
                 }
             }
 

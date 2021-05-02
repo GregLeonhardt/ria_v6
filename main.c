@@ -714,7 +714,12 @@ is_export_done(
  *  @return                     Zero for success. Any other value is an error.
  *
  *  @note
-*
+ *
+ *  @ToDo: 3 DateTime
+ *          Need a standardized date/time format added to the RCB.
+ *          When a duplicate is discovered the OLDEST DataTime is stored as
+ *          the prime recipe.  All others are stored as duplicated of the prime.
+ *
  ****************************************************************************/
 
 int

@@ -76,6 +76,7 @@ enum    recipe_format_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+//  @ToDo: 3 Add '_p' to all pointer names.
 /**
  *  @param recipe_t             Primary structure for a recipe
  *  @NOTE:  Changes to this structure require changes to recipe_kill( );    */

@@ -961,10 +961,6 @@ main(
      *  IMPORT  everything on the list
      ************************************************************************/
 
-//  @ToDo: 0 MEMORY LEAK
-//      There is a memory leak somewhere and it's huge.
-    mem_dump( );
-
     //  Scan the list
     for( file_info_p = list_get_first( file_list_p );
          file_info_p != NULL;
@@ -1075,10 +1071,6 @@ main(
     /************************************************************************
      *  Application Exit
      ************************************************************************/
-
-//  @ToDo: 0 MEMORY LEAK
-//      There is a memory leak somewhere and it's huge.
-    mem_dump( );
 
     //  DONE!
     return( 0 );

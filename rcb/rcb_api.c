@@ -196,7 +196,6 @@ rcb_kill(
  *  Initialize the Translations tables.
  *
  *  @param  rcb_p               Pointer to the current Recipe Control Block
- *  @param  recipe_format       The recipe format for this recipe.
  *
  *  @return new_rcb_p           Pointer to a new Recipe Control Block
  *
@@ -206,8 +205,7 @@ rcb_kill(
 
 struct  rcb_t   *
 rcb_new(
-    struct  rcb_t           *   old_rcb_p,
-    enum    recipe_format_e     recipe_format
+    struct  rcb_t           *   old_rcb_p
     )
 {
     /**
@@ -229,28 +227,8 @@ rcb_new(
     //  Create a new e-Mail information structure for the new RCB
     new_rcb_p->email_info_p = mem_malloc( sizeof( struct email_info_t ) );
 
-    //  Is this going to be a split of an existing Recipe Control Block
-    if ( old_rcb_p != NULL )
-    {
-        //  YES:    Copy Thread Control Block pointer
-        new_rcb_p->tcb_p = old_rcb_p->tcb_p;
-
-        //  Copy the file stats to the new RCB
-        new_rcb_p->file_info_p = mem_malloc( sizeof( struct file_info_t ) );
-        memcpy( new_rcb_p->file_info_p,
-                old_rcb_p->file_info_p,
-                sizeof( struct file_info_t ) );
-
-        //  Copy the display file name
-        memcpy( new_rcb_p->file_path,
-                old_rcb_p->file_path,
-                sizeof( old_rcb_p->file_path ) );
-
-        //  Copy the e-Mail information to the new RCB
-        memcpy( new_rcb_p->email_info_p,
-                old_rcb_p->email_info_p,
-                sizeof( struct email_info_t ) );
-    }
+    //  Create an new file information buffer
+    new_rcb_p->file_info_p = mem_malloc( sizeof( struct file_info_t ) );
 
     //  No destination thread yet.
     new_rcb_p->dst_thread = DST_INVALID;
@@ -264,8 +242,45 @@ rcb_new(
     //  There isn't an open file
     new_rcb_p->file_p = NULL;
 
-    //  Set the recipe format
-    new_rcb_p->recipe_format = recipe_format;
+    //  Clear the TCB pointer
+    new_rcb_p->tcb_p = NULL;
+
+    //  Clear the file stats structure
+    memset( new_rcb_p->file_info_p, 0x00, sizeof( struct file_info_t ) );
+
+    //  Clear the display file name string
+    memset( new_rcb_p->file_path, 0x00, sizeof( new_rcb_p->file_path ) );
+
+    //  Clear the e-Mail structure
+    memset( new_rcb_p->email_info_p, 0x00, sizeof( struct email_info_t ) );
+
+    //  Set the default recipe format
+    new_rcb_p->recipe_format = RECIPE_FORMAT_NONE;
+
+    //  Is this going to be a clone of an existing Recipe Control Block
+    if ( old_rcb_p != NULL )
+    {
+        //  YES:    Copy Thread Control Block pointer
+        new_rcb_p->tcb_p = old_rcb_p->tcb_p;
+
+        //  Copy the file stats to the new RCB
+        memcpy( new_rcb_p->file_info_p,
+                old_rcb_p->file_info_p,
+                sizeof( struct file_info_t ) );
+
+        //  Copy the display file name
+        memcpy( new_rcb_p->file_path,
+                old_rcb_p->file_path,
+                sizeof( old_rcb_p->file_path ) );
+
+        //  Copy the e-Mail information to the new RCB
+        memcpy( new_rcb_p->email_info_p,
+                old_rcb_p->email_info_p,
+                sizeof( struct email_info_t ) );
+
+        //  Set the recipe format
+        new_rcb_p->recipe_format = old_rcb_p->recipe_format;
+    }
 
     /************************************************************************
      *  Function Exit

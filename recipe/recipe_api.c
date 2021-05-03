@@ -1163,7 +1163,17 @@ recipe_append(
     //  Initialize the search buffer
     memset( search_data, ' ', sizeof( search_data ) );
     search_data[ sizeof( search_data ) ] = '\0';
-    memcpy( search_data, data_p, strlen( data_p ) );
+    if ( sizeof( search_data ) > strlen( data_p ) )
+    {
+        memcpy( search_data, data_p, strlen( data_p ) );
+    }
+    else
+    {
+        log_write( MID_FATAL, "FATAL-ERROR:",
+                   "%s @ line %d (D:%d < S:%d)\n",
+                   __FILE__, __LINE__,
+                   sizeof( search_data ), strlen( data_p ) );
+    }
 
     /************************************************************************
      *  Function Initialization
@@ -1198,7 +1208,18 @@ recipe_append(
         //  NO:     Cleanup the new entry before adding it to the list.
         memset( search_data, ' ', sizeof( search_data ) );
         search_data[ sizeof( search_data ) ] = '\0';
-        memcpy( search_data, data_p, strlen( data_p ) );
+
+        if ( sizeof( search_data ) > strlen( data_p ) )
+        {
+            memcpy( search_data, data_p, strlen( data_p ) );
+        }
+        else
+        {
+            log_write( MID_FATAL, "FATAL-ERROR:",
+                       "%s @ line %d (D:%d < S:%d)\n",
+                        __FILE__, __LINE__,
+                        sizeof( search_data ), strlen( data_p ) );
+        }
         text_strip_whitespace( search_data );
 
         //  Copy the new data to a buffer

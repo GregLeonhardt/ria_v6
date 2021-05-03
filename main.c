@@ -50,7 +50,7 @@
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 4
+#define VER_MIN                 5
 
 /****************************************************************************
  * System Function API
@@ -991,14 +991,25 @@ main(
             struct  rcb_t           *   rcb_p;
 
             //  YES:    Allocate a new recipe control block
-            rcb_p = rcb_new( NULL, RECIPE_FORMAT_NONE );
+            rcb_p = rcb_new( NULL );
 
             //  Put the file info pointer into the recipe control block
             rcb_p->file_info_p = file_info_p;
 
             //  Set the display file name
             memset( rcb_p->file_path, '\0', sizeof( rcb_p->file_path ) );
-            memcpy( rcb_p->file_path, file_path, strlen( file_path ) );
+            if ( sizeof( rcb_p->file_path ) > strlen( file_path ) )
+            {
+                memcpy( rcb_p->file_path, file_path, strlen( file_path ) );
+            }
+            else
+            {
+                log_write( MID_FATAL, "FATAL-ERROR:",
+                           "%s @ line %d (D:%d < S:%d)\n",
+                           __FILE__, __LINE__,
+                           sizeof( rcb_p->file_path ),
+                           strlen( file_path ) );
+            }
 
             //  Put it in one of the IMPORT queue's
             queue_put_payload( import_tcb->queue_id, rcb_p  );

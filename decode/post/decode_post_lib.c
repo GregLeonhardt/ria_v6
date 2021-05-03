@@ -161,9 +161,18 @@ DECODE_POST__get_tag_data(
                 //  Set the length of the data to copy out
                 string_l = ( string_end_p - string_beg_p ) - 1;
 
-                //  Copy the source data string
-                memcpy( data_p, &string_beg_p[ 1 ], string_l );
-
+                if ( MAX_LINE_L > string_l )
+                {
+                    //  Copy the source data string
+                    memcpy( data_p, &string_beg_p[ 1 ], string_l );
+                }
+                else
+                {
+                    log_write( MID_FATAL, "FATAL-ERROR:",
+                               "%s @ line %d (D:%d < S:%d)\n",
+                               __FILE__, __LINE__,
+                               MAX_LINE_L, string_l );
+                }
                 //  Now remove the FROM: string from the directions line.
                 text_remove( temp_p, 0, ( string_end_p - temp_p ) + 1 );
             }

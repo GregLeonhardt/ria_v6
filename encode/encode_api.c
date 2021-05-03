@@ -19,7 +19,9 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_ENCODE          ( "ALLOCATE STORAGE FOR ENCODE" )
+#define ALLOC_ENCODE            ( "ALLOCATE STORAGE FOR ENCODE" )
+
+#define STUB                    ( 0 )
 
 /****************************************************************************
  * System Function API
@@ -267,6 +269,8 @@ encode(
                    "Q-%03d: Rcv: FILE-ID: %s\n",
                    tcb_p->queue_id, rcb_p->file_path );
 
+#if ! STUB
+
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
 
@@ -288,6 +292,13 @@ encode(
 
         //  Put it in one of the DECODE queue
         queue_put_payload( export_tcb->queue_id, rcb_p  );
+
+#else
+
+        //  Kill the Recipe Control Block
+        rcb_kill( rcb_p );
+
+#endif
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

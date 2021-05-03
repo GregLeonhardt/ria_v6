@@ -19,9 +19,9 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_EMAIL          ( "ALLOCATE STORAGE FOR EMAIL" )
+#define ALLOC_EMAIL             ( "ALLOCATE STORAGE FOR EMAIL" )
 
-#define DEBUG_STUB              ( 0 )
+#define STUB                    ( 0 )
 
 /****************************************************************************
  * System Function API
@@ -144,6 +144,7 @@ email(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+#if ! STUB
     /**
      *  @param  new_rcb_p       Pointer to a Recipe Control Block           */
     struct  rcb_t           *   new_rcb_p;
@@ -159,6 +160,7 @@ email(
     /**
      * @param tmp_data_p        Temporary data pointer                      */
     char                    *   tmp_data_p;
+#endif
 
     /************************************************************************
      *  Function Initialization
@@ -199,6 +201,8 @@ email(
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
 
+#if ! STUB
+
         //  Clear the new RCB pointer
         new_rcb_p = NULL;
 
@@ -223,6 +227,7 @@ email(
             {
                 email_start_flag = true;
             }
+
             //  Are we processing an e-Mail message ?
             if (    ( email_start_flag     ==               true )
                  && ( rcb_p->recipe_format == RECIPE_FORMAT_NONE ) )
@@ -238,8 +243,10 @@ email(
                                 tmp_data_p, strlen( tmp_data_p ) );
                     else
                         memcpy( rcb_p->email_info_p->g_from,
-                                tmp_data_p, FROM_L );
+                                tmp_data_p, FROM_L - 1 );
                 }
+#if 1
+
                 //  "SUBJECT:"
                 tmp_data_p = EMAIL__find_subject( list_data_p );
                 if ( tmp_data_p != NULL )
@@ -251,7 +258,7 @@ email(
                                 tmp_data_p, strlen( tmp_data_p ) );
                     else
                         memcpy( rcb_p->email_info_p->e_subject,
-                                tmp_data_p, SUBJECT_L );
+                                tmp_data_p, SUBJECT_L - 1 );
                 }
                 //  "FROM:"
                 tmp_data_p = EMAIL__find_from( list_data_p );
@@ -264,7 +271,7 @@ email(
                                 tmp_data_p, strlen( tmp_data_p ) );
                     else
                         memcpy( rcb_p->email_info_p->e_from,
-                                tmp_data_p, strlen( tmp_data_p ) );
+                                tmp_data_p, FROM_L - 1 );
                 }
                 //  "DATE:"
                 tmp_data_p = EMAIL__find_datetime( list_data_p );
@@ -277,21 +284,23 @@ email(
                                 tmp_data_p, strlen( tmp_data_p ) );
                     else
                         memcpy( rcb_p->email_info_p->e_datetime,
-                                tmp_data_p, DATETIME_L );
+                                tmp_data_p, DATETIME_L - 1 );
                 }
+#endif
+
             }
 
-            //  Did we find the start of a recipe ?
+            //  Is there an active recipe split ?
             if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
             {
-                //  NO:     Maybe this is a recipe start tag.
+                //  NO:     Test foe the start of a new recipe.
                 rcb_p->recipe_format = recipe_is_start( list_data_p );
 
-                //  Is this the start of a recipe ?
+                //  Is this the start of a new recipe ?
                 if ( rcb_p->recipe_format != RECIPE_FORMAT_NONE )
                 {
-                    //  YES:    Prepare for the new recipe
-                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+                    //  YES:    Clone the RCB
+                    new_rcb_p = rcb_new( rcb_p );
 
                     //  Add this data buffer to the new recipe list.
                     list_put_last( new_rcb_p->import_list_p, list_data_p );
@@ -323,8 +332,8 @@ email(
                     //  Clear the new RCB pointer
                     new_rcb_p = NULL;
 
-                    //  Allocate a new RCB for the new recipe
-                    new_rcb_p = rcb_new( rcb_p, rcb_p->recipe_format );
+                    //  Clone the RCB
+                    new_rcb_p = rcb_new( rcb_p );
                 }
 
                 //  Add this data buffer to the recipe list.
@@ -352,10 +361,15 @@ email(
         {
             //  YES:    Put it in one of the DECODE queue
             queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
+
+            //  Clear the new RCB pointer
+            new_rcb_p = NULL;
         }
 
         //  Release the lock on the level 3 list
         list_user_unlock( rcb_p->import_list_p, list_lock_key );
+
+#endif
 
         //  Kill the Recipe Control Block
         rcb_kill( rcb_p );

@@ -19,7 +19,9 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_EXPORT          ( "ALLOCATE STORAGE FOR EXPORT" )
+#define ALLOC_EXPORT            ( "ALLOCATE STORAGE FOR EXPORT" )
+
+#define STUB                    ( 0 )
 
 /****************************************************************************
  * System Function API
@@ -108,6 +110,7 @@ export(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+#if ! STUB
     /**
      * @param out_name          Encoded output file name                    */
     char                        out_name[ FILE_NAME_L + 1 ];
@@ -123,6 +126,7 @@ export(
     /**
      * @param list_lock_key     File list key                               */
     int                         list_lock_key;
+#endif
 
     /************************************************************************
      *  Function Initialization
@@ -163,11 +167,13 @@ export(
         //  Display progress.
         log_write( MID_INFO, tcb_p->thread_name,
                    "%s - %s\n",
-                   rcb_p->file_path,
+                   rcb_p->recipe_p->recipe_id,
                    rcb_p->recipe_p->name );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
+
+#if ! STUB
 
         /********************************************************************
          *  Open the output file
@@ -242,6 +248,8 @@ export(
 
         //  Release the lock on the level 3 list
         list_user_unlock( rcb_p->export_list_p, list_lock_key );
+
+#endif
 
         //  Kill the Recipe Control Block
         rcb_kill( rcb_p );

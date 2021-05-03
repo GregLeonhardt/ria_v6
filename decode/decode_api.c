@@ -19,7 +19,9 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_DECODE          ( "ALLOCATE STORAGE FOR DECODE" )
+#define ALLOC_DECODE            ( "ALLOCATE STORAGE FOR DECODE" )
+
+#define STUB                    ( 0 )
 
 /****************************************************************************
  * System Function API
@@ -190,9 +192,11 @@ decode(
     /**
      *  @param  rcb_p           Pointer to a Recipe Control Block           */
     struct  rcb_t           *   rcb_p;
+#if ! STUB
     /**
      *  @param  ok_to_encode    TRUE = OK to encode the recipe              */
     int                         ok_to_encode;
+#endif
 
     /************************************************************************
      *  Function Initialization
@@ -234,6 +238,8 @@ decode(
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
+
+#if ! STUB
 
         /********************************************************************
          *  Decoder selection
@@ -350,9 +356,16 @@ decode(
         }
         else
         {
-            //  NO:     Kipp the RCB
+            //  NO:     Kill the RCB
             rcb_kill( rcb_p );
         }
+
+#else
+
+        //  Kill the Recipe Control Block
+        rcb_kill( rcb_p );
+
+#endif
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

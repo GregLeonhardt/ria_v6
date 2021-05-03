@@ -84,20 +84,6 @@ struct  email_info_t
      *  @param  e_datetime      When the e-Mail was originally posted       */
     char                            e_datetime[  DATETIME_L  + 1 ];
     //------------------------------------------------------------------------
-#if 0   //  @ToDo: 1 Remove depricated code
-    /**
-     *  @param  f_dir_name      Directory the file was when it was decoded  */
-    char                            f_dir_name[  FILE_NAME_L + 1 ];
-    /**
-     *  @param  e_file_name     The file name that was decoded              */
-    char                            f_file_name[ FILE_NAME_L + 1 ];
-    /**
-     *  @param  f_date_time     Date & Time stamp of the file               */
-    char                            f_date_time[ FILE_DATE_L + 1 ];
-    /**
-     *  @param  f_size          Size of the file that was decoded           */
-    char                            f_file_size[ FILE_SIZE_L + 1 ];
-#endif
 };
 //----------------------------------------------------------------------------
 

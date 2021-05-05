@@ -713,7 +713,7 @@ decode_fmt_notes(
      ************************************************************************/
 
     //  Are we starting the directions for a new recipe ?
-    if ( list_query_count( recipe_p->notes ) == 0 )
+    if ( list_query_count( recipe_p->notes_p ) == 0 )
     {
         //  YES:    Reset the first word flags
         fwos = true;
@@ -727,16 +727,16 @@ decode_fmt_notes(
         memset( formatted_text, '\0', sizeof( formatted_text ) );
     }
     else
-    if ( list_query_count( recipe_p->notes ) != 0 )
+    if ( list_query_count( recipe_p->notes_p ) != 0 )
     {
         //  NO:     Get the saved partial line of text from the list.
-        tmp_p = list_get_last( recipe_p->notes );
+        tmp_p = list_get_last( recipe_p->notes_p );
 
         //  Move the data to the scan formatted text buffer
         strncpy( formatted_text, tmp_p, ( sizeof( formatted_text ) - 1 ) );
 
         //  Remove the last line of text from the list.
-        list_delete( recipe_p->notes, tmp_p );
+        list_delete( recipe_p->notes_p, tmp_p );
 
         //  Release the storage used by the temporary buffer
         mem_free( tmp_p );
@@ -822,7 +822,7 @@ decode_fmt_notes(
                 log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
                 //  Add it to the list.
-                list_put_last( recipe_p->notes, tmp_p );
+                list_put_last( recipe_p->notes_p, tmp_p );
 
                 //  Clear the formatted text buffer.
                 memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -868,7 +868,7 @@ decode_fmt_notes(
                                 "Line: %d\n", __LINE__ );
 
                         //  Add it to the list.
-                        list_put_last( recipe_p->notes, tmp_p );
+                        list_put_last( recipe_p->notes_p, tmp_p );
 
                         //  Clear the formatted text buffer.
                         memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -936,7 +936,7 @@ decode_fmt_notes(
                     log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
                     //  Add it to the list.
-                    list_put_last( recipe_p->notes, tmp_p );
+                    list_put_last( recipe_p->notes_p, tmp_p );
 
                     //  Clear the formatted text buffer.
                     memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -967,7 +967,7 @@ decode_fmt_notes(
         log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         //  Add it to the list.
-        list_put_last( recipe_p->notes, tmp_p );
+        list_put_last( recipe_p->notes_p, tmp_p );
 
         //  Clear the formatted text buffer.
         memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -1051,7 +1051,7 @@ decode_next_id(
               0x00 );
 
     //  Add it to the recipe
-    recipe_p->recipe_id = text_copy_to_new( id_string );
+    recipe_p->recipe_id_p = text_copy_to_new( id_string );
     log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
     /************************************************************************
@@ -1213,31 +1213,31 @@ decode_add_instructions(
      ************************************************************************/
 
     //  Is this the first thing for the instructions buffer ?
-    if ( recipe_p->instructions == NULL )
+    if ( recipe_p->instructions_p == NULL )
     {
         //  YES:    Just use this buffer
-        recipe_p->instructions = text_copy_to_new( data_p );
+        recipe_p->instructions_p = text_copy_to_new( data_p );
         log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
     }
     else
     {
         //  NO:     Figure out how big it needs to be.
-        new_data_l = ( strlen( data_p ) + ( strlen( recipe_p->instructions ) ) + 2 );
+        new_data_l = ( strlen( data_p ) + ( strlen( recipe_p->instructions_p ) ) + 2 );
 
         //  Create a new buffer with the old and the new
         new_data_p = mem_malloc( new_data_l );
         log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         //  Merge the two buffers together.
-        strncpy( new_data_p, recipe_p->instructions, new_data_l );
+        strncpy( new_data_p, recipe_p->instructions_p, new_data_l );
         strcat( new_data_p, " " );
         strncat( new_data_p, data_p, new_data_l - strlen( new_data_p ) );
 
         //  Release the (now) unused buffers
-        mem_free( recipe_p->instructions );
+        mem_free( recipe_p->instructions_p );
 
         //  Update the instructions pointer
-        recipe_p->instructions = new_data_p;
+        recipe_p->instructions_p = new_data_p;
     }
 
     /************************************************************************
@@ -1283,42 +1283,42 @@ decode_save_chapter(
         //  Appliance ?
         if ( strncmp( APPLIANCE, data_p, APPLIANCE_L ) == 0 )
         {
-            decode_append( recipe_p->appliance,
+            decode_append( recipe_p->appliance_p,
                            ( data_p + APPLIANCE_L ) );
         }
         //  Diet ?
         else
         if ( strncmp( DIET, data_p, DIET_L ) == 0 )
         {
-            decode_append( recipe_p->diet,
+            decode_append( recipe_p->diet_p,
                            ( data_p + DIET_L ) );
         }
         //  Course ?
         else
         if ( strncmp( COURSE, data_p, COURSE_L ) == 0 )
         {
-            decode_append( recipe_p->course,
+            decode_append( recipe_p->course_p,
                            ( data_p + COURSE_L ) );
         }
         //  Cuisine ?
         else
         if ( strncmp( CUISINE, data_p, CUISINE_L ) == 0 )
         {
-            decode_append( recipe_p->cuisine,
+            decode_append( recipe_p->cuisine_p,
                            ( data_p + CUISINE_L ) );
         }
         //  Occasion ?
         else
         if ( strncmp( OCCASION, data_p, OCCASION_L ) == 0 )
         {
-            decode_append( recipe_p->occasion,
+            decode_append( recipe_p->occasion_p,
                            ( data_p + OCCASION_L ) );
         }
         //  Category ?
         else
         if ( strncmp( CATEGORY, data_p, CATEGORY_L ) == 0 )
         {
-            decode_append( recipe_p->chapter,
+            decode_append( recipe_p->chapter_p,
                            ( data_p + CATEGORY_L ) );
         }
     }

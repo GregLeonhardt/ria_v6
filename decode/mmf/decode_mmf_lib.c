@@ -501,7 +501,7 @@ MMF__title(
             decode_name_cleanup( title_p, strlen( title_p ) );
 
             //  Save the recipe title (name)
-            recipe_p->name = text_copy_to_new( title_p );
+            recipe_p->name_p = text_copy_to_new( title_p );
 
             log_write( MID_DEBUG_1, "mmf_lib.c", "Line: %d\n", __LINE__ );
 
@@ -733,18 +733,18 @@ MMF__yield(
             if ( strlen( tmp_unit ) == 0 )
             {
                 //  YES:    This is a serves amount, not a MAKES amount
-                recipe_p->serves = text_copy_to_new( local_amount );
+                recipe_p->serves_p = text_copy_to_new( local_amount );
 
                 log_write( MID_DEBUG_1, "mmf_lib.c", "Line: %d\n", __LINE__ );
             }
             else
             {
                 //  NO:     This is a serves amount, not a MAKES amount
-                recipe_p->makes      = text_copy_to_new( local_amount );
+                recipe_p->makes_p      = text_copy_to_new( local_amount );
 
                 log_write( MID_DEBUG_1, "mmf_lib.c", "Line: %d\n", __LINE__ );
 
-                recipe_p->makes_unit = text_copy_to_new( tmp_unit );
+                recipe_p->makes_unit_p = text_copy_to_new( tmp_unit );
 
                 log_write( MID_DEBUG_1, "mmf_lib.c", "Line: %d\n", __LINE__ );
             }
@@ -752,7 +752,7 @@ MMF__yield(
         else
         {
             //  This is a serves amount, not a MAKES amount
-            recipe_p->serves = text_copy_to_new( local_amount );
+            recipe_p->serves_p = text_copy_to_new( local_amount );
 
             log_write( MID_DEBUG_1, "mmf_lib.c", "Line: %d\n", __LINE__ );
         }

@@ -266,13 +266,13 @@ decode_mmf(
                 if ( MMF__categories( rcb_p->recipe_p, list_data_p ) == true )
                 {
                     //  Change to Title Case
-                    text_title_case( rcb_p->recipe_p->name, rcb_p->recipe_p->name );
+                    text_title_case( rcb_p->recipe_p->name_p, rcb_p->recipe_p->name_p );
 
                     //  Log the new title
                     log_write( MID_LOGONLY, rcb_p->tcb_p->thread_name,
                                "'%s - %s'\n",
                                rcb_p->file_path,
-                               rcb_p->recipe_p->name );
+                               rcb_p->recipe_p->name_p );
 
                     //  Change decode state
                     mmf_state = MMF_DS_YIELD;

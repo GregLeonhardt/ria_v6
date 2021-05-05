@@ -89,8 +89,6 @@
  *
  *  @note
  *
- *  @ToDo: 2 Segment fault after unknown recipe format.
- *
  ****************************************************************************/
 
 void

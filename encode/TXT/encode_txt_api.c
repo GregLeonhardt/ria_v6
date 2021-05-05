@@ -142,7 +142,7 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  NAME
-    asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->name );
+    asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->name_p );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Section break:
@@ -150,9 +150,9 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  DESCRIPTION:
-    if ( rcb_p->recipe_p->description != NULL )
+    if ( rcb_p->recipe_p->description_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->description );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->description_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -166,11 +166,11 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  <AUIP>
-    if ( list_query_count( rcb_p->recipe_p->ingredient ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 )
     {
-        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient );
+        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient_p );
              auip_p != NULL;
-             auip_p = list_get_next( rcb_p->recipe_p->ingredient, auip_p ) )
+             auip_p = list_get_next( rcb_p->recipe_p->ingredient_p, auip_p ) )
         {
             //  Is there an amount ?
             if ( auip_p->amount_p != NULL )
@@ -223,11 +223,11 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  DIRECTIONS
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
-        for( tmp_data_p = list_get_first( rcb_p->recipe_p->directions );
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->directions_p );
              tmp_data_p != NULL;
-             tmp_data_p = list_get_next( rcb_p->recipe_p->directions, tmp_data_p ) )
+             tmp_data_p = list_get_next( rcb_p->recipe_p->directions_p, tmp_data_p ) )
         {
             //  Is there something to write ?
             if ( text_is_blank_line( tmp_data_p ) != true )
@@ -247,9 +247,9 @@ encode_txt(
     asprintf( &write_data_p, "AUTHOR: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->author != NULL )
+    if ( rcb_p->recipe_p->author_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->author );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->author_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -262,9 +262,9 @@ encode_txt(
     asprintf( &write_data_p, "SERVES: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->serves != NULL )
+    if ( rcb_p->recipe_p->serves_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->serves );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->serves_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -277,9 +277,9 @@ encode_txt(
     asprintf( &write_data_p, "TIME PREP: " );
 
     list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->time_prep != NULL )
+    if ( rcb_p->recipe_p->time_prep_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_prep );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_prep_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -292,9 +292,9 @@ encode_txt(
     asprintf( &write_data_p, "TIME COOK: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->time_cook != NULL )
+    if ( rcb_p->recipe_p->time_cook_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_cook );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_cook_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -307,16 +307,16 @@ encode_txt(
     asprintf( &write_data_p, "YIELD: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->makes != NULL )
+    if ( rcb_p->recipe_p->makes_p != NULL )
     {
-        asprintf( &write_data_p, "%s", rcb_p->recipe_p->makes );
+        asprintf( &write_data_p, "%s", rcb_p->recipe_p->makes_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //  Is there a unit of measurement ?
-    if ( rcb_p->recipe_p->makes_unit != NULL )
+    if ( rcb_p->recipe_p->makes_unit_p != NULL )
     {
         //  YES:    Write it
-        asprintf( &write_data_p, " %s\n", rcb_p->recipe_p->makes_unit );
+        asprintf( &write_data_p, " %s\n", rcb_p->recipe_p->makes_unit_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -330,9 +330,9 @@ encode_txt(
     asprintf( &write_data_p, "SOURCE: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->source != NULL )
+    if ( rcb_p->recipe_p->source_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n\n", rcb_p->recipe_p->source );
+        asprintf( &write_data_p, "%s\n\n", rcb_p->recipe_p->source_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -345,11 +345,11 @@ encode_txt(
     asprintf( &write_data_p, "NOTES:\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( list_query_count( rcb_p->recipe_p->notes ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->notes_p ) > 0 )
     {
-        for( tmp_data_p = list_get_first( rcb_p->recipe_p->notes );
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->notes_p );
              tmp_data_p != NULL;
-             tmp_data_p = list_get_next( rcb_p->recipe_p->notes, tmp_data_p ) )
+             tmp_data_p = list_get_next( rcb_p->recipe_p->notes_p, tmp_data_p ) )
         {
             asprintf( &write_data_p, "%s\n", tmp_data_p );
             list_put_last( rcb_p->export_list_p, write_data_p );
@@ -368,14 +368,14 @@ encode_txt(
         asprintf( &write_data_p, "    CUISINE:    " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->cuisine ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->cuisine_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->cuisine );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->cuisine_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->cuisine, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->cuisine_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -399,14 +399,14 @@ encode_txt(
         asprintf( &write_data_p, "    OCCASION:   " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->occasion ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->occasion_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->occasion );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->occasion_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->occasion, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->occasion_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -430,14 +430,14 @@ encode_txt(
         asprintf( &write_data_p, "    COURSE:     " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->course ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->course_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->course );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->course_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->course, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->course_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -461,14 +461,14 @@ encode_txt(
         asprintf( &write_data_p, "    DIET:       " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->diet ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->diet_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->diet );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->diet_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->diet, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->diet_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -492,14 +492,14 @@ encode_txt(
         asprintf( &write_data_p, "    APPLIANCE:  " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->appliance ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->appliance_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->appliance );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->appliance_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->appliance, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->appliance_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -523,14 +523,14 @@ encode_txt(
         asprintf( &write_data_p, "    CHAPTER:    " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->chapter ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->chapter_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->chapter );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->chapter_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->chapter, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->chapter_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {
@@ -551,9 +551,9 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  COPYRIGHT:
-    if ( rcb_p->recipe_p->copyright != NULL )
+    if ( rcb_p->recipe_p->copyright_p != NULL )
     {
-        asprintf( &write_data_p, "COPYRIGHT:      %s\n", rcb_p->recipe_p->copyright );
+        asprintf( &write_data_p, "COPYRIGHT:      %s\n", rcb_p->recipe_p->copyright_p );
     }
     else
     {
@@ -567,9 +567,9 @@ encode_txt(
     //          I'm using the resting time as a place holder.
     asprintf( &write_data_p, "TIME WAIT:      " );
     list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->time_rest != NULL )
+    if ( rcb_p->recipe_p->time_rest_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -581,9 +581,9 @@ encode_txt(
     //  TIME REST:
     asprintf( &write_data_p, "TIME REST:      " );
     list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->time_rest != NULL )
+    if ( rcb_p->recipe_p->time_rest_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -596,9 +596,9 @@ encode_txt(
     asprintf( &write_data_p, "SKILL LEVEL:    " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->skill != NULL )
+    if ( rcb_p->recipe_p->skill_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->skill );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->skill_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -611,9 +611,9 @@ encode_txt(
     asprintf( &write_data_p, "RATING:         " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->rating != NULL )
+    if ( rcb_p->recipe_p->rating_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->rating );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->rating_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -627,7 +627,7 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  Recipe-Id
-    asprintf( &write_data_p, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id );
+    asprintf( &write_data_p, "Recipe-ID:      %s\n", rcb_p->recipe_p->recipe_id_p );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  SOURCE FORMAT:
@@ -746,9 +746,9 @@ encode_txt(
     //  Formatted By:
     asprintf( &write_data_p, "FormattedBy:    " );
         list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->formatted_by != NULL )
+    if ( rcb_p->recipe_p->formatted_by_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->formatted_by );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->formatted_by_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -761,9 +761,9 @@ encode_txt(
     asprintf( &write_data_p, "EditedBy:       " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
-    if ( rcb_p->recipe_p->edited_by != NULL )
+    if ( rcb_p->recipe_p->edited_by_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->edited_by );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->edited_by_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else

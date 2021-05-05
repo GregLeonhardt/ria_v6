@@ -167,8 +167,8 @@ export(
         //  Display progress.
         log_write( MID_INFO, tcb_p->thread_name,
                    "%s - %s\n",
-                   rcb_p->recipe_p->recipe_id,
-                   rcb_p->recipe_p->name );
+                   rcb_p->recipe_p->recipe_id_p,
+                   rcb_p->recipe_p->name_p );
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WORKING;
@@ -181,7 +181,7 @@ export(
 
         //  Build the subdirectory name
         snprintf( subdirectory, sizeof( subdirectory ),
-                  "%s", rcb_p->recipe_p->recipe_id );
+                  "%s", rcb_p->recipe_p->recipe_id_p );
 
         //  Start building the output name
         snprintf( out_name, sizeof( out_name ),
@@ -207,10 +207,10 @@ export(
         //  Append the file name to the output name
         snprintf( out_name, sizeof( out_name ),
                   "%s/%s/%s/%s.txt", out_dir_name_p, DIR_FORMATTED,
-                  subdirectory, rcb_p->recipe_p->recipe_id );
+                  subdirectory, rcb_p->recipe_p->recipe_id_p );
 
         //  Is this a recipe with no instructions ?
-        if ( strncmp( rcb_p->recipe_p->recipe_id, "000000000000000000000000000000", 30 ) == 0 )
+        if ( strncmp( rcb_p->recipe_p->recipe_id_p, "000000000000000000000000000000", 30 ) == 0 )
         {
             //  YES:    Append to whatever is already there
             out_file_fp = file_open_append( out_name );

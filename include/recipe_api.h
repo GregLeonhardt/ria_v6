@@ -76,7 +76,6 @@ enum    recipe_format_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-//  @ToDo: 3 Add '_p' to all pointer names.
 /**
  *  @param recipe_t             Primary structure for a recipe
  *  @NOTE:  Changes to this structure require changes to recipe_kill( );    */
@@ -87,109 +86,109 @@ struct   recipe_t
     struct  rcb_t           *   rcb_p;
     /**
      *  @param  name            The recipe name or title                    */
-    char                    *   name;
+    char                    *   name_p;
     /**
      *  @param  recipe_id       A unique identifier for the recipe          */
-    char                    *   recipe_id;
+    char                    *   recipe_id_p;
     /**
      *  @param  web_address     The web address the file came from          */
-    char                    *   web_address;
+    char                    *   web_address_p;
     /**
      *  @param  source_format   Encoding format from the source recipe      */
-    char                    *   source_format;
+    char                    *   source_format_p;
     /**
      *  @param  author          The person or company that created          */
-    char                    *   author;
+    char                    *   author_p;
     /**
      *  @param  copyright       (c) XyZ                                     */
-    char                    *   copyright;
+    char                    *   copyright_p;
     /**
      *  @param  edited_by       Who last edited or changed                  */
-    char                    *   edited_by;
+    char                    *   edited_by_p;
     /**
      *  @param  formatted by    Who originally formatted                    */
-    char                    *   formatted_by;
+    char                    *   formatted_by_p;
     /**
      *  @param  import_from     Where the recipe was imported from          */
-    char                    *   import_from;
+    char                    *   import_from_p;
     /**
      *  @param  serves          Number of people                            */
-    char                    *   serves;
+    char                    *   serves_p;
     /**
      *  @param  serving_size    How much each person is served              */
-    char                    *   servings_size;
+    char                    *   servings_size_p;
     /**
      *  @param  makes           How many of something the recipe will make  */
-    char                    *   makes;
+    char                    *   makes_p;
     /**
      *  @param  makes_unit      Unit of measurement for 'makes'             */
-    char                    *   makes_unit;
+    char                    *   makes_unit_p;
     /**
      *  @param  time_prep       How long is should take to get ready        */
-    char                    *   time_prep;
+    char                    *   time_prep_p;
     /**
      *  @param  time_wait       After preparation and before cooking        */
-    char                    *   time_wait;
+    char                    *   time_wait_p;
     /**
      *  @param  time_cook       How long it should take to cook             */
-    char                    *   time_cook;
+    char                    *   time_cook_p;
     /**
      *  @param  time_rest       After cooked before serving                 */
-    char                    *   time_rest;
+    char                    *   time_rest_p;
     /**
      *  @param  time_total      All the times added up.                     */
-    char                    *   time_total;
+    char                    *   time_total_p;
     /**
      *  @param  serves          A short description (1024 MAX.)             */
-    char                    *   description;
+    char                    *   description_p;
     /**
      *  @param  based_on        Another recipe this one is based on         */
-    char                    *   based_on;
+    char                    *   based_on_p;
     /**
      *  @param  serve_with      Something to serve with                     */
-    char                    *   serve_with;
+    char                    *   serve_with_p;
     /**
      *  @param  wine            Sone wines that would go well               */
-    char                    *   wine;
+    char                    *   wine_p;
     /**
      *  @param  rating          How good (0-9)                              */
-    char                    *   rating;
+    char                    *   rating_p;
     /**
      *  @param  skill           Skill needed to make (0-9)                  */
-    char                    *   skill;
+    char                    *   skill_p;
     /**
      *  @param  instructions    A single string of the "directions:         */
-    char                    *   instructions;
+    char                    *   instructions_p;
     /**
      *  @param  source          Where the recipe came from                  */
-    char                    *   source;
+    char                    *   source_p;
     /**
      *  @param  Appliance       List of appliances needed to make           */
-    struct  list_base_t     *   appliance;
+    struct  list_base_t     *   appliance_p;
     /**
      *  @param  Cuisine         List of Cuisine this recipe fits            */
-    struct  list_base_t     *   cuisine;
+    struct  list_base_t     *   cuisine_p;
     /**
      *  @param  Occasion        List of occasions to use this recipe        */
-    struct  list_base_t     *   occasion;
+    struct  list_base_t     *   occasion_p;
     /**
      *  @param  Course          List of courses to use this recipe          */
-    struct  list_base_t     *   course;
+    struct  list_base_t     *   course_p;
     /**
      *  @param  Diet            List of diet(s) to use this recipe          */
-    struct  list_base_t     *   diet;
+    struct  list_base_t     *   diet_p;
     /**
      *  @param  Chapter         List of Chapters for this recipe            */
-    struct  list_base_t     *   chapter;
+    struct  list_base_t     *   chapter_p;
     /**
      *  @param  ingredient      List of ingredients                         */
-    struct  list_base_t     *   ingredient;
+    struct  list_base_t     *   ingredient_p;
     /**
      *  @param  directions      List of directions to make                  */
-    struct  list_base_t     *   directions;
+    struct  list_base_t     *   directions_p;
     /**
      *  @param  notes           Additional notes or modification options    */
-    struct  list_base_t     *   notes;
+    struct  list_base_t     *   notes_p;
     //------------------------------------------------------------------------
     //  Used by the decoders
     //------------------------------------------------------------------------

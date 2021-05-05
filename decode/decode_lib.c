@@ -524,7 +524,7 @@ DECODE__new_auip(
      ************************************************************************/
 
     //  Append the new ingredient to the list
-    list_put_last( recipe_p->ingredient, auip_p );
+    list_put_last( recipe_p->ingredient_p, auip_p );
 
     /************************************************************************
      *  Function Exit

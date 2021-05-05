@@ -225,42 +225,42 @@ DECODE_POST__save_chapter(
         //  Appliance ?
         if ( strncmp( APPLIANCE, data_p, APPLIANCE_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->appliance,
+            decode_append( rcb_p->recipe_p->appliance_p,
                            ( data_p + APPLIANCE_L ) );
         }
         //  Diet ?
         else
         if ( strncmp( DIET, data_p, DIET_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->diet,
+            decode_append( rcb_p->recipe_p->diet_p,
                            ( data_p + DIET_L ) );
         }
         //  Course ?
         else
         if ( strncmp( COURSE, data_p, COURSE_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->course,
+            decode_append( rcb_p->recipe_p->course_p,
                            ( data_p + COURSE_L ) );
         }
         //  Cuisine ?
         else
         if ( strncmp( CUISINE, data_p, CUISINE_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->cuisine,
+            decode_append( rcb_p->recipe_p->cuisine_p,
                            ( data_p + CUISINE_L ) );
         }
         //  Occasion ?
         else
         if ( strncmp( OCCASION, data_p, OCCASION_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->occasion,
+            decode_append( rcb_p->recipe_p->occasion_p,
                            ( data_p + OCCASION_L ) );
         }
         //  Category ?
         else
         if ( strncmp( CATEGORY, data_p, CATEGORY_L ) == 0 )
         {
-            decode_append( rcb_p->recipe_p->chapter,
+            decode_append( rcb_p->recipe_p->chapter_p,
                            ( data_p + CATEGORY_L ) );
         }
     }
@@ -312,14 +312,14 @@ DECODE_POST__title_information(
      ************************************************************************/
 
     //  Is there a recipe title to analyze ?
-    if ( rcb_p->recipe_p->name != NULL )
+    if ( rcb_p->recipe_p->name_p != NULL )
     {
         //  YES:    Allocate storage for the local copy of the recipe title
-        name_p = mem_malloc( ( strlen( rcb_p->recipe_p->name ) + 1 ) );
+        name_p = mem_malloc( ( strlen( rcb_p->recipe_p->name_p ) + 1 ) );
         log_write( MID_DEBUG_1, "decode_lib.c", "Line: %d\n", __LINE__ );
 
         //  Copy the recipe title to the local buffer
-        memcpy( name_p, rcb_p->recipe_p->name, strlen( rcb_p->recipe_p->name ) );
+        memcpy( name_p, rcb_p->recipe_p->name_p, strlen( rcb_p->recipe_p->name_p ) );
 
         //  Clean the next word buffer
         memset( next_word, '\0', sizeof( next_word ) );
@@ -397,7 +397,7 @@ DECODE_POST__fmt_directions(
      ************************************************************************/
 
     //  Are we starting the directions for a new recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) == 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) == 0 )
     {
         //  YES:    Reset the first word flags
         fwos = true;
@@ -411,16 +411,16 @@ DECODE_POST__fmt_directions(
         memset( formatted_text, '\0', sizeof( formatted_text ) );
     }
     else
-    if ( list_query_count( rcb_p->recipe_p->directions ) != 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) != 0 )
     {
         //  NO:     Get the saved partial line of text from the list.
-        tmp_p = list_get_last( rcb_p->recipe_p->directions );
+        tmp_p = list_get_last( rcb_p->recipe_p->directions_p );
 
         //  Move the data to the scan formatted text buffer
         strncpy( formatted_text, tmp_p, ( sizeof( formatted_text ) - 1 ) );
 
         //  Remove the last line of text from the list.
-        list_delete( rcb_p->recipe_p->directions, tmp_p );
+        list_delete( rcb_p->recipe_p->directions_p, tmp_p );
 
         //  Release the storage used by the temporary buffer
         mem_free( tmp_p );
@@ -431,13 +431,13 @@ DECODE_POST__fmt_directions(
      ************************************************************************/
 
     //  Did we just get passed a blank line ?
-    if ( text_is_blank_line( rcb_p->recipe_p->instructions ) == false )
+    if ( text_is_blank_line( rcb_p->recipe_p->instructions_p ) == false )
     {
         //  NO:     Clean the next word buffer
         memset( next_word, '\0', sizeof( next_word ) );
 
         //  Process all words in the input buffer
-        for( scan_buffer_p = text_next_word( rcb_p->recipe_p->instructions, next_word );
+        for( scan_buffer_p = text_next_word( rcb_p->recipe_p->instructions_p, next_word );
              scan_buffer_p != NULL;
              scan_buffer_p = text_next_word( scan_buffer_p, next_word ) )
         {
@@ -531,7 +531,7 @@ DECODE_POST__fmt_directions(
                 log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
                 //  Add it to the list.
-                list_put_last( rcb_p->recipe_p->directions, tmp_p );
+                list_put_last( rcb_p->recipe_p->directions_p, tmp_p );
 
                 //  Clear the formatted text buffer.
                 memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -564,7 +564,7 @@ DECODE_POST__fmt_directions(
                     log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
                     //  Add it to the list.
-                    list_put_last( rcb_p->recipe_p->directions, tmp_p );
+                    list_put_last( rcb_p->recipe_p->directions_p, tmp_p );
 
                     //  Clear the formatted text buffer.
                     memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -616,7 +616,7 @@ DECODE_POST__fmt_directions(
                                 "Line: %d\n", __LINE__ );
 
                         //  Add it to the list.
-                        list_put_last( rcb_p->recipe_p->directions, tmp_p );
+                        list_put_last( rcb_p->recipe_p->directions_p, tmp_p );
 
                         //  Clear the formatted text buffer.
                         memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -683,7 +683,7 @@ DECODE_POST__fmt_directions(
                     log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
                     //  Add it to the list.
-                    list_put_last( rcb_p->recipe_p->directions, tmp_p );
+                    list_put_last( rcb_p->recipe_p->directions_p, tmp_p );
 
                     //  Clear the formatted text buffer.
                     memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -714,7 +714,7 @@ DECODE_POST__fmt_directions(
         log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         //  Add it to the list.
-        list_put_last( rcb_p->recipe_p->directions, tmp_p );
+        list_put_last( rcb_p->recipe_p->directions_p, tmp_p );
 
         //  Clear the formatted text buffer.
         memset( formatted_text, '\0', sizeof( formatted_text ) );
@@ -775,20 +775,20 @@ DECODE_POST__directions_cleanup(
     //          number.
 
     //  Set the initial size of the buffer
-    directions_l = strlen( rcb_p->recipe_p->instructions ) + LINE_L;
+    directions_l = strlen( rcb_p->recipe_p->instructions_p ) + LINE_L;
 
     //  Allocate a new (larger) buffer.
     directions_p = mem_malloc( directions_l );
 
     //  Copy the instructions data to the new buffer.
-    memcpy( directions_p, rcb_p->recipe_p->instructions,
+    memcpy( directions_p, rcb_p->recipe_p->instructions_p,
            ( directions_l - LINE_L ) );
 
     //  Release the old buffer
-    mem_free( rcb_p->recipe_p->instructions );
+    mem_free( rcb_p->recipe_p->instructions_p );
 
     //  And finally, replace the pointer with the new buffer
-    rcb_p->recipe_p->instructions = directions_p;
+    rcb_p->recipe_p->instructions_p = directions_p;
 
     /************************************************************************
      *  Cleanup some common formatting problems
@@ -1668,12 +1668,12 @@ DECODE_POST__directions_from(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Look for the tag
             temp_p = DECODE_POST__get_tag_data( directions_p, "From:" );
@@ -1691,8 +1691,8 @@ DECODE_POST__directions_from(
 
 
                 //  Add it to [NOTES :].
-                list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
             }
         }
     }
@@ -1744,12 +1744,12 @@ DECODE_POST__directions_source(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -1761,13 +1761,13 @@ DECODE_POST__directions_source(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a source ?
-                if ( rcb_p->recipe_p->source == NULL )
+                if ( rcb_p->recipe_p->source_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < LINE_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->source = temp_p;
+                        rcb_p->recipe_p->source_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -1785,8 +1785,8 @@ DECODE_POST__directions_source(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -1839,12 +1839,12 @@ DECODE_POST__directions_copyright(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -1856,13 +1856,13 @@ DECODE_POST__directions_copyright(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a copyright ?
-                if ( rcb_p->recipe_p->copyright == NULL )
+                if ( rcb_p->recipe_p->copyright_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < LINE_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->copyright = temp_p;
+                        rcb_p->recipe_p->copyright_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -1880,8 +1880,8 @@ DECODE_POST__directions_copyright(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -1934,12 +1934,12 @@ DECODE_POST__directions_description(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -1951,13 +1951,13 @@ DECODE_POST__directions_description(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->description == NULL )
+                if ( rcb_p->recipe_p->description_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < LINE_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->description = temp_p;
+                        rcb_p->recipe_p->description_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -1975,8 +1975,8 @@ DECODE_POST__directions_description(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -2038,12 +2038,12 @@ DECODE_POST__directions_makes(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -2100,16 +2100,16 @@ DECODE_POST__directions_makes(
                 mem_free( temp_p );
 
                 //  Is there already a makes amount or unit ?
-                if (    ( rcb_p->recipe_p->makes      == NULL )
-                     && ( rcb_p->recipe_p->makes_unit == NULL ) )
+                if (    ( rcb_p->recipe_p->makes_p      == NULL )
+                     && ( rcb_p->recipe_p->makes_unit_p == NULL ) )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if (    ( strlen( makes_amount ) < MAKES_AMOUNT - 1 )
                          && ( strlen( makes_unit   ) < MAKES_UNIT   - 1 ) )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->makes      = makes_amount;
-                        rcb_p->recipe_p->makes_unit = makes_unit;
+                        rcb_p->recipe_p->makes_p      = makes_amount;
+                        rcb_p->recipe_p->makes_unit_p = makes_unit;
 
                         //  Set the saved flag
                         saved = true;
@@ -2128,8 +2128,8 @@ DECODE_POST__directions_makes(
                     mem_free( makes_unit );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -2182,12 +2182,12 @@ DECODE_POST__directions_time(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -2202,13 +2202,13 @@ DECODE_POST__directions_time(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->time_prep == NULL )
+                if ( rcb_p->recipe_p->time_prep_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < TIME_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->time_prep = temp_p;
+                        rcb_p->recipe_p->time_prep_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2226,8 +2226,8 @@ DECODE_POST__directions_time(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
 
@@ -2241,13 +2241,13 @@ DECODE_POST__directions_time(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->time_wait == NULL )
+                if ( rcb_p->recipe_p->time_wait_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < TIME_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->time_wait = temp_p;
+                        rcb_p->recipe_p->time_wait_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2265,8 +2265,8 @@ DECODE_POST__directions_time(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
 
@@ -2280,13 +2280,13 @@ DECODE_POST__directions_time(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->time_cook == NULL )
+                if ( rcb_p->recipe_p->time_cook_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < TIME_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->time_cook = temp_p;
+                        rcb_p->recipe_p->time_cook_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2304,8 +2304,8 @@ DECODE_POST__directions_time(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
 
@@ -2319,13 +2319,13 @@ DECODE_POST__directions_time(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->time_rest == NULL )
+                if ( rcb_p->recipe_p->time_rest_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < TIME_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->time_rest = temp_p;
+                        rcb_p->recipe_p->time_rest_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2343,8 +2343,8 @@ DECODE_POST__directions_time(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
 
@@ -2358,13 +2358,13 @@ DECODE_POST__directions_time(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->time_total == NULL )
+                if ( rcb_p->recipe_p->time_total_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < TIME_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->time_total = temp_p;
+                        rcb_p->recipe_p->time_total_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2382,8 +2382,8 @@ DECODE_POST__directions_time(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -2436,12 +2436,12 @@ DECODE_POST__directions_import_from(
      ************************************************************************/
 
     //  Are there any directions for this recipe ?
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
         //  YES:    Scan the whole thing.
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Initialize the saved flag
             saved = false;
@@ -2453,13 +2453,13 @@ DECODE_POST__directions_import_from(
             if ( temp_p != NULL )
             {
                 //  YES:    Is there already a description ?
-                if ( rcb_p->recipe_p->import_from == NULL )
+                if ( rcb_p->recipe_p->import_from_p == NULL )
                 {
                     //  NO:     Will the data fit into the MasterCook Buffer ?
                     if ( strlen( temp_p ) < LINE_L )
                     {
                         //  YES:    Save it
-                        rcb_p->recipe_p->import_from = temp_p;
+                        rcb_p->recipe_p->import_from_p = temp_p;
 
                         //  Set the saved flag
                         saved = true;
@@ -2477,8 +2477,8 @@ DECODE_POST__directions_import_from(
                     mem_free( temp_p );
 
                     //  Add it to [NOTES :].
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( " "       ) );
-                    list_put_last( rcb_p->recipe_p->notes, text_copy_to_new( temp_data ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( " "       ) );
+                    list_put_last( rcb_p->recipe_p->notes_p, text_copy_to_new( temp_data ) );
                 }
             }
         }
@@ -2529,11 +2529,11 @@ DECODE_POST__directions_notes(
      *  Function
      ************************************************************************/
 
-    if ( list_query_count( rcb_p->recipe_p->directions ) > 0 )
+    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
     {
-        for( directions_p = list_get_first( rcb_p->recipe_p->directions );
+        for( directions_p = list_get_first( rcb_p->recipe_p->directions_p );
              directions_p != NULL;
-             directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p ) )
+             directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p ) )
         {
             //  Look for the keyword "NOTES:" or "NOTE:"
             if (    ( ( notes_p = strstr( directions_p, "NOTES:" ) ) != NULL )
@@ -2545,7 +2545,7 @@ DECODE_POST__directions_notes(
                 if ( notes_p == directions_p )
                 {
                     //  YES:    Remove it from the directions
-                    list_delete( rcb_p->recipe_p->directions, directions_p );
+                    list_delete( rcb_p->recipe_p->directions_p, directions_p );
 
                     //  We are go to have to free this buffer later.
                     free_note = true;
@@ -2590,13 +2590,13 @@ DECODE_POST__directions_notes(
                     }
 
                     //  Add the next line to the notes:
-                    directions_p = list_get_next( rcb_p->recipe_p->directions, directions_p );
+                    directions_p = list_get_next( rcb_p->recipe_p->directions_p, directions_p );
 
                     //  Sanity check! Did we get something
                     if ( directions_p != NULL )
                     {
                         //  YES:    Remove the entire line from the directions
-                        list_delete( rcb_p->recipe_p->directions, directions_p );
+                        list_delete( rcb_p->recipe_p->directions_p, directions_p );
 
                         //  Now add it to the notes
                         decode_fmt_notes( rcb_p->recipe_p, directions_p );
@@ -2665,15 +2665,15 @@ DECODE_POST__recipe_id(
     memset( recipe_id, 0x00, sizeof( recipe_id ) );
 
     //  Query the number of ingredients for this recipe
-    AUIP_count = list_query_count( rcb_p->recipe_p->ingredient );
+    AUIP_count = list_query_count( rcb_p->recipe_p->ingredient_p );
 
     //  Are there any ingredients in this recipe ?
     if ( AUIP_count > 0 )
     {
         //  YES:    Loop through all of the ingredients in this recipe
-        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient );
+        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient_p );
              auip_p != NULL;
-             auip_p = list_get_next( rcb_p->recipe_p->ingredient, auip_p ) )
+             auip_p = list_get_next( rcb_p->recipe_p->ingredient_p, auip_p ) )
         {
             //  Is there an amount ?
             if ( auip_p->amount_p != NULL )
@@ -2736,12 +2736,12 @@ DECODE_POST__recipe_id(
                   AUIP_count );
 
         //  Add it to the recipe
-        rcb_p->recipe_p->recipe_id = text_copy_to_new( id_string );
+        rcb_p->recipe_p->recipe_id_p = text_copy_to_new( id_string );
     }
     else
     {
         //  NO:     A recipe without ingredients isn't a recipe.
-        rcb_p->recipe_p->recipe_id =
+        rcb_p->recipe_p->recipe_id_p =
                 text_copy_to_new( "000000000000000000000000000000000000000000" );
     }
 

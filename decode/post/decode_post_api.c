@@ -110,7 +110,7 @@ decode_post(
     //  Recipe Title analysis
     DECODE_POST__title_information( rcb_p );
 
-    if ( rcb_p->recipe_p->instructions != NULL )
+    if ( rcb_p->recipe_p->instructions_p != NULL )
     {
         //  Directions  analysis
         DECODE_POST__directions_cleanup( rcb_p );

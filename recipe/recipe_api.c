@@ -127,15 +127,15 @@ recipe_new(
     recipe_p->rcb_p = rcb_p;
 
     //  Create the lists needed by the structure
-    recipe_p->appliance  = list_new( );
-    recipe_p->diet       = list_new( );
-    recipe_p->course     = list_new( );
-    recipe_p->cuisine    = list_new( );
-    recipe_p->occasion   = list_new( );
-    recipe_p->chapter    = list_new( );
-    recipe_p->directions = list_new( );
-    recipe_p->ingredient = list_new( );
-    recipe_p->notes      = list_new( );
+    recipe_p->appliance_p  = list_new( );
+    recipe_p->diet_p       = list_new( );
+    recipe_p->course_p     = list_new( );
+    recipe_p->cuisine_p    = list_new( );
+    recipe_p->occasion_p   = list_new( );
+    recipe_p->chapter_p    = list_new( );
+    recipe_p->directions_p = list_new( );
+    recipe_p->ingredient_p = list_new( );
+    recipe_p->notes_p      = list_new( );
 
     //  Save the original recipe format
     switch( recipe_format )
@@ -144,7 +144,7 @@ recipe_new(
         case    RECIPE_FORMAT_MXP:
         {
             //  MasterCook eXport
-            recipe_p->source_format = text_copy_to_new( "MXP" );
+            recipe_p->source_format_p = text_copy_to_new( "MXP" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -152,7 +152,7 @@ recipe_new(
         case    RECIPE_FORMAT_MX2:
         {
             //  MasterCook eXport Ver. 2
-            recipe_p->source_format = text_copy_to_new( "MX2" );
+            recipe_p->source_format_p = text_copy_to_new( "MX2" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -160,7 +160,7 @@ recipe_new(
         case    RECIPE_FORMAT_MMF:
         {
             //  Meal-Master Format
-            recipe_p->source_format = text_copy_to_new( "MMF" );
+            recipe_p->source_format_p = text_copy_to_new( "MMF" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -168,7 +168,7 @@ recipe_new(
         case    RECIPE_FORMAT_RXF:
         {
             //  Recipe eXchange Format (Native)
-            recipe_p->source_format = text_copy_to_new( "RXF" );
+            recipe_p->source_format_p = text_copy_to_new( "RXF" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -176,7 +176,7 @@ recipe_new(
         case    RECIPE_FORMAT_NYC:
         {
             //  Now Your Cooking!
-            recipe_p->source_format = text_copy_to_new( "NYC" );
+            recipe_p->source_format_p = text_copy_to_new( "NYC" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -184,7 +184,7 @@ recipe_new(
         case    RECIPE_FORMAT_ERD:
         {
             //  Easy Recipe Deluxe
-            recipe_p->source_format = text_copy_to_new( "ERD" );
+            recipe_p->source_format_p = text_copy_to_new( "ERD" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -192,7 +192,7 @@ recipe_new(
         case    RECIPE_FORMAT_BOF:
         {
             //  Big Oven Format
-            recipe_p->source_format = text_copy_to_new( "BOF" );
+            recipe_p->source_format_p = text_copy_to_new( "BOF" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -200,7 +200,7 @@ recipe_new(
         case    RECIPE_FORMAT_CP2:
         {
             //  Cooken Pro 2.0
-            recipe_p->source_format = text_copy_to_new( "CP2" );
+            recipe_p->source_format_p = text_copy_to_new( "CP2" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -208,7 +208,7 @@ recipe_new(
         case    RECIPE_FORMAT_GRF:
         {
             //  Generic Format #1     [[[[[
-            recipe_p->source_format = text_copy_to_new( "GRF" );
+            recipe_p->source_format_p = text_copy_to_new( "GRF" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -216,7 +216,7 @@ recipe_new(
         case    RECIPE_FORMAT_GF2:
         {
             //  Generic Format #2     @@@@@
-            recipe_p->source_format = text_copy_to_new( "GF2" );
+            recipe_p->source_format_p = text_copy_to_new( "GF2" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -224,7 +224,7 @@ recipe_new(
         case    RECIPE_FORMAT_TXT:
         {
             //  Unformatted text data
-            recipe_p->source_format = text_copy_to_new( "TXT" );
+            recipe_p->source_format_p = text_copy_to_new( "TXT" );
             log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
 
         }   break;
@@ -278,119 +278,119 @@ recipe_kill(
      ************************************************************************/
 
     if ( recipe_p->rcb_p != NULL)            recipe_p->rcb_p->recipe_p = NULL;
-    if ( recipe_p->name != NULL)             mem_free( recipe_p->name );
-    if ( recipe_p->recipe_id != NULL)        mem_free( recipe_p->recipe_id );
-    if ( recipe_p->author != NULL)           mem_free( recipe_p->author );
-    if ( recipe_p->source_format != NULL)    mem_free( recipe_p->source_format );
-    if ( recipe_p->wine != NULL)             mem_free( recipe_p->wine );
-    if ( recipe_p->copyright != NULL)        mem_free( recipe_p->copyright );
-    if ( recipe_p->edited_by != NULL)        mem_free( recipe_p->edited_by );
-    if ( recipe_p->formatted_by != NULL)     mem_free( recipe_p->formatted_by );
-    if ( recipe_p->import_from != NULL)      mem_free( recipe_p->import_from );
-    if ( recipe_p->serves != NULL)           mem_free( recipe_p->serves );
-    if ( recipe_p->servings_size != NULL)    mem_free( recipe_p->servings_size );
-    if ( recipe_p->makes != NULL)            mem_free( recipe_p->makes );
-    if ( recipe_p->makes_unit != NULL)       mem_free( recipe_p->makes_unit );
-    if ( recipe_p->time_prep != NULL)        mem_free( recipe_p->time_prep );
-    if ( recipe_p->time_wait != NULL)        mem_free( recipe_p->time_wait );
-    if ( recipe_p->time_cook != NULL)        mem_free( recipe_p->time_cook );
-    if ( recipe_p->time_rest != NULL)        mem_free( recipe_p->time_rest );
-    if ( recipe_p->time_total != NULL)       mem_free( recipe_p->time_total );
-    if ( recipe_p->description != NULL)      mem_free( recipe_p->description );
-    if ( recipe_p->based_on != NULL)         mem_free( recipe_p->based_on );
-    if ( recipe_p->serve_with != NULL)       mem_free( recipe_p->serve_with );
-    if ( recipe_p->rating != NULL)           mem_free( recipe_p->rating );
-    if ( recipe_p->source != NULL)           mem_free( recipe_p->source );
-    if ( recipe_p->skill != NULL)            mem_free( recipe_p->skill );
-    if ( recipe_p->instructions != NULL )    mem_free( recipe_p->instructions );
+    if ( recipe_p->name_p != NULL)             mem_free( recipe_p->name_p );
+    if ( recipe_p->recipe_id_p != NULL)        mem_free( recipe_p->recipe_id_p );
+    if ( recipe_p->author_p != NULL)           mem_free( recipe_p->author_p );
+    if ( recipe_p->source_format_p != NULL)    mem_free( recipe_p->source_format_p );
+    if ( recipe_p->wine_p != NULL)             mem_free( recipe_p->wine_p );
+    if ( recipe_p->copyright_p != NULL)        mem_free( recipe_p->copyright_p );
+    if ( recipe_p->edited_by_p != NULL)        mem_free( recipe_p->edited_by_p );
+    if ( recipe_p->formatted_by_p != NULL)     mem_free( recipe_p->formatted_by_p );
+    if ( recipe_p->import_from_p != NULL)      mem_free( recipe_p->import_from_p );
+    if ( recipe_p->serves_p != NULL)           mem_free( recipe_p->serves_p );
+    if ( recipe_p->servings_size_p != NULL)    mem_free( recipe_p->servings_size_p );
+    if ( recipe_p->makes_p != NULL)            mem_free( recipe_p->makes_p );
+    if ( recipe_p->makes_unit_p != NULL)       mem_free( recipe_p->makes_unit_p );
+    if ( recipe_p->time_prep_p != NULL)        mem_free( recipe_p->time_prep_p );
+    if ( recipe_p->time_wait_p != NULL)        mem_free( recipe_p->time_wait_p );
+    if ( recipe_p->time_cook_p != NULL)        mem_free( recipe_p->time_cook_p );
+    if ( recipe_p->time_rest_p != NULL)        mem_free( recipe_p->time_rest_p );
+    if ( recipe_p->time_total_p != NULL)       mem_free( recipe_p->time_total_p );
+    if ( recipe_p->description_p != NULL)      mem_free( recipe_p->description_p );
+    if ( recipe_p->based_on_p != NULL)         mem_free( recipe_p->based_on_p );
+    if ( recipe_p->serve_with_p != NULL)       mem_free( recipe_p->serve_with_p );
+    if ( recipe_p->rating_p != NULL)           mem_free( recipe_p->rating_p );
+    if ( recipe_p->source_p != NULL)           mem_free( recipe_p->source_p );
+    if ( recipe_p->skill_p != NULL)            mem_free( recipe_p->skill_p );
+    if ( recipe_p->instructions_p != NULL )    mem_free( recipe_p->instructions_p );
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->appliance ) > 0 )
+    if ( list_query_count( recipe_p->appliance_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->appliance ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->appliance_p ) ) != NULL )
         {
-            list_delete( recipe_p->appliance, data_p );
+            list_delete( recipe_p->appliance_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->appliance ) != true )
+    if ( list_kill( recipe_p->appliance_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->appliance ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->cuisine ) > 0 )
+    if ( list_query_count( recipe_p->cuisine_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->cuisine ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->cuisine_p ) ) != NULL )
         {
-            list_delete( recipe_p->cuisine, data_p );
+            list_delete( recipe_p->cuisine_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->cuisine ) != true )
+    if ( list_kill( recipe_p->cuisine_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->cuisine ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->occasion ) > 0 )
+    if ( list_query_count( recipe_p->occasion_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->occasion ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->occasion_p ) ) != NULL )
         {
-            list_delete( recipe_p->occasion, data_p );
+            list_delete( recipe_p->occasion_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->occasion ) != true )
+    if ( list_kill( recipe_p->occasion_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->occasion ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->course ) > 0 )
+    if ( list_query_count( recipe_p->course_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->course ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->course_p ) ) != NULL )
         {
-            list_delete( recipe_p->course, data_p );
+            list_delete( recipe_p->course_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->course ) != true )
+    if ( list_kill( recipe_p->course_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->course ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->diet ) > 0 )
+    if ( list_query_count( recipe_p->diet_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->diet ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->diet_p ) ) != NULL )
         {
-            list_delete( recipe_p->diet, data_p );
+            list_delete( recipe_p->diet_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->diet ) != true )
+    if ( list_kill( recipe_p->diet_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->diet ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->chapter ) > 0 )
+    if ( list_query_count( recipe_p->chapter_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->chapter ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->chapter_p ) ) != NULL )
         {
-            list_delete( recipe_p->chapter, data_p );
+            list_delete( recipe_p->chapter_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->chapter ) != true )
+    if ( list_kill( recipe_p->chapter_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->chapter ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->ingredient ) > 0 )
+    if ( list_query_count( recipe_p->ingredient_p ) > 0 )
     {
-        while( ( auip_p = list_get_first( recipe_p->ingredient ) ) != NULL )
+        while( ( auip_p = list_get_first( recipe_p->ingredient_p ) ) != NULL )
         {
             if ( auip_p->type_p != NULL )        mem_free( auip_p->type_p );
             if ( auip_p->amount_p != NULL )      mem_free( auip_p->amount_p );
@@ -398,38 +398,38 @@ recipe_kill(
             if ( auip_p->ingredient_p != NULL )  mem_free( auip_p->ingredient_p );
             if ( auip_p->preparation_p != NULL ) mem_free( auip_p->preparation_p );
             if ( auip_p != NULL )                mem_free( auip_p );
-            list_delete( recipe_p->ingredient, auip_p );
+            list_delete( recipe_p->ingredient_p, auip_p );
         }
     }
-    if ( list_kill( recipe_p->ingredient ) != true )
+    if ( list_kill( recipe_p->ingredient_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->ingredient ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->directions ) > 0 )
+    if ( list_query_count( recipe_p->directions_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->directions ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->directions_p ) ) != NULL )
         {
-            list_delete( recipe_p->directions, data_p );
+            list_delete( recipe_p->directions_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->directions ) != true )
+    if ( list_kill( recipe_p->directions_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->directions ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->notes ) > 0 )
+    if ( list_query_count( recipe_p->notes_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->notes ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->notes_p ) ) != NULL )
         {
-            list_delete( recipe_p->notes, data_p );
+            list_delete( recipe_p->notes_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->notes ) != true )
+    if ( list_kill( recipe_p->notes_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
                       "list_kill( recipe_p->notes ) failed\n" );

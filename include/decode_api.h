@@ -88,6 +88,12 @@
 
 //---------------------------------------------------------------------------
 void
+decode_add_instructions(
+    struct   recipe_t       *   recipe_p,
+    char                    *   data_p
+    );
+//---------------------------------------------------------------------------
+void
 decode_save_chapter(
     char                    *   data_p,
     struct   recipe_t       *   recipe_p

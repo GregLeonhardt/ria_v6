@@ -87,6 +87,76 @@
 
 /****************************************************************************/
 /**
+ *  Append a new line of text to the directions data.
+ *
+ *  @param  recipe_p            Primary structure for a recipe.
+ *  @param  data_p              Pointer to a directions line of text
+ *
+ *  @return void                No return code from this function.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+void
+decode_add_instructions(
+    struct   recipe_t       *   recipe_p,
+    char                    *   data_p
+    )
+{
+    /**
+     *  @param  new_data_p      Pointer to a new data buffer                */
+    char                    *   new_data_p;
+    /**
+     *  @param  new_data_l      Size needed for the combined (old & new)    */
+    int                         new_data_l;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Is this the first thing for the instructions buffer ?
+    if ( recipe_p->instructions == NULL )
+    {
+        //  YES:    Just use this buffer
+        recipe_p->instructions = text_copy_to_new( data_p );
+        log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
+    }
+    else
+    {
+        //  NO:     Figure out how big it needs to be.
+        new_data_l = ( strlen( data_p ) + ( strlen( recipe_p->instructions ) ) + 2 );
+
+        //  Create a new buffer with the old and the new
+        new_data_p = mem_malloc( new_data_l );
+        log_write( MID_DEBUG_1, "recipe_api.c", "Line: %d\n", __LINE__ );
+
+        //  Merge the two buffers together.
+        strncpy( new_data_p, recipe_p->instructions, new_data_l );
+        strcat( new_data_p, " " );
+        strncat( new_data_p, data_p, new_data_l - strlen( new_data_p ) );
+
+        //  Release the (now) unused buffers
+        mem_free( recipe_p->instructions );
+
+        //  Update the instructions pointer
+        recipe_p->instructions = new_data_p;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+}
+
+/****************************************************************************/
+/**
  *  The decode_save_chapter will identify which category subsection is
  *  identified and store the data in that section.
  *

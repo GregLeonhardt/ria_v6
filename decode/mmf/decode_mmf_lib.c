@@ -893,7 +893,7 @@ MMF__directions(
     else
     {
         //  Format the Directions line
-        recipe_add_instructions( recipe_p, in_buffer_p );
+        decode_add_instructions( recipe_p, in_buffer_p );
     }
 
     /************************************************************************

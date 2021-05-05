@@ -268,12 +268,6 @@ recipe_append(
     );
 //---------------------------------------------------------------------------
 void
-recipe_add_instructions(
-    struct   recipe_t       *   recipe_p,
-    char                    *   data_p
-    );
-//---------------------------------------------------------------------------
-void
 recipe_fmt_notes(
     struct   recipe_t       *   recipe_p,
     char                    *   data_p

@@ -498,7 +498,7 @@ MMF__title(
             title_p = text_skip_past_whitespace( title_p );
 
             //  Cleanup the recipe name before saving it.
-            recipe_name_cleanup( title_p, strlen( title_p ) );
+            decode_name_cleanup( title_p, strlen( title_p ) );
 
             //  Save the recipe title (name)
             recipe_p->name = text_copy_to_new( title_p );
@@ -832,7 +832,7 @@ MMF__auip(
             }
 
             // Format the AUIP line
-            recipe_fmt_auip( recipe_p, in_buffer_p, RECIPE_FORMAT_MMF );
+            decode_fmt_auip( recipe_p, in_buffer_p, RECIPE_FORMAT_MMF );
         }
     }
     else

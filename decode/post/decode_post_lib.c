@@ -47,6 +47,7 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
+#include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
 #include "decode_post_api.h"    //  API for all post_*              PUBLIC
 #include "decode_post_lib.h"    //  API for all POST__*             PRIVATE
@@ -224,42 +225,42 @@ DECODE_POST__save_chapter(
         //  Appliance ?
         if ( strncmp( APPLIANCE, data_p, APPLIANCE_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->appliance,
+            decode_append( rcb_p->recipe_p->appliance,
                            ( data_p + APPLIANCE_L ) );
         }
         //  Diet ?
         else
         if ( strncmp( DIET, data_p, DIET_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->diet,
+            decode_append( rcb_p->recipe_p->diet,
                            ( data_p + DIET_L ) );
         }
         //  Course ?
         else
         if ( strncmp( COURSE, data_p, COURSE_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->course,
+            decode_append( rcb_p->recipe_p->course,
                            ( data_p + COURSE_L ) );
         }
         //  Cuisine ?
         else
         if ( strncmp( CUISINE, data_p, CUISINE_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->cuisine,
+            decode_append( rcb_p->recipe_p->cuisine,
                            ( data_p + CUISINE_L ) );
         }
         //  Occasion ?
         else
         if ( strncmp( OCCASION, data_p, OCCASION_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->occasion,
+            decode_append( rcb_p->recipe_p->occasion,
                            ( data_p + OCCASION_L ) );
         }
         //  Category ?
         else
         if ( strncmp( CATEGORY, data_p, CATEGORY_L ) == 0 )
         {
-            recipe_append( rcb_p->recipe_p->chapter,
+            decode_append( rcb_p->recipe_p->chapter,
                            ( data_p + CATEGORY_L ) );
         }
     }
@@ -2563,7 +2564,7 @@ DECODE_POST__directions_notes(
                 if ( text_is_blank_line( notes_p ) == false )
                 {
                     //  YES:    Add the remaining text to the notes.
-                    recipe_fmt_notes( rcb_p->recipe_p, notes_p );
+                    decode_fmt_notes( rcb_p->recipe_p, notes_p );
 
                     //  Are we supposed to free the buffer ?
                     if ( free_note == true )
@@ -2598,7 +2599,7 @@ DECODE_POST__directions_notes(
                         list_delete( rcb_p->recipe_p->directions, directions_p );
 
                         //  Now add it to the notes
-                        recipe_fmt_notes( rcb_p->recipe_p, directions_p );
+                        decode_fmt_notes( rcb_p->recipe_p, directions_p );
 
                         //  Release the storage buffer.
                         mem_free( directions_p );

@@ -77,6 +77,49 @@ int                             FooBar;
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+int
+DECODE__is_preperations(
+    char                    *   data_p
+    );
+//----------------------------------------------------------------------------
+char  *
+DECODE__fmt_ingredient(
+    char                    *   in_ingredient_p,
+    char                    *   ingredient_p,
+    int                         mmf_length,
+    int                         out_buf_size
+    );
+//----------------------------------------------------------------------------
+char  *
+DECODE__fmt_preparation(
+    char                    *   in_preparation_p,
+    char                    *   preparation_p,
+    int                         mmf_length,
+    int                         out_buf_size
+    );
+//----------------------------------------------------------------------------
+void
+DECODE__new_auip(
+    struct   recipe_t       *   recipe_p,
+    char                    *   amount_p,
+    char                    *   unit_p,
+    char                    *   ingredient_p,
+    char                    *   preparation_p
+    );
+//----------------------------------------------------------------------------
+char  *
+DECODE__fmt_unit(
+    char                    *   in_auip_p,
+    char                    *   unit_p,
+    int                         out_buf_size
+    );
+//----------------------------------------------------------------------------
+char  *
+DECODE__fmt_amount(
+    char                    *   in_auip_p,
+    char                    *   amount_p,
+    int                         out_buf_size
+    );
 //----------------------------------------------------------------------------
 
 /****************************************************************************/

@@ -88,6 +88,36 @@
 
 //---------------------------------------------------------------------------
 void
+decode_fmt_auip(
+    struct   recipe_t       *   recipe_p,
+    char                    *   auip_data_p,
+    enum    recipe_format_e         recipe_format
+    );
+//---------------------------------------------------------------------------
+void
+decode_name_cleanup(
+    char                    *   name_p,
+    int                         name_l
+    );
+//---------------------------------------------------------------------------
+void
+decode_fmt_notes(
+    struct   recipe_t       *   recipe_p,
+    char                    *   data_p
+    );
+//---------------------------------------------------------------------------
+void
+decode_next_id(
+    struct  recipe_t        *   recipe_p
+    );
+//---------------------------------------------------------------------------
+void
+decode_append(
+    struct  list_base_t     *   list_p,
+    char                    *   data_p
+    );
+//---------------------------------------------------------------------------
+void
 decode_add_instructions(
     struct   recipe_t       *   recipe_p,
     char                    *   data_p

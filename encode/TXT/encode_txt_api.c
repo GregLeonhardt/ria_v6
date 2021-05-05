@@ -64,7 +64,6 @@
 #include "email_api.h"          //  API for all email_*             PUBLIC
                                 //*******************************************
 #include <encode_api.h>         //  API for all encode_*            PUBLIC
-#include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
 #include "encode_txt_lib.h"     //  API for all ENCODE_TXT__*       PRIVATE
                                 //*******************************************
 

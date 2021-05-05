@@ -13,6 +13,10 @@
  *
  *  @note
  *
+ *  @ToDo: 1 Restructure header files.
+ *      {Subdirectory}_api.c files don't get their own {Subdirectory}_api.h
+ *      files.  Move {Subdirectory}_api.h contents in decode_api.h
+ *
  ****************************************************************************/
 
 /****************************************************************************
@@ -47,7 +51,6 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
 #include "encode_api.h"         //  API for all encode_*            PUBLIC
 #include "encode_lib.h"         //  API for all ENCODE__*           PRIVATE
                                 //*******************************************

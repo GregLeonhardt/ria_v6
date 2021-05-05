@@ -49,7 +49,7 @@
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
-#include "decode_post_api.h"    //  API for all post_*              PUBLIC
+#include "decode_api.h"         //  API for all decode_*            PUBLIC
 #include "decode_post_lib.h"    //  API for all POST__*             PRIVATE
                                 //*******************************************
 

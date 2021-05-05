@@ -50,7 +50,7 @@
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 5
+#define VER_MIN                 6
 
 /****************************************************************************
  * System Function API

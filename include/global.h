@@ -66,9 +66,9 @@
 #define MAX_QUEUE_DEPTH         (    0 )
 #define QUEUE_DEPTH_IMPORT      (    1 )
 #define QUEUE_DEPTH_EMAIL       (    1 )
-#define QUEUE_DEPTH_DECODE      ( 9999 )
-#define QUEUE_DEPTH_ENCODE      (    0 )
-#define QUEUE_DEPTH_EXPORT      (    0 )
+#define QUEUE_DEPTH_DECODE      ( 2047 )
+#define QUEUE_DEPTH_ENCODE      (  127 )
+#define QUEUE_DEPTH_EXPORT      (  127 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************

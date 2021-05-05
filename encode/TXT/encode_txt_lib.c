@@ -39,7 +39,7 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include <encode_txt_api.h>     //  API for all encode_txt_*        PUBLIC
+#include "encode_api.h"         //  API for all encode_*            PUBLIC
 #include "encode_txt_lib.h"     //  API for all ENCODE_TXT__*       PRIVATE
                                 //*******************************************
 

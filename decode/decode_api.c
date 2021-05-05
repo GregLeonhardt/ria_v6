@@ -47,8 +47,6 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
-#include "decode_mmf_api.h"     //  API for all mmf_*               PUBLIC
-#include "decode_post_api.h"    //  API for all post_*              PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
 #include "decode_api.h"         //  API for all decode_*            PUBLIC

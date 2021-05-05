@@ -43,7 +43,7 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
                                 //*******************************************
-#include "decode_post_api.h"    //  API for all post_*              PUBLIC
+#include "decode_api.h"         //  API for all decode_*            PUBLIC
 #include "decode_post_lib.h"    //  API for all POST__*             PRIVATE
                                 //*******************************************
 

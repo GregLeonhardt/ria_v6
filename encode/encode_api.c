@@ -13,10 +13,6 @@
  *
  *  @note
  *
- *  @ToDo: 1 Restructure header files.
- *      {Subdirectory}_api.c files don't get their own {Subdirectory}_api.h
- *      files.  Move {Subdirectory}_api.h contents in decode_api.h
- *
  ****************************************************************************/
 
 /****************************************************************************

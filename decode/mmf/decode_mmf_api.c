@@ -215,7 +215,7 @@ decode_mmf(
     mmf_state = MMF_DS_TITLE;
 
     /************************************************************************
-     *  Copy e-Mail information
+     *  Create a blank recipe structure
      ************************************************************************/
 
     //  Allocate a new recipe data structure

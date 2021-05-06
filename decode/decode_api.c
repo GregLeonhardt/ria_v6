@@ -23,6 +23,8 @@
 
 #define STUB                    ( 0 )
 
+#define _GNU_SOURCE             //  See feature_test_macros(7)
+
 /****************************************************************************
  * System Function API
  ****************************************************************************/
@@ -211,6 +213,75 @@ DECODE__fmt_unit(
 
     //  Return the pointer that is set past the unit field
     return ( in_unit_p );
+}
+
+/****************************************************************************/
+/**
+ *  Test the data string for the tag string provided.
+ *
+ *  @param  data_p              Pointer to the test data string.
+ *  @param  tag_p               Pointer to the tag to be tested.
+ *
+ *  @return return_data_p       When the tag string is located, a pointer to
+ *                              the first byte of the tag data;  else NULL
+ *                              is returned.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+char    *
+decode_is_tag(
+    char                        *   data_p,
+    char                        *   tag_p
+    )
+{
+    /**
+     *  @param  return_data_p       Pointer to the data string              */
+    char                        *   return_data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function
+     ************************************************************************/
+
+    //  Look for the first occurence of the search tag data.
+    return_data_p = strcasestr( data_p, tag_p );
+
+    //  Was the tag string found ?
+    if ( return_data_p != NULL )
+    {
+        //  YES:    Skip over the tag before looking for blank characters
+        return_data_p += strlen( tag_p );
+
+        //  Skip past blank characters to what should be a colon [:].
+        for ( ;
+              isblank( return_data_p[ 0 ] ) != 0;
+              return_data_p += 1 );
+
+        //  Is this a colon [:] character ?
+        if ( return_data_p[ 0 ] == ':' )
+        {
+            //  YES:    Fix the pointer and we are done.
+            return_data_p += 1;
+        }
+        else
+        {
+            //  NO:     This isn't the tag we are looking for
+            return_data_p = NULL;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( return_data_p );
 }
 
 /****************************************************************************/
@@ -1410,11 +1481,9 @@ decode(
         {
             case    RECIPE_FORMAT_MXP:
             {
-                //  OOPS.
-                log_write( MID_WARNING, tcb_p->thread_name,
-                           "Decode for recipe format 'MXP' is not available\n" );
-                //  Clean out the recipe control block
-                ok_to_encode = false;
+                //  Decode a MasterCook recipe
+                decode_mxp( rcb_p );
+                ok_to_encode = true;
             }   break;
             case    RECIPE_FORMAT_MX2:
             {

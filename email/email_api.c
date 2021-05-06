@@ -160,6 +160,9 @@ email(
     /**
      * @param tmp_data_p        Temporary data pointer                      */
     char                    *   tmp_data_p;
+    /**
+     *  @param  recipe_format   Format code for this recipe                 */
+    enum    recipe_format_e     tmp_format;
 #endif
 
     /************************************************************************
@@ -313,34 +316,12 @@ email(
             }
             else
             {
-                /**
-                 *  @param  recipe_format   Format code for this recipe     */
-                enum    recipe_format_e     tmp_format;
-
-                //  YES:    Maybe this is a recipe start tag
+                //  Just in case this is the start of a new recipe
                 tmp_format = recipe_is_start( list_data_p );
-
-                //  Is this the start of a recipe ?
-                if ( tmp_format != RECIPE_FORMAT_NONE )
-                {
-                   //  YES:    Put it in one of the DECODE queue
-                    queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
-
-                    //  Clear the current recipe format
-                    rcb_p->recipe_format = tmp_format;
-
-                    //  Clear the new RCB pointer
-                    new_rcb_p = NULL;
-
-                    //  Clone the RCB
-                    new_rcb_p = rcb_new( rcb_p );
-                }
-
-                //  Add this data buffer to the recipe list.
-                list_put_last( new_rcb_p->import_list_p, list_data_p );
 
                 //  Is this the end of the recipe
                 if (    ( recipe_is_end( rcb_p->recipe_format, list_data_p ) == true )
+                     || ( tmp_format                           != RECIPE_FORMAT_NONE )
                      || ( EMAIL__is_group_break( list_data_p )               == true ) )
                 {
                     //  YES:    Put it in one of the DECODE queue
@@ -352,6 +333,23 @@ email(
                     //  Clear the new RCB pointer
                     new_rcb_p = NULL;
                 }
+
+
+                //  Is this the start of a recipe ?
+                if ( tmp_format != RECIPE_FORMAT_NONE )
+                {
+                   //  YES:    Set the new recipe format
+                    rcb_p->recipe_format = tmp_format;
+
+                    //  Clear the new RCB pointer
+                    new_rcb_p = NULL;
+
+                    //  Clone the RCB
+                    new_rcb_p = rcb_new( rcb_p );
+                }
+
+                //  Add this data buffer to the current recipe list.
+                list_put_last( new_rcb_p->import_list_p, list_data_p );
             }
 
         }

@@ -555,7 +555,7 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MX2;
     }
 #endif
-#if 0   //  @ToDo: 2 mxp_is_start()
+#if 1   //  @ToDo: 2 mxp_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MXP
     else
@@ -626,33 +626,26 @@ recipe_is_end(
      ************************************************************************/
 
     //  NOTE:
-    //  When a MXP formatted recipe is embedded inside a MX2, this was producing
-    //  a false positive for a recipe break.  If this creates a problem then
-    //  I will have to pass the current recipe type for additional testing.
+    //  When a MXP formatted recipe is embedded inside a MX2, this was
+    //  producing a false positive for a recipe break.  If this creates a
+    //  problem then I will have to pass the current recipe type for
+    //  additional testing.
 
     //  NOTE:
     //  MX2 is a special case because it may contain an embedded MXP recipe
     //  inside it.
 
     //  Is this something that can end a recipe ?
-    if (    ( email_is_group_break( data_p ) == true )
-//       || ( bof_is_start(         data_p ) == true )
-//       || ( cp2_is_start(         data_p ) == true )
-//       || ( gf2_is_start(         data_p ) == true )
-//       || ( grf_is_start(         data_p ) == true )
-         || ( mmf_is_end(           data_p ) == true )
-//       || ( mx2_is_start(         data_p ) == true )
+    if (    ( mmf_is_end(           data_p ) == true )
+//       || ( bof_is_end(           data_p ) == true )
+//       || ( cp2_is_end(           data_p ) == true )
+//       || ( gf2_is_end(           data_p ) == true )
+//       || ( grf_is_end(           data_p ) == true )
+//       || ( mx2_is_end(           data_p ) == true )
 //       || (    ( recipe_format != RECIPE_FORMAT_MX2 )
 //            && ( mxp_is_start(    data_p ) == true ) )
-//       || ( nyc_is_start(         data_p ) == true ) )
+//       || ( nyc_is_end(           data_p ) == true ) )
                                                         )
-    {
-        //  YES:    Change the return code
-        decode_rc = true;
-    }
-    else
-    //  Maybe we missed the recipe end.
-    if ( recipe_is_start( data_p ) != RECIPE_FORMAT_NONE )
     {
         //  YES:    Change the return code
         decode_rc = true;

@@ -148,8 +148,7 @@ import(
 
         //  Progress report.
         log_write( MID_INFO, tcb_p->thread_name,
-                   "SIZE: %10d - FILE-ID: %s\n",
-                   list_query_count( rcb_p->import_list_p ),
+                   "FILE-ID: %s\n",
                    rcb_p->file_path );
 
         //  Change execution state to "INITIALIZED" for work.

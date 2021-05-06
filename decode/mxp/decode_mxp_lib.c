@@ -54,28 +54,6 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-enum    categories_state_e
-{
-    CSS_IDLE                    =   0,
-    CSS_STARTED                 =   1,
-    CSS_COMPLETE                =   2
-};
-//----------------------------------------------------------------------------
-enum    auip_state_e
-{
-    AUIPS_IDLE                  =   0,
-    AUIPS_TEXT                  =   1,
-    AUIPS_DASH                  =   2,
-    AUIPS_AMIP                  =   3,
-    AUIPS_COMPLETE              =   4
-};
-//----------------------------------------------------------------------------
-enum    direction_state_e
-{
-    DSS_IDLE                    =   0,
-    DSS_STARTED                 =   1,
-    DSS_COMPLETE                =   2
-};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -201,14 +179,6 @@ enum    direction_state_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-static
-enum    categories_state_e      categories_scan_state;
-//----------------------------------------------------------------------------
-static
-enum    auip_state_e            auip_scan_state;
-//----------------------------------------------------------------------------
-static
-enum    direction_state_e       direction_scan_state;
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -258,11 +228,6 @@ DECODE_MXP__start(
 
     //  Locate the first character in the buffer
     start_p = text_skip_past_whitespace( data_p );
-
-    //  Initialize process state registers
-    categories_scan_state = CSS_IDLE;
-    auip_scan_state = AUIPS_IDLE;
-    direction_scan_state = DSS_IDLE;
 
     /************************************************************************
      *  Generic Detection
@@ -629,23 +594,25 @@ DECODE_MXP__categories(
      *  Function
      ************************************************************************/
 
-    //
-    if ( categories_scan_state == CSS_IDLE )
+    //  Have we located the categories tag yet ?
+    if ( recipe_p->categories_scan_state == CSS_IDLE )
     {
-        //  Search the data buffer
+        //  NO:     Test the buffer data for the categories tag.
         tmp_data_p = decode_is_tag( tmp_data_p, MXP_CATEGORIES );
 
-        //  Does this line contain ?
+        //  Is this a categories tag ?
         if ( tmp_data_p != NULL )
         {
             //  YES:    This is the first categories line being scanned.
-            categories_scan_state = CSS_STARTED;
+            recipe_p->categories_scan_state = CSS_STARTED;
 
             //  Locate the first character in the buffer
             tmp_data_p = text_skip_past_whitespace( tmp_data_p );
         }
     }
-    if ( categories_scan_state == CSS_STARTED )
+
+    //  Have we located the categories tag yet ?
+    if ( recipe_p->categories_scan_state == CSS_STARTED )
     {
         //  Is this the end of the categories list ?
         if (    ( strncmp( tmp_data_p, MXP_AUIP_HDR_1, MXP_AUIP_HDR_1_L ) == 0 )
@@ -655,7 +622,7 @@ DECODE_MXP__categories(
              || ( text_is_blank_line( tmp_data_p )                == true ) )
         {
             //  YES:    Then this is the end of the categories section
-            categories_scan_state = CSS_COMPLETE;
+            recipe_p->categories_scan_state = CSS_COMPLETE;
         }
         //  Process all categories on the line
         while( 1 )
@@ -667,7 +634,7 @@ DECODE_MXP__categories(
             if ( tmp_data_p[ 0 ] == '\0' )
             {
                 //  NO:     Then this is the end of the categories section
-                categories_scan_state = CSS_COMPLETE;
+                recipe_p->categories_scan_state = CSS_COMPLETE;
 
                 //  There isn't anything else to get here
                 break;
@@ -747,7 +714,7 @@ DECODE_MXP__categories(
 
         }
     }
-    if ( categories_scan_state == CSS_COMPLETE )
+    if ( recipe_p->categories_scan_state == CSS_COMPLETE )
     {
         //  Change the return code
         mxp_rc = true;
@@ -809,7 +776,7 @@ DECODE_MXP__auip(
      *  Function
      ************************************************************************/
 
-    switch( auip_scan_state )
+    switch( recipe_p->auip_scan_state )
     {
         case    AUIPS_IDLE:
         {
@@ -817,7 +784,7 @@ DECODE_MXP__auip(
             if ( text_is_blank_line( tmp_data_p ) != true )
             {
                 //  YES:    Change the state
-                auip_scan_state = AUIPS_TEXT;
+                recipe_p->auip_scan_state = AUIPS_TEXT;
             }
         }   //  The break is intentionally missing.
         case    AUIPS_TEXT:
@@ -828,7 +795,7 @@ DECODE_MXP__auip(
                  && ( strcasestr( tmp_data_p, MXP_AUIP_HDR_3 ) != NULL ) )
             {
                 //  YES:    Change the state
-                auip_scan_state = AUIPS_DASH;
+                recipe_p->auip_scan_state = AUIPS_DASH;
             }
         }   break;
         case    AUIPS_DASH:
@@ -842,7 +809,7 @@ DECODE_MXP__auip(
                  && (      tmp_data_p[ 4 ] == '-' ) )
             {
                 //  YES:    Change the state
-                auip_scan_state = AUIPS_AMIP;
+                recipe_p->auip_scan_state = AUIPS_AMIP;
             }
         }   break;
         case    AUIPS_AMIP:
@@ -854,7 +821,7 @@ DECODE_MXP__auip(
                 mxp_rc = true;
 
                 //  Change the state
-                auip_scan_state = AUIPS_COMPLETE;
+                recipe_p->auip_scan_state = AUIPS_COMPLETE;
             }
             else
             {
@@ -871,7 +838,7 @@ DECODE_MXP__auip(
                 mxp_rc = true;
 
                 //  Change the state
-                auip_scan_state = AUIPS_COMPLETE;
+                recipe_p->auip_scan_state = AUIPS_COMPLETE;
             }
         }   break;
     }
@@ -936,20 +903,20 @@ DECODE_MXP__directions(
         mxp_rc = true;
 
         //  Change the state
-        direction_scan_state = DSS_COMPLETE;
+        recipe_p->direction_scan_state = DSS_COMPLETE;
     }
     else
     {
         //  First blank line before directions start ?
         if (    ( text_is_blank_line( tmp_data_p ) == true )
-             && ( direction_scan_state            == DSS_IDLE ) )
+             && ( recipe_p->direction_scan_state == DSS_IDLE ) )
         {
             //  YES:    Just move on to the next line
         }
         else
         {
             //  NO:     Change the state
-            direction_scan_state = DSS_STARTED;
+            recipe_p->direction_scan_state = DSS_STARTED;
 
             //  Add the line to the recipe directions
             decode_add_instructions( recipe_p, tmp_data_p );

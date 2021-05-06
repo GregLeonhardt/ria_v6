@@ -70,6 +70,29 @@ enum    recipe_format_e
     RECIPE_FORMAT_TXT           =  99       //  Unformatted text data
 };
 //----------------------------------------------------------------------------
+enum    categories_state_e
+{
+    CSS_IDLE                    =   0,
+    CSS_STARTED                 =   1,
+    CSS_COMPLETE                =   2
+};
+//----------------------------------------------------------------------------
+enum    auip_state_e
+{
+    AUIPS_IDLE                  =   0,
+    AUIPS_TEXT                  =   1,
+    AUIPS_DASH                  =   2,
+    AUIPS_AMIP                  =   3,
+    AUIPS_COMPLETE              =   4
+};
+//----------------------------------------------------------------------------
+enum    direction_state_e
+{
+    DSS_IDLE                    =   0,
+    DSS_STARTED                 =   1,
+    DSS_COMPLETE                =   2
+};
+//----------------------------------------------------------------------------
 
 /****************************************************************************
  * Library Public Structures
@@ -198,6 +221,15 @@ struct   recipe_t
     /**
      * @param first_auip        We have located the first AUIP line         */
     int                         first_auip;
+    /**
+     *  @param  categories_scan_state                                       */
+    enum    categories_state_e  categories_scan_state;
+    /**
+     *  @param  auip_scan_state                                             */
+    enum    auip_state_e        auip_scan_state;
+    /**
+     *  @param  direction_scan_state                                        */
+    enum    direction_state_e   direction_scan_state;
 };
 //----------------------------------------------------------------------------
 struct  auip_t

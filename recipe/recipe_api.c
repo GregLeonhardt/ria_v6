@@ -236,6 +236,11 @@ recipe_new(
         //--------------------------------------------------------------------
     }
 
+    //  Initialize the recipe decode stuff
+    recipe_p->categories_scan_state = CSS_IDLE;
+    recipe_p->auip_scan_state       = AUIPS_IDLE;
+    recipe_p->direction_scan_state  = DSS_IDLE;
+
     /************************************************************************
      *  Function Exit
      ************************************************************************/

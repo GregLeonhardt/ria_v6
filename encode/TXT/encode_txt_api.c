@@ -302,6 +302,37 @@ encode_txt(
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
+    //  TIME WAIT:
+    //  @ToDo: 3 This field isn't decoded yet!
+    //          I'm using the resting time as a place holder.
+    //          --->>>  What is the difference between WAIT and REST ?
+    asprintf( &write_data_p, "TIME WAIT:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+    if ( rcb_p->recipe_p->time_rest_p != NULL )
+    {
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+    }
+    else
+    {
+        asprintf( &write_data_p, "0:00\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+    }
+    //-----------------------------------------------------------------------
+    //  TIME REST:
+    asprintf( &write_data_p, "TIME REST:      " );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+    if ( rcb_p->recipe_p->time_rest_p != NULL )
+    {
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+    }
+    else
+    {
+        asprintf( &write_data_p, "0:00\n" );
+    list_put_last( rcb_p->export_list_p, write_data_p );
+    }
+    //-----------------------------------------------------------------------
     //  YIELD:
     asprintf( &write_data_p, "YIELD: " );
     list_put_last( rcb_p->export_list_p, write_data_p );
@@ -560,36 +591,6 @@ encode_txt(
                   "CC BY-NC 2.0 https://creativecommons.org/licenses/by-nc/2.0/" );
     }
     list_put_last( rcb_p->export_list_p, write_data_p );
-    //-----------------------------------------------------------------------
-    //  TIME WAIT:
-    //  @ToDo: 3 This field isn't decoded yet!
-    //          I'm using the resting time as a place holder.
-    asprintf( &write_data_p, "TIME WAIT:      " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->time_rest_p != NULL )
-    {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
-        list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    else
-    {
-        asprintf( &write_data_p, "0:00\n" );
-        list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    //-----------------------------------------------------------------------
-    //  TIME REST:
-    asprintf( &write_data_p, "TIME REST:      " );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    if ( rcb_p->recipe_p->time_rest_p != NULL )
-    {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
-        list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    else
-    {
-        asprintf( &write_data_p, "0:00\n" );
-    list_put_last( rcb_p->export_list_p, write_data_p );
-    }
     //-----------------------------------------------------------------------
     //  SKILL LEVEL:
     asprintf( &write_data_p, "SKILL LEVEL:    " );

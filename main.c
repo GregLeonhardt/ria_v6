@@ -1012,7 +1012,7 @@ main(
 
             //  Progress report.
             log_write( MID_LOGONLY, "main",
-                       "Q-%03d: Snd: FILE-ID: %s\n", import_tcb->queue_id,
+                       "Snd: FILE-ID: %s\n",
                        rcb_p->file_path );
         }
         else

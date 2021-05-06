@@ -1465,8 +1465,7 @@ decode(
 
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
-                   "Q-%03d: SIZE: %10d Rcv: FILE-ID: %s\n",
-                   tcb_p->queue_id,
+                   "SIZE: %10d - FILE-ID: %s\n",
                    list_query_count( rcb_p->import_list_p ),
                    rcb_p->file_path );
 
@@ -1570,8 +1569,8 @@ decode(
             {
                 //  OOPS.
                 log_write( MID_WARNING, tcb_p->thread_name,
-                           "Q-%03d: Rcv: UNKNOWN recipe format (%d)\n",
-                           tcb_p->queue_id, rcb_p->recipe_format );
+                           "recipe format (%d)\n",
+                           rcb_p->recipe_format );
                 //  Clean out the recipe control block
                 ok_to_encode = false;
             }

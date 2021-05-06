@@ -321,10 +321,7 @@ email(
                      || ( tmp_format                           != RECIPE_FORMAT_NONE )
                      || ( EMAIL__is_group_break( list_data_p )               == true ) )
                 {
-                    //  YES:    Add this data buffer to the current recipe list.
-                    list_put_last( new_rcb_p->import_list_p, list_data_p );
-
-                    //  Put it in one of the DECODE queue
+                    //  YES"    Put it in one of the DECODE queue
                     queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
 
                     //  Clear the current recipe format
@@ -340,9 +337,6 @@ email(
                 {
                    //  YES:    Set the new recipe format
                     rcb_p->recipe_format = tmp_format;
-
-                    //  Clear the new RCB pointer
-                    new_rcb_p = NULL;
 
                     //  Clone the RCB
                     new_rcb_p = rcb_new( rcb_p );

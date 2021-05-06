@@ -243,7 +243,7 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  AUTHOR:
-    asprintf( &write_data_p, "AUTHOR: " );
+    asprintf( &write_data_p, "AUTHOR:         " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->author_p != NULL )
@@ -258,7 +258,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  SERVES:
-    asprintf( &write_data_p, "SERVES: " );
+    asprintf( &write_data_p, "SERVES:         " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->serves_p != NULL )
@@ -273,7 +273,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  TIME PREP:
-    asprintf( &write_data_p, "TIME PREP: " );
+    asprintf( &write_data_p, "TIME PREP:      " );
 
     list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->time_prep_p != NULL )
@@ -288,7 +288,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  TIME COOK:
-    asprintf( &write_data_p, "TIME COOK: " );
+    asprintf( &write_data_p, "TIME COOK:      " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->time_cook_p != NULL )

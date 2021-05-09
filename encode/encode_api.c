@@ -281,11 +281,11 @@ encode(
         if ( rcb_p->recipe_p != NULL )
         {
             //  YES:    Go encode it.
-//          encode_mmf( rcb_p );    //  @ToDo: 3 encode_mmf
-//          encode_mx2( rcb_p );    //  @ToDo: 3 encode_mx2
-//          encode_mxp( rcb_p );    //  @ToDo: 3 encode_mxp
-//          encode_rxf( rcb_p );    //  @ToDo: 3 encode_rxf
-//          encode_ria( rcb_p );    //  @ToDo: 3 encode_ria
+//          encode_mmf( rcb_p );    //  @ToDo: 3 mmf encode
+//          encode_mx2( rcb_p );    //  @ToDo: 3 mx2 encode
+//          encode_mxp( rcb_p );    //  @ToDo: 3 mxp encode
+//          encode_rxf( rcb_p );    //  @ToDo: 3 rxf encode
+//          encode_ria( rcb_p );    //  @ToDo: 3 ria encode
             encode_txt( rcb_p );    //  Universal recipe text format
         }
 

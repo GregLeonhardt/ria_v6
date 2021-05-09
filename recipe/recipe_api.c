@@ -560,7 +560,6 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_MX2;
     }
 #endif
-#if 1   //  @ToDo: 2 mxp_is_start()
     //-------------------------------------------------------------------
     //  MasterCook MXP
     else
@@ -570,7 +569,6 @@ recipe_is_start(
         //  YES:    Set the format to use
         recipe_format = RECIPE_FORMAT_MXP;
     }
-#endif
 #if 0   //  @ToDo: 3 nyc_is_start()
     //-------------------------------------------------------------------
     //  Now You're Cooking!
@@ -642,13 +640,19 @@ recipe_is_end(
 
     //  Is this something that can end a recipe ?
     if (    ( mmf_is_end(           data_p ) == true )
+//  @ToDo: 3 bof_is_end
 //       || ( bof_is_end(           data_p ) == true )
+//  @ToDo: 3 cp2_is_end
 //       || ( cp2_is_end(           data_p ) == true )
+//  @ToDo: 3 gf2_is_end
 //       || ( gf2_is_end(           data_p ) == true )
+//  @ToDo: 3 grf_is_end
 //       || ( grf_is_end(           data_p ) == true )
+//  @ToDo: 3 mx2_is_end
 //       || ( mx2_is_end(           data_p ) == true )
 //       || (    ( recipe_format != RECIPE_FORMAT_MX2 )
 //            && ( mxp_is_start(    data_p ) == true ) )
+//  @ToDo: 3 nyc_is_end
 //       || ( nyc_is_end(           data_p ) == true ) )
                                                         )
     {

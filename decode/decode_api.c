@@ -1489,7 +1489,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_MX2:
             {
-                //  OOPS.
+                //  @ToDo: 3 mx2 decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'MX2' is not available\n" );
                 //  Clean out the recipe control block
@@ -1503,7 +1503,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_RXF:
             {
-                //  OOPS.
+                //  @ToDo: 3 rxf decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'RXF' is not available\n" );
                 //  Clean out the recipe control block
@@ -1511,7 +1511,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_NYC:
             {
-                //  OOPS.
+                //  @ToDo: 3 nyc decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'NYC' is not available\n" );
                 //  Clean out the recipe control block
@@ -1519,7 +1519,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_BOF:
             {
-                //  OOPS.
+                //  @ToDo: 3 bof decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'BOF' is not available\n" );
                 //  Clean out the recipe control block
@@ -1527,7 +1527,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_CP2:
             {
-                //  OOPS.
+                //  @ToDo: 3 cp2 decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'CP2' is not available\n" );
                 //  Clean out the recipe control block
@@ -1535,7 +1535,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_GRF:
             {
-                //  OOPS.
+                //  @ToDo: 3 grf decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'GRF' is not available\n" );
                 //  Clean out the recipe control block
@@ -1543,7 +1543,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_GF2:
             {
-                //  OOPS.
+                //  @ToDo: 3 gf2 decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'GF2' is not available\n" );
                 //  Clean out the recipe control block
@@ -1551,7 +1551,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_ERD:
             {
-                //  OOPS.
+                //  @ToDo: 3 erd decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'ERD' is not available\n" );
                 //  Clean out the recipe control block
@@ -1559,7 +1559,7 @@ decode(
             }   break;
             case    RECIPE_FORMAT_TXT:
             {
-                //  OOPS.
+                //  @ToDo: 3 txt decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'TXT' is not available\n" );
                 //  Clean out the recipe control block

@@ -349,7 +349,6 @@ email(
                     list_put_last( new_rcb_p->import_list_p, list_data_p );
                 }
             }
-
         }
 
         //  End-Of-File with an active recipe ?

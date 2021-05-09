@@ -265,8 +265,7 @@ encode(
 
         //  Progress report.
         log_write( MID_LOGONLY, tcb_p->thread_name,
-                   "SIZE: %10d - FILE-ID: %s\n",
-                   list_query_count( rcb_p->import_list_p ),
+                   "FILE-ID: %s\n",
                    rcb_p->file_path );
 
 #if ! STUB

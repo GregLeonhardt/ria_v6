@@ -63,7 +63,7 @@
 
 //----------------------------------------------------------------------------
 //  This is the first four characters of the Recipe-ID.
-#define SUBDIRECTORY_L          ( 4 )
+#define SUBDIRECTORY_L          ( 2 )
 //----------------------------------------------------------------------------
 //  This is the name of the directory where ALL formatted recipes are saved to.
 #define DIR_FORMATTED           "Recipes_Formatted"

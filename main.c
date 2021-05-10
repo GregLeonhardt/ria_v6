@@ -720,6 +720,10 @@ is_export_done(
  *          When a duplicate is discovered the OLDEST DataTime is stored as
  *          the prime recipe.  All others are stored as duplicated of the prime.
  *
+ *  @ToDo: 2 HTML
+ *          A HTML thread is needed to detect HTML formatted recipes or
+ *          strip HTML tags from the file.
+ *
  ****************************************************************************/
 
 int

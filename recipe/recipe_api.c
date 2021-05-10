@@ -486,7 +486,6 @@ recipe_is_start(
      *  Function
      ************************************************************************/
 
-#if 0   //  @ToDo: 3 bof_is_start()
     //-------------------------------------------------------------------
     //  Big-Oven BOF
     if (    ( recipe_format == RECIPE_FORMAT_NONE )
@@ -495,7 +494,6 @@ recipe_is_start(
         //  YES:    Set the format to use
         recipe_format = RECIPE_FORMAT_BOF;
     }
-#endif
 #if 0   //  @ToDo: 3 cp2_is_start()
     //-------------------------------------------------------------------
     //  CookenPro 2.0
@@ -640,8 +638,7 @@ recipe_is_end(
 
     //  Is this something that can end a recipe ?
     if (    ( mmf_is_end(           data_p ) == true )
-//  @ToDo: 3 bof_is_end
-//       || ( bof_is_end(           data_p ) == true )
+         || ( bof_is_end(           data_p ) == true )
 //  @ToDo: 3 cp2_is_end
 //       || ( cp2_is_end(           data_p ) == true )
 //  @ToDo: 3 gf2_is_end

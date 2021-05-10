@@ -1481,6 +1481,11 @@ decode(
         //  Based on the recipe format of the recipe start
         switch( rcb_p->recipe_format )
         {
+            case    RECIPE_FORMAT_BOF:
+            {
+                decode_bof( rcb_p );
+                ok_to_encode = true;
+            }   break;
             case    RECIPE_FORMAT_MXP:
             {
                 //  Decode a MasterCook recipe
@@ -1514,14 +1519,6 @@ decode(
                 //  @ToDo: 3 nyc decode
                 log_write( MID_WARNING, tcb_p->thread_name,
                            "Decode for recipe format 'NYC' is not available\n" );
-                //  Clean out the recipe control block
-                ok_to_encode = false;
-            }   break;
-            case    RECIPE_FORMAT_BOF:
-            {
-                //  @ToDo: 3 bof decode
-                log_write( MID_WARNING, tcb_p->thread_name,
-                           "Decode for recipe format 'BOF' is not available\n" );
                 //  Clean out the recipe control block
                 ok_to_encode = false;
             }   break;

@@ -50,7 +50,7 @@
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 6
+#define VER_MIN                 7
 
 /****************************************************************************
  * System Function API
@@ -984,7 +984,7 @@ main(
                   file_info_p->file_name );
 
         //  Is there anything in the file ?
-        if ( text_to_int( file_info_p->file_size ) >= 100 )
+        if ( text_to_long( file_info_p->file_size ) >= 100 )
         {
             /**
              *  @param  rcb_p           Recipe Control block                */

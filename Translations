@@ -1,0 +1,601 @@
+################################  COPYRIGHT  #################################
+#  
+#   Copyright (c) 2017,2018 Gregory N. Leonhardt All rights reserved.
+# 
+##############################################################################
+################################# JAVADOC ####################################
+#  
+#   This file contains translations for numerous abbreviations, and
+#   category standardizations.
+# 
+#   @note
+# 
+##############################################################################
+################################# VERSION ####################################
+#
+#   1.0.6  20180106  Removed 'BURGERS' because of tuna burgers. 
+#                    Removed 'Steak' because of salmon steak. 
+#                    Added 'Bake' and 'Baked'
+#   1.0.5  20180106  General cleanup: addition of 'oven' and 'sous vide'
+#   1.0.4  20171229  Removed 'Quick & Easy' and 'Back Of The Box'
+#   1.0.3  20171126  Added 'G' to Gram
+#   1.0.2  20171030  Added 'Breads, Yeast' Added 'Machine Bread Dough'
+#   1.0.1  20171026  Removed Category:Potato
+#   1.0.0  20171026  Initial release
+#
+##############################################################################
+################################## NOTES #####################################
+#
+#       Table Description:
+#
+#       All lines starting with ( # ) are comments.
+#
+#       These tables are used to translate words contained within
+#       the input recipe file to words in the output file.  Generally
+#       they are used to remove abbreviations, translating them back to
+#       full words.
+#
+#       As always there is an exception and this one is that when
+#       Meal-Master is selected for the export format, the Unit Of
+#       Measurement is translated twice.  The first translation
+#       abbreviations are converted to full words.  The second (because
+#       Meal-Master has a limited Unit Of Measurement field) translates
+#       the full abbreviations into a standardized abbreviation.
+#
+#       Table Format:
+#       The left most column contains the translation output field.  The
+#       remaining columns are the input or search fields.
+#
+#       The base translation table has the output field in title case and
+#       the input field in upper case.  The input field will be converted
+#       to upper case if it is not already.  As a result, if you modify
+#       the table, you can enter the data whoever you want.  As always
+#       there is an exception to this rule.  Information in the input
+#       field that is one character in length is not converted to upper
+#       case.  Otherwise there is no way to determine if the ( T ) was
+#       supposed to be ( t ) teaspoon or ( T ) tablespoon.
+#
+#       Tables are input as a continuous data stream. I.E no blank lines
+#       are permitted.  If you wish to separate sections for formatting
+#       use ( # ) comment lines.
+#
+#       You may notice at the end of the Unit Of Measurement table there
+#       is no output format.  All input matches will be translated to
+#       nothing.  These inputs were sometimes used as filler characters
+#       in older recipes.
+#
+#       The formatted columns used are not required.  They simply make it
+#       easier for me to read and revise.  The actual columns are comma
+#       ( , ) delimited and may have any number of spaces between them.
+#
+#       There is no preset limit to the number of entries for each table.
+#       Only system resources limit the number of entries each table
+#       can contain.
+#
+#       Table:
+#       Each table is identified by a line starting with ( Table: )
+#
+#       ! ! ! DO NOT CHANGE THESE LINES UNDER ANY CIRCUMSTANCES ! ! !
+#
+#       Alterations of these lines WILL cause errors when the tables
+#       are scanned.
+#
+#       Field Size:
+#       All output and input strings are limited to 29 characters.
+#       Anything larger will be truncated.
+#
+#       Plural Words:
+#       In all cases the plural use of an input (or search for) word is
+#       not accounted for.  Thus, many words require multiple search
+#       strings.  For example ( bag ) and ( bags ).
+#
+#       History:
+#       Once upon a time these tables were hard coded into the program.
+#       The unfortunate side effect of this is that when new conversion
+#       are required, the program needed to be recompiled.  This method
+#       though efficient during execution of the program was a pain in
+#       the .....
+#
+#       Status:
+#       These tables are NOT nor will they ever be complete.  There will
+#       always be somebody out there inventing another way to abbreviate
+#       a word, create a new category or something.  Plan on modifying
+#       this file.
+#
+##############################################################################
+#
+Table: Unit Of Measurement
+#
+#       This table is used when translating unit of measurements within
+#       the ingredients section of the recipe.
+#
+#       If the amount field is greater then one, the translated word
+#       is converted to plural. Example ( Bag ) will be converted into
+#       ( Bags ) if more then one is called for in the amount field.
+#
+#       NOTE:  The maximum length for a Unit Of Measurement is 12 bytes
+#
+Bag,            bags,        bag
+,               -,           X,          x
+Bottle,         BOTTLES,     BOTTLE
+Box,            BOXES,       BOX
+Bulb,           BULBS,       BULB
+Bunch,          BUNCHES,     BUNCHS,     BUNCH,   BN
+Can,            CANS,        CAN,        CN
+Carton,         CARTON
+Centiliter,     CENTILITERS, CENTILITER
+Clove,          CLOVES,      CLOVE,      CL
+Container,      CONTAINERS,  CONTAINER
+Count,          COUNT,       CNT,        CT
+Cube,           CUBE
+Cup,            CUPS,        CUP,        CU,      c,     C
+Dash,           DASHS,       DASH,       DS
+Deciliter,      DECILETERS,  DECILETER,  DL
+Dozen,          DOZEN,       DZ
+Drachm,         DRACHMS,     DRACHM
+Drop,           DROPS,       DROP,       DR
+Each,           EACH,        EA
+Ear,            EARS,        EAR
+Envelope,       ENVELOPES,   ENVELOPE,   EN
+Fluid,          FLUID,       FL
+Fluid Ounce,    FL. OZ,      FL.OZ,      FLOZ
+Gallon,         GALLONS,     GALLON,     GAL,     GA
+Generous,       GENEROUS
+Graham,         GRAHAMS,     GRAHAM
+Gram,           GRAMS,       GRAM,       G,       g
+Head,           HEADS,       HEAD
+Heaping,        HEAPING
+Huge,           HUGE
+Inch,           INCH,        IN
+Jigger,         JIGGERS,     JIGGER
+Jar,            JAR
+Kilogram,       KILOGRAMS,   KILOGRAM,   KG
+Large,          LARGE,       LRG,        LG
+Liter,          LITERS,      LITER,      l,       L
+Loave,          LOAVES,      LOAVE
+Medium,         MEDIUM,      MED,        MD
+Mild,           MILD
+Milligram,      MILLIGRAMS,  MILLIGRAM,  MG
+Milliliter,     MILLILITERS, MILLILITER, MLS,     ML
+Ounce,          OUNCES,      OUNCE,      OZS,     OZ
+Package,        PACKAGES,    PACKAGE,    PKGS,    PKG,   PKT,   PKG,  PK
+Packet,         PACKETS,     PACKET,     PA
+Piece,          PIECES,      PIECE
+Pinch,          PINCHS,      PINCH,      PN
+Pint,           PINTS,       PINT,       PT
+Pound,          POUNDS,      POUND,      LBS,     LB
+Quart,          QUARTS,      QUART,      QT
+Recipe,         RECIPE
+Rib,            RIBS,        RIB
+Ripe,           RIPE
+Scoop,          SCOOPS,      SCOOP
+Serving,        SERVINGS,    SERVING
+Shot,           SHOTS,       SHOT,       SH
+Side,           SIDE
+Slice,          SLICES,      SLICE,      SL
+Small,          SMALL,       SM
+Sprig,          SPRIGS,      SPRIG
+Square,         SQUARES,     SQUARE,     SQUAE
+Stalk,          STALKS,      STALK
+Stick,          STICKS,      STICK
+Strip,          STRIPS,      STRIP
+Tablespoon,     TABLESPOONS, TABLESPOON, TBSPS,   TBLS,  TBSP,  TBL,  TBS, TB, T
+Teaspoon,       TEASPOONS,   TEASPOON,   TSPS,    TEA,   TSP,   TS,   t
+Thick,          THICK
+Whole,          WHOLE,       W,          w
+Wide,           WIDE
+Yard,           YARDS,       YARD,       YDS,     YD
+
+
+##############################################################################
+#
+Table: Categories
+#
+#       The categories section is used when translating recipe categories.
+#       Use of this table allows for standardized categories.
+#
+#       You may notice the implementation of sub categories.  This allows
+#       better categorization of the recipes.
+#
+#############################
+####    Major cooking appliances
+#############################
+Appliance:Bread Machine,            BREADMACHINE, ABM, Breadmaker, Machine
+Appliance:Bread Machine,            Breadmakers, BRDMAKER, BRDMACHINE
+Appliance:Bread Machine,            BreadMachi, BreadBaker, BreadsBM
+Appliance:Clay Pot,                 ClayPot
+Appliance:Dutch-Oven,               DutchOven
+Appliance:Fryer,                    Fryer, Fried
+Appliance:Grill,                    Grill, Grilled
+Appliance:Microwave,                MICROWAVE
+Appliance:Oven,                     Oven, Rost, Rosted, Bake, Baked
+Appliance:Pressure Cooker,          PressureCooker, Pressure, PRESCOOKER
+Appliance:Slow Cooker,              SLOWCOOKER, CROCKPOT, Crocker, CP, CROCK
+Appliance:Slow Cooker,              Crock Pot Dishes
+Appliance:Smoker,                   Smoker
+Appliance:Sous Vide                 Sous
+Appliance:Wok,                      Wok
+#############################
+####    Special diets
+#############################
+Diet:Baby,                          Baby Recipes, Baby, Baby Food, Baby-Food
+Diet:Cyberealm,                     Cyberealm
+Diet:Diabetic,                      DIABETIC
+Diet:Gluten-Free,                   Gluten-Free, Gluten Free, GlutenFree
+Diet:High-Fiber,                    HighFiber, HIGHFIBRE
+Diet:Fat-Free,                      FATFREE, FATFREE, Fat Free, Fat-Free
+Diet:Lantose-Free,                  LantoseFree, LactFree
+Diet:Low-Calorie,                   LowCal, LowCalorie, LoCal, Low Calorie, Low-cal
+Diet:Low-Carb,                      LowCarb
+Diet:Low-Cholesterol,               LowCholesterol, Low Cholesterol
+Diet:Low-Fat,                       LowFat, LowFatCal, LowFatLow, NoLowFat
+Diet:Low-Fat,                       Eat-Lf Mailing List, Very Low Fat, Low Fat
+Diet:Low-Fat,                       Low-Fat
+Diet:Low-Sodium,                    LOWSODIUM, Low Sodium
+Diet:Ovo-Lacto,                     OVOLACTO, Lacto, Ovo-Lacto
+Diet:Ornish,                        Ornish
+Diet:Vegan,                         VEGAN
+Diet:Vegetarian,                    VEGETARIAN
+Diet:Weight Watchers,               WeightWatchers, WW, WEIGHTWATCH, WTWATCHERS
+Diet:Yeast-Free,                    YeastFree
+#############################
+####    Major meal categories
+#############################
+Course:Appetizers,                  Appetizers, APPETIZER, HDOuevres, HorsDoeuv
+Course:Appetizers,                  Appetizers & Hors d'Oeuvres
+Course:Breakfast,                   Breakfast, Breakfasts, Pancakes, WAFFLES
+Course:Breakfast,                   Breakfast/Brunch
+Course:Brunch,                      Brunch, LUNCHEON, Breakfast/Brunch
+Course:Buffet,                      Buffet
+Course:Desserts,                    Desserts, DESSERT, Cobbler
+Course:Lunch,                       Lunch
+Course:Main Dish,                   MainDish, MainDishes, Main, Entree, MAINCOARSE
+Course:Main Dish,                   MainCoarse, Main Course, Main Dish, Main Dishes
+Course:Side Dish,                   SideDish, SideDishes, Side, Side Dish
+Course:Side Dish,                   Side Dishes
+Course:Snack,                       Snack, Snacks, snack, snaks, Party
+#############################
+####    Part of the world the recipe would be associated with.
+#############################
+Cuisine:African,                    African, Africa, WestAfrica
+Cuisine:Afganistan,                 Afghanistan, Afghan, AFGHANI
+Cuisine:Ancient,                    Ancient, Medieval, HEIRLOOM
+Cuisine:Amish,                      Amish
+Cuisine:Asian,                      Asian
+Cuisine:Australian,                 Australian, AUSTRALIA
+Cuisine:Austrian,                   Austrian
+Cuisine:Bangladesh,                 Bangladesh
+Cuisine:British,                    British, Londontowne
+Cuisine:Burma,                      Burma
+Cuisine:California,                 CALIFORNIA
+Cuisine:Cambodian,                  Cambodian
+Cuisine:Canadian,                   Canadian
+Cuisine:Cajun,                      Cajun, Jambalaya, Cajun/Creole
+Cuisine:Caribbean,                  Caribbean
+Cuisine:Children,                   CHILDREN, Kids
+Cuisine:Chinese,                    Chinese, China, Hunan
+Cuisine:Cuban,                      Cuban
+Cuisine:Columbian,                  Columbian, COLUMBIA
+Cuisine:Costs Rica,                 CostaRica
+Cuisine:Czech,                      Czech
+Cuisine:Dutch,                      Dutch
+Cuisine:English,                    English
+Cuisine:Fillipino,                  Fillipino, Filipino
+Cuisine:Finnish,                    Finish, Finland, Finnish
+Cuisine:French,                     FRENCH, FRANCE
+Cuisine:German,                     GERMAN, GERMANY
+Cuisine:Greek,                      GREEK, GREECE
+Cuisine:Guatemala,                  GUATEMALA
+Cuisine:Hawaiian,                   Hawaiian, Hawaii
+Cuisine:Hungarian,                  Hungarian, Hungary
+Cuisine:Hunan,                      Hunsn
+Cuisine:Indian,                     Indian, India
+Cuisine:Indonesian,                 Indonesian
+Cuisine:Italian,                    ITALIAN, ITAILIAN, ITALY, ITALIANDIS, ITALIANTUS
+Cuisine:Iranian,                    Iranian
+Cuisine:Irish & Welsh,              Irish, Ireland, Welsh
+Cuisine:Jamaican,                   Jamaican, Jamica, JAMAICA, JAMAIICAN
+Cuisine:Japanese,                   Japanese, Japan
+Cuisine:Jewish,                     JEWISH, Israeli, Kosher, Passover, Jewish Recipes
+Cuisine:Jewish,                     Jewish Foods
+Cuisine:Kerdish,                    Kerdish
+Cuisine:Korean,                     Korean
+Cuisine:Korma,                      Korma
+Cuisine:Laotian,                    Laotian, Laos
+Cuisine:Malaysian,                  Malaysian, Malaysia
+Cuisine:Mediterranean,              MEDITERRANEAN
+Cuisine:Mexican,                    MEXICAN, Mexico, CINCODEMAYO
+Cuisine:Mid Eastern,                MidEast, MidEastern, MiddleEast
+Cuisine:Mongolian,                  Mongolian, Mongolia
+Cuisine:Moroccan,                   Moroccan
+Cuisine:Native American,            NativeAmer
+Cuisine:Norwegian,                  Norwegian, NORWAY
+Cuisine:New Zealand,                NewZealand
+Cuisine:Oriental,                   Oriental, ChinJapan
+Cuisine:Pakistan,                   Pakistan
+Cuisine:Penn-Dutch,                 PennDutch
+Cuisine:Persian,                    Persian
+Cuisine:Peru,                       Peru
+Cuisine:Philippines,                Philippines, Lumpia, PHILLIPINES
+Cuisine:Polish,                     Poland, Polish
+Cuisine:Polynesian,                 Polynesian
+Cuisine:Portuguese,                 Portuguese, Linguica, Portuguese, Portugal
+Cuisine:Russian,                    Russian
+Cuisine:Romanian,                   ROUMANIAN, ROMANIAN
+Cuisine:Scottish,                   Scottish, Scotland
+Cuisine:Singapore,                  Singapore
+Cuisine:Sri Lanka,                  SriLanka, Ceylon
+Cuisine:Scandinavian,               Scandinavian, Scandinavia
+Cuisine:Soul Food,                  Soul Food
+Cuisine:Southern,                   Southern
+Cuisine:South West,                 SOUTH WESTERN, SOUTHWESTERN, SOUTH WEST, SOUTHWEST
+Cuisine:South West,                 TEXMEX, TexasSW, NewMex, Southwestern Cuisine
+Cuisine:Spanish,                    Spain, Spanish
+Cuisine:Stir Fry,                   StirFry
+Cuisine:Swedish,                    Swedish, SWEDEN
+Cuisine:Switzerland,                Switzerland
+Cuisine:Swiss,                      Swiss
+Cuisine:Thai,                       Thai, Thailand
+Cuisine:Tahiti,                     Tahiti
+Cuisine:Tibetan,                    Tibet, Tibetan
+Cuisine:Turkey,                     TURKISH
+Cuisine:Vietnamese,                 Vietnamese, Vietnam
+Cuisine:Viennese,                   Viennese
+Cuisine:Yucatan,                    Yucatan
+Cuisine:Zimbabwe,                   Zimbabwe
+#############################
+####    Any special season the recipe would be associated with.
+#############################
+Occasion:Christmas,                 CHRISTMAS, XMAS, HOLIDAY, HOLIDAYS, Gifts
+Occasion:Christmas,                 Gift, FoodGift
+Occasion:Easter,                    EASTER
+Occasion:Halloween,                 HALLOWEEN
+Occasion:Passover,                  Passover
+Occasion:Thanksgiving,              Thanksgiving, Thanksgivin, Thnksgiving
+#############################
+####    Any food Categories the recipe belongs to
+#############################
+Category:Barbecue,                  BBQ, Barbeque, BbqGrill, Barbecue, BarBQ, Barbecued
+Category:Bars & Cookies,            Bars, Cookies, Biscotti, MrsFields
+Category:Bars & Cookies,            CookyBars, Cookie, CookieBars, BarCookies
+Category:Bars & Cookies,            Cookie And Bar, No-Bake Cookies, Bar Cookies
+Category:Bars & Cookies,            Scones
+Category:Beef,                      BEEF, GroundBeef, PotRost, Hamburger
+Category:Beef,                      Roast, Roasts, BRISKET, Flank Steak
+Category:Beef,                      Ground Beef
+Category:Beverages,                 Beverages, BEVERAGE, Liquor, Drinks, Cocktails
+Category:Beverages,                 MixedDrink, Punch, Punches
+Category:Bread,                     BREADS, BREAD, QUICKBREADS, Sourdough, Rye
+Category:Bread,                     Bread-Bakers Mailing List, Breads & Muffins
+Category:Bread,                     Bread Mailing List, Bread/Muffins/Rolls
+Category:Bread,                     Bread With Yeast, Breads For Dessert
+Category:Bread,                     Breads, Yeast
+Category:Brownies,                  Brownies, Squares, Brownie
+Category:Biscuits & Muffins,        Biscuits, Muffins
+Category:Cake,                      CAKES, CAKE
+Category:Camping,                   Camping
+Category:Candy,                     CANDIES, CANDY, Candied, Candy And Confections
+Category:Canning & Preserving,      Canning, PRESERVING
+Category:Casserole,                 Casseroles, Casserole, Cassarole
+Category:Chocolate,                 Chocolate, GHIRARDELLI
+Category:Cheesecakes,               Cheesecakes, Cheesecake
+Category:Chili,                     CHILI
+Category:Condiments & Relishes,     CONDIMENTS, Condiment
+Category:Condiments & Relishes,     Relishes, Relish
+Category:Creole & Gumbos,           Creole, Gumbos, Gumbo
+Category:Crepas,                    Crepas, Crep
+Category:Curries,                   Curries
+Category:Custard,                   Custard, Custards
+Category:Dairy,                     DAIRY, CHEESEEGGS, CHEESEEGG, Cheese, Eggs
+Category:Dairy,                     Cheese/Eggs, Eggs/Cheese
+Category:Dip,                       DIPS, DIP
+Category:Dressings,                 Dressings, SaladDress, Vinaigrette
+Category:Duck,                      Duck
+Category:Flatbreads,                Flatbread, Flatbreads
+Category:Fondue,                    Fondue
+Category:Fruit & Nuts,              FRUITS, FRUIT, FruitNuts, Nuts
+Category:Fruit & Nuts,              Banana, NutsGrains, Bananas, FruitsNuts
+Category:Frogs,                     Frogs, Frog
+Category:Frostings & Iceing,        Frostings, Frosting, Iceings, Iceing
+Category:Frostings & Iceing,        Toppings, Topping, ICINGS
+Category:Goat,                      Goat
+Category:Herbs & Spices,            HerbSpice, Herb, Herbs, Spice, Spices
+Category:Ice Cream,                 IceCream, IceCreams, Ice Cream
+Category:Information,               Information, InfoTips, InfoHelp, Info, Tips
+Category:Information,               HowTo, Instruction, How To, How-To
+Category:Jam Jelly & Preserves,     JAMJELLY, JELLYJAM, JAM, JELLY, PRESERVES
+Category:Jam Jelly & Preserves,     Spreads, Preserve, JamsJelly, JAMS, JELLIES
+Category:Jam Jelly & Preserves,     Jams & Jellies, Jams/Jellies
+Category:Lamb & Mutton,             Lamb, LambMutton, Mutton
+Category:Legumes,                   LEGUMES, Beans, Peas, Bean, GreenBean
+Category:Legumes,                   BeanLegume, Lentils, Beans & Rice
+Category:Legumes,                   Beans/Legumes, Chick Peas
+Category:Low Cost,                  LowCost, Tightwad
+Category:Marinades & Rubs,          Marinades, Marinade, Rubs
+Category:Pastries & Tarts,          Pastries, Pastry, Tart, Tarts, Popovers, Popover
+Category:Pasta & Pasta Sauces,      PASTA, Spaghetti, PastaNoodle, Pasta & Pasta Sauces
+Category:Pets,                      Pets, PetFoods, PetFood
+Category:Pie Pastries & Tarts,      Pastries, Pastry, Tart, Tarts, Popovers, Popover
+Category:Pie Pastries & Tarts,      PIES, PIE, PastryPie, Pies & Pastry, Pies & Pastry
+Category:Pizza,                     PIZZAS, PIZZA
+Category:Pork & Ham,                Pork, PorkHam, PorkChops, Ham, HamPork
+Category:Pork & Ham,                Pork & Ham
+Category:Poultry,                   Chicken, Wings, Poultry, TURKEY, Leftover Turkey
+Category:Pudding,                   Puddings, Pudding
+Category:Quiche,                    Quiche, Quiches
+Category:Quail,                     Quail
+Category:Rice & Grains,             Rice, Grains, RiceGrains, Pilaf, WildRice
+Category:Rice & Grains,             GRAINSRICE, Pilaf, Pilafi, Rice/grains
+Category:Rice & Grains,             Rice & Couscous, Rice Dishes
+Category:Rolls,                     Rolls
+Category:Salsas,                    Salsas, Salsa
+Category:Salad,                     SALADS, SALAD
+Category:Sandwiches,                Sandwiches, Sandwich
+Category:Sauces & Gravies,          SAUCES, SAUCE, SaucesAnd, SauceGravy
+Category:Sauces & Gravies,          BbqSauce, BbqSauces, GRAVY Gravies
+Category:Sausage,                   Sausage, Sausages
+Category:Seafood,                   SEAFOODS, SEAFOOD, FISH, FishSea, FishAndSe
+Category:Seafood,                   Salmon, Trout, CATFISH, Tuna, Fish And Seafood
+Category:Seafood,                   Fish - Salmon, Fish & Seafood
+Category:Shell Fish,                ShellFish, Toheroa, Shrimp, FishShell
+Category:Shell Fish,                Crawfish, Crab, Clams, Lobster
+Category:Soup Stew & Chowders,      SOUPS, SOUP, STEWS, STEW, SoupsStews, SoupStews
+Category:Soup Stew & Chowders,      Chowders, Chowder, Soups & Stews
+Category:Spices & Seasonings,       Spices, SpicesEtc, Seasoning, Seasonings
+Category:Spreads,                   Spreads
+Category:Stocks & Broths,           Stocks, Stock, Broaths, Broath
+Category:Stuffings,                 Dressings, Dressing, Stuffings, Stuffing
+Category:Syrups,                    Syrups, Syrup
+Category:Tofu,                      Tofu
+Category:Veal,                      Veal
+Category:Wild Game,                 WildGame, Game, Rabbit, Moose, Venison, Rabbit
+Category:Wild Game,                 CARIBOU
+Category:Vegetable,                 VEGETABLES, VEGETABLE, Veges, Veggies, Potatoes
+#############################
+
+##############################################################################
+#
+Table: Abbreviations
+#
+#       The abbreviations section is used when formatting recipe directions.
+#
+#       Many recipes use abbreviations in the directions simply to reduce
+#       the amount of typing.  The person entering the recipe naturally
+#       assumes whoever is reading the recipe (normally intended for
+#       personal use) has the same knowledge as they do.  This program
+#       makes the assumption that nobody knows anything and wishes to
+#       make all information within a recipe as easy to understand as
+#       possible.
+#
+
+##############################################################################
+#
+Table: Paragraph Starters
+#
+#       This section is used when formatting recipe directions.
+#
+#       It is a special case table where there is not a TO string
+#       because it is simply used to detect the search strings.
+#
+#       Many recipes sent over the internet have been formatted,
+#       reformatted, re-re-formatted.......  Though (in most cases)
+#       the original information still exists, it has become a jumbled
+#       mess of information requiring the current user to read and
+#       reread several times to understand.  The following is a list of
+#       keywords that this program will use to detect what once were
+#       probably separate paragraphs.  If they were not they should have
+#       been.
+#
+#       In addition to the following list.  Sentences starting with
+#       numbers or (hopefully) Roman numerals will also start new
+#       paragraphs.
+#
+,       Add
+,       After
+,       As
+,       Bake
+,       Be
+,       Beat
+,       Blend
+,       Break
+,       Bring
+,       Check
+,       Chill
+,       Chop
+,       Continue
+,       Combine
+,       Cook
+,       Cool
+,       Copyright
+,       Cover
+,       Cut
+,       Dissolve
+,       Divide
+,       Drain
+,       Drizzle
+,       From
+,       For
+,       Formatted
+,       Garnish
+,       Grease
+,       Heat
+,       In
+,       Kneed
+,       Let
+,       Line
+,       Makes
+,       May
+,       Meanwhile
+,       Melt
+,       Microwave
+,       Mix
+,       Note
+,       On
+,       Place
+,       Pour
+,       Pre
+,       Preheat
+,       Preparation
+,       Prepare
+,       Punch
+,       Reduce
+,       Rinse
+,       Refrigerate
+,       Remove
+,       Repeat
+,       Return
+,       Saute
+,       Serve
+,       Serves
+,       Set
+,       Slowly
+,       Soak
+,       Source
+,       Spoon
+,       Stir
+,       Taste
+,       To
+,       Top
+,       Toss
+,       Transfer
+,       Turn
+,       Typed
+,       Typos
+,       Use
+,       Using
+,       When
+,       While
+,       Whisk
+,       Yield
+,       Date:
+,       From:
+,       Makes:
+,       Notes:
+,       PerServing:
+,       SentBy:
+,       SentTo:
+,       RecipeBy:
+,       Served:
+,       ToPlate:
+,       Yield:
+,       ^T
+
+##############################################################################
+#
+Table: Key Words
+#
+#       This section is used when formatting recipe categories.
+#
+#       It is a special case table where there is not a TO string
+#       because it is simply used to detect the search strings.
+#
+#       Words in this table are not considered when looking up
+#       a recipe category.
+#
+,       Appliance
+,       Diet
+,       Meal
+,       Cuisine
+,       Seasonal
+,       Group
+

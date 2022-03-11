@@ -46,11 +46,11 @@
 #define ALLOC_MAIN              ( "ALLOCATE STORAGE FOR MAIN" )
 
 //  Generate default command line parameters
-#define DEBUG_CMD_LINE          ( 1 )
+#define DEBUG_CMD_LINE          ( 0 )
 
 //  Version Numbers
 #define VER_MAJ                 6
-#define VER_MIN                 7
+#define VER_MIN                 8
 
 /****************************************************************************
  * System Function API

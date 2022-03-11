@@ -420,7 +420,7 @@ DECODE_POST__fmt_directions(
         strncpy( formatted_text, tmp_p, ( sizeof( formatted_text ) - 1 ) );
 
         //  Remove the last line of text from the list.
-        list_delete( rcb_p->recipe_p->directions_p, tmp_p );
+        list_delete_payload( rcb_p->recipe_p->directions_p, tmp_p );
 
         //  Release the storage used by the temporary buffer
         mem_free( tmp_p );
@@ -2565,7 +2565,7 @@ DECODE_POST__directions_notes(
                 if ( notes_p == directions_p )
                 {
                     //  YES:    Remove it from the directions
-                    list_delete( rcb_p->recipe_p->directions_p, directions_p );
+                    list_delete_payload( rcb_p->recipe_p->directions_p, directions_p );
 
                     //  We are go to have to free this buffer later.
                     free_note = true;
@@ -2616,7 +2616,7 @@ DECODE_POST__directions_notes(
                     if ( directions_p != NULL )
                     {
                         //  YES:    Remove the entire line from the directions
-                        list_delete( rcb_p->recipe_p->directions_p, directions_p );
+                        list_delete_payload( rcb_p->recipe_p->directions_p, directions_p );
 
                         //  Now add it to the notes
                         decode_fmt_notes( rcb_p->recipe_p, directions_p );

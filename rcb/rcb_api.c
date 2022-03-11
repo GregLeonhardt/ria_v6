@@ -131,7 +131,7 @@ rcb_kill(
         {
             while( ( data_p = list_get_first( rcb_p->import_list_p ) ) != NULL )
             {
-                list_delete( rcb_p->import_list_p, data_p );
+                list_delete_payload( rcb_p->import_list_p, data_p );
                 mem_free( data_p );
             }
         }
@@ -146,7 +146,7 @@ rcb_kill(
         {
             while( ( data_p = list_get_first( rcb_p->export_list_p ) ) != NULL )
             {
-                list_delete( rcb_p->export_list_p, data_p );
+                list_delete_payload( rcb_p->export_list_p, data_p );
                 mem_free( data_p );
             }
         }

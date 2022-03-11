@@ -313,7 +313,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->appliance_p ) ) != NULL )
         {
-            list_delete( recipe_p->appliance_p, data_p );
+            list_delete_payload( recipe_p->appliance_p, data_p );
             mem_free( data_p );
         }
     }
@@ -327,7 +327,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->cuisine_p ) ) != NULL )
         {
-            list_delete( recipe_p->cuisine_p, data_p );
+            list_delete_payload( recipe_p->cuisine_p, data_p );
             mem_free( data_p );
         }
     }
@@ -341,7 +341,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->occasion_p ) ) != NULL )
         {
-            list_delete( recipe_p->occasion_p, data_p );
+            list_delete_payload( recipe_p->occasion_p, data_p );
             mem_free( data_p );
         }
     }
@@ -355,7 +355,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->course_p ) ) != NULL )
         {
-            list_delete( recipe_p->course_p, data_p );
+            list_delete_payload( recipe_p->course_p, data_p );
             mem_free( data_p );
         }
     }
@@ -369,7 +369,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->diet_p ) ) != NULL )
         {
-            list_delete( recipe_p->diet_p, data_p );
+            list_delete_payload( recipe_p->diet_p, data_p );
             mem_free( data_p );
         }
     }
@@ -383,7 +383,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->chapter_p ) ) != NULL )
         {
-            list_delete( recipe_p->chapter_p, data_p );
+            list_delete_payload( recipe_p->chapter_p, data_p );
             mem_free( data_p );
         }
     }
@@ -403,7 +403,7 @@ recipe_kill(
             if ( auip_p->ingredient_p != NULL )  mem_free( auip_p->ingredient_p );
             if ( auip_p->preparation_p != NULL ) mem_free( auip_p->preparation_p );
             if ( auip_p != NULL )                mem_free( auip_p );
-            list_delete( recipe_p->ingredient_p, auip_p );
+            list_delete_payload( recipe_p->ingredient_p, auip_p );
         }
     }
     if ( list_kill( recipe_p->ingredient_p ) != true )
@@ -416,7 +416,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->directions_p ) ) != NULL )
         {
-            list_delete( recipe_p->directions_p, data_p );
+            list_delete_payload( recipe_p->directions_p, data_p );
             mem_free( data_p );
         }
     }
@@ -430,7 +430,7 @@ recipe_kill(
     {
         while( ( data_p = list_get_first( recipe_p->notes_p ) ) != NULL )
         {
-            list_delete( recipe_p->notes_p, data_p );
+            list_delete_payload( recipe_p->notes_p, data_p );
             mem_free( data_p );
         }
     }

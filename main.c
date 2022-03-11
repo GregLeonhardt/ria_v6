@@ -975,7 +975,7 @@ main(
         char                        file_path[ FILENAME_MAX ];
 
         //  Remove this file from the list.
-        list_delete( file_list_p, file_info_p );
+        list_delete_payload( file_list_p, file_info_p );
 
         //  Build the file path & name
         memset( file_path, '\0', sizeof( file_path ) );

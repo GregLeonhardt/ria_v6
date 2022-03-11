@@ -808,7 +808,7 @@ decode_fmt_notes(
         strncpy( formatted_text, tmp_p, ( sizeof( formatted_text ) - 1 ) );
 
         //  Remove the last line of text from the list.
-        list_delete( recipe_p->notes_p, tmp_p );
+        list_delete_payload( recipe_p->notes_p, tmp_p );
 
         //  Release the storage used by the temporary buffer
         mem_free( tmp_p );

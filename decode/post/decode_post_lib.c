@@ -736,9 +736,29 @@ DECODE_POST__fmt_directions(
  *
  *  @return void                No return code from this function.
  *
- *  @note
+ *  @NOTE:
+ *      This function does NOT do anything with the data.  It ONLY changes
+ *      the data tag to a standard format that may be used later.
+ *
+ *  @NOTE:
  *      Be careful here.  If you try to use this to simply change case the
  *      function will go into an infinite loop.
+ *
+ *  @NOTE:
+ *      List of tags:
+ *          Date:
+ *          From:
+ *          Notes:
+ *          PerServing:
+ *          RecipeBy:
+ *          SentBy:
+ *          SentTo:
+ *          Serves:
+ *          Source:
+ *          ToPlate:
+ *          Makes:
+ *          Copyright:
+ *          Imported-From:
  *
  ****************************************************************************/
 

@@ -1,13 +1,30 @@
 #   RIA
 #   Recipe Import Assist
+ 
+#   Run these commands before first compile and run:
 
-This is something like the sixth attempt at writing this program.
+    sudo apt install libssl-dev
 
-The goal is to be able to feed it files with various formatting models.  I 
-currently have decode models for:
-*   MMF     MealMaster
-*   MXP     MasterCook
-*   MX2     MasterCook
-*   NYC     Now Your'e Cooking
-*   BOF     Big Oven
+    mkdir ~/.LibTools
+    cp {build_dir}/Translations ~/.LibTools/.
 
+#   The goal is to be able to feed it files with various formatting models.
+#   I currently have decode models for:
+    MMF     MealMaster
+    MXP     MasterCook
+    MX2     MasterCook
+    NYC     Now Your'e Cooking
+    BOF     Big Oven
+
+    * Refer to the documents directory for additional information for each
+      file format.
+
+NOTE-01:
+    The application will attempt to scan "ALL" files in the directory pointed
+    to by the '-id' command line parameter.  Attempts are made to exclude
+    image files empty files and other stuff that won't have recipes in them.
+
+NOTE-02:
+    Files are scanned from beginning to end for recipes of all recipe formats.
+    In other words recipes of all recipe formats can exist inside a single
+    file.

@@ -137,7 +137,7 @@ encode_txt(
 
     //-----------------------------------------------------------------------
     //  TXT Recipe start tag
-    asprintf( &write_data_p, "@@@@@\n" );
+    asprintf( &write_data_p, "-----  Recipe Import Assist Start -----\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  NAME
@@ -773,7 +773,7 @@ encode_txt(
     }
     //-----------------------------------------------------------------------
     //  TXT Recipe end tag
-    asprintf( &write_data_p, "\n@@@@@\n" );
+    asprintf( &write_data_p, "-----  Recipe Import Assist End -----\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     /************************************************************************

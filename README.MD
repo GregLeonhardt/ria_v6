@@ -10,11 +10,11 @@
 
 #   The goal is to be able to feed it files with various formatting models.
 #   I currently have decode models for:
+    BOF     Big Oven
     MMF     MealMaster
     MXP     MasterCook
     MX2     MasterCook
     NYC     Now Your'e Cooking
-    BOF     Big Oven
 
     * Refer to the documents directory for additional information for each
       file format.

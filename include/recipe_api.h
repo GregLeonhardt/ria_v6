@@ -56,17 +56,17 @@
 //----------------------------------------------------------------------------
 enum    recipe_format_e
 {
-    RECIPE_FORMAT_NONE          =   0,      //
-    RECIPE_FORMAT_MXP           =   1,      //  MasterCook eXport
-    RECIPE_FORMAT_MX2           =   2,      //  MasterCook XML
-    RECIPE_FORMAT_MMF           =   3,      //  MealMaster
-    RECIPE_FORMAT_RXF           =   4,      //  Recipe eXchange Format (Native)
-    RECIPE_FORMAT_NYC           =   5,      //  Now You're Cooking!
-    RECIPE_FORMAT_BOF           =   6,      //  Big Oven Format
-    RECIPE_FORMAT_CP2           =   7,      //  Cooken Pro 2.0
-    RECIPE_FORMAT_GRF           =   8,      //  Generic Format #1     [[[[[
-    RECIPE_FORMAT_GF2           =   9,      //  Generic Format #2     @@@@@
-    RECIPE_FORMAT_ERD           =  10,      //  Easy Recipe Deluxe
+    RECIPE_FORMAT_NONE          =   0,      //  RESERVED
+    RECIPE_FORMAT_BOF           =   1,      //  Big Oven Format
+    RECIPE_FORMAT_CP2           =   2,      //  Cooken Pro 2.0
+    RECIPE_FORMAT_ERD           =   3,      //  Easy Recipe Deluxe
+    RECIPE_FORMAT_GRF           =   4,      //  Generic Format #1     [[[[[
+    RECIPE_FORMAT_GF2           =   5,      //  Generic Format #2     @@@@@
+    RECIPE_FORMAT_MMF           =   6,      //  MealMaster
+    RECIPE_FORMAT_MXP           =   7,      //  MasterCook eXport
+    RECIPE_FORMAT_MX2           =   8,      //  MasterCook XML
+    RECIPE_FORMAT_NYC           =   9,      //  Now You're Cooking!
+    RECIPE_FORMAT_RXF           =  10,      //  Recipe eXchange Format (Native)
     RECIPE_FORMAT_TXT           =  99       //  Unformatted text data
 };
 //----------------------------------------------------------------------------

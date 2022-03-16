@@ -284,9 +284,9 @@ encode(
 //          encode_mmf( rcb_p );    //  @ToDo: 3 mmf encode
 //          encode_mx2( rcb_p );    //  @ToDo: 3 mx2 encode
 //          encode_mxp( rcb_p );    //  @ToDo: 3 mxp encode
-//          encode_rxf( rcb_p );    //  @ToDo: 3 rxf encode
+            encode_rxf( rcb_p );    //  @ToDo: 3 rxf encode
 //          encode_ria( rcb_p );    //  @ToDo: 3 ria encode
-            encode_txt( rcb_p );    //  Universal recipe text format
+//          encode_txt( rcb_p );    //  Universal recipe text format
         }
 
         //  Put it in one of the DECODE queue

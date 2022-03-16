@@ -9,7 +9,7 @@
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains public function that makeup the external
- *  library components of the 'encode_txt' library.
+ *  library components of the 'encode_rxf' library.
  *
  *  @note
  *          @@@@@
@@ -35,7 +35,7 @@
  *  Compiler directives
  ****************************************************************************/
 
-#define ALLOC_ENCODE_TXT        ( "ALLOCATE STORAGE FOR ENCODE_TXT" )
+#define ALLOC_ENCODE_RXF        ( "ALLOCATE STORAGE FOR ENCODE_RXF" )
 
 #define _GNU_SOURCE             // See feature_test_macros(7)
 
@@ -64,7 +64,7 @@
 #include "email_api.h"          //  API for all email_*             PUBLIC
                                 //*******************************************
 #include <encode_api.h>         //  API for all encode_*            PUBLIC
-#include "encode_txt_lib.h"     //  API for all ENCODE_TXT__*       PRIVATE
+#include "encode_rxf_lib.h"     //  API for all ENCODE_RXF__*       PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -101,7 +101,7 @@
 
 /****************************************************************************/
 /**
- *  Encode the recipe in 'TXT' format
+ *  Encode the recipe in 'RXF' format
  *
  *  @param  rcb_p               Pointer to a Recipe Control Block
  *
@@ -112,7 +112,7 @@
  ****************************************************************************/
 
 void
-encode_txt(
+encode_rxf(
     struct   rcb_t          *   rcb_p
     )
 {
@@ -132,11 +132,11 @@ encode_txt(
 
 
     /************************************************************************
-     *  Write TXT-XML to the file
+     *  Write RXF-XML to the file
      ************************************************************************/
 
     //-----------------------------------------------------------------------
-    //  TXT Recipe start tag
+    //  RXF Recipe start tag
     asprintf( &write_data_p, "-----  Recipe Import Assist Start -----\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
@@ -631,9 +631,9 @@ encode_txt(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  SOURCE FORMAT:
-    if ( rcb_p->recipe_format == RECIPE_FORMAT_TXT )
+    if ( rcb_p->recipe_format == RECIPE_FORMAT_RXF )
     {
-        asprintf( &write_data_p, "SOURCE FORMAT:  TXT\n" );
+        asprintf( &write_data_p, "SOURCE FORMAT:  RXF\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else
@@ -772,7 +772,7 @@ encode_txt(
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     //-----------------------------------------------------------------------
-    //  TXT Recipe end tag
+    //  RXF Recipe end tag
     asprintf( &write_data_p, "-----  Recipe Import Assist End -----\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
 

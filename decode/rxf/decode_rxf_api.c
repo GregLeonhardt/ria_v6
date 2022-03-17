@@ -225,10 +225,6 @@ decode_rxf(
         //  Remove the line from the list
         list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
-        //  Debug log output
-        log_write( MID_DEBUG_0, "decode_rxf",
-                      "'%.60s'\n", list_data_p );
-
         /*********************************************************************
          *  Look for a segment change
          *********************************************************************/
@@ -249,6 +245,13 @@ decode_rxf(
         {
             //  YES:    Change the decode state
             rxf_state = RXF_DS_DESCRIPTION;
+        }
+        //--------------------------------------------------------------------
+        //  ----- Recipe Data ----- ?
+        if ( DECODE_RXF__is_recipe_data( tmp_data_p ) == true )
+        {
+            //  YES:    Change the decode state
+            rxf_state = RXF_DS_RECIPE_DATA;
         }
 #if 0
         //--------------------------------------------------------------------
@@ -359,12 +362,48 @@ decode_rxf(
                 if ( DECODE_RXF__do_description( rcb_p->recipe_p, list_data_p ) != true )
                 {
                     //  Change recipe Decode State
-                    rxf_state = RXF_DS_NEXT_SEGMENT;
+                    rxf_state = RXF_DS_AUIP;
 
                     //  There may be some data in the description processing buffer.
                     //  This call will flush it out.
                     DECODE_RXF__do_description( rcb_p->recipe_p, "   " );
                 }
+            }   break;
+
+            /****************************************************************
+             *  Process AUIP
+             ****************************************************************/
+
+            case RXF_DS_AUIP:
+            {
+                //  Locate and process the recipe title
+                if ( DECODE_RXF__do_auip( rcb_p->recipe_p, list_data_p ) != true )
+                {
+                    //  Change recipe Decode State
+                    rxf_state = RXF_DS_DIRECTIONS;
+                }
+            }   break;
+
+            /****************************************************************
+             *  Process Directions
+             ****************************************************************/
+
+            case RXF_DS_DIRECTIONS:
+            {
+                //  Locate and process the recipe title
+                DECODE_RXF__do_directions( rcb_p->recipe_p, list_data_p );
+
+            }   break;
+
+            /****************************************************************
+             *  Process Recipe-Data
+             ****************************************************************/
+
+            case RXF_DS_RECIPE_DATA:
+            {
+                //  Locate and process the recipe title
+                DECODE_RXF__do_recipe_data( rcb_p->recipe_p, list_data_p );
+
             }   break;
 #if 0
 
@@ -415,31 +454,6 @@ decode_rxf(
             }   break;
 
             /****************************************************************
-             *  -= Ingredients =-
-             ****************************************************************/
-
-            case RXF_DS_INGREDIENTS:
-            {
-                //  Change recipe Decode State
-                rxf_state = RXF_DS_AUIP;
-
-            }   break;
-
-            /****************************************************************
-             *  Process AUIP
-             ****************************************************************/
-
-            case RXF_DS_AUIP:
-            {
-                //  Locate and process the recipe title
-                if ( DECODE_RXF__auip( rcb_p->recipe_p, list_data_p ) != true )
-                {
-                    //  Change recipe Decode State
-//                  rxf_state = RXF_DS_NEXT_SEGMENT;
-                }
-            }   break;
-
-            /****************************************************************
              *  -= Instructions =-
              ****************************************************************/
 
@@ -448,24 +462,6 @@ decode_rxf(
                 //  Change recipe Decode State
                 rxf_state = RXF_DS_DIRECTIONS;
 
-            }   break;
-
-            /****************************************************************
-             *  Process Directions
-             ****************************************************************/
-
-            case RXF_DS_DIRECTIONS:
-            {
-                //  Locate and process the recipe title
-                if ( DECODE_RXF__directions( rcb_p->recipe_p, list_data_p ) != true )
-                {
-                    //  Change recipe Decode State
-                    rxf_state = RXF_DS_NEXT_SEGMENT;
-
-                    //  There may be some data in the directions processing buffer.
-                    //  This call will flush it out.
-                    DECODE_RXF__directions( rcb_p->recipe_p, "   " );
-                }
             }   break;
 
             /****************************************************************

@@ -578,6 +578,15 @@ recipe_is_start(
         recipe_format = RECIPE_FORMAT_NYC;
     }
 #endif
+    //-------------------------------------------------------------------
+    //  Recipe eXchange Format
+    else
+    if (    ( recipe_format == RECIPE_FORMAT_NONE )
+         && ( rxf_is_start( data_p ) == true ) )
+    {
+        //  YES:    Set the format to use
+        recipe_format = RECIPE_FORMAT_RXF;
+    }
 
     /************************************************************************
      *  Function Exit

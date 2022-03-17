@@ -55,6 +55,13 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+enum    data_type_e
+{
+    RXF_DT_VOID                 =   0,
+    RXF_DT_CATEGORIES           =   1,
+    RXF_DT_CUISINE              =   2,
+    RXF_DT_END                  =   9
+};
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -82,6 +89,205 @@
  * LIB Functions
  ****************************************************************************/
 
+
+/****************************************************************************/
+/**
+ *  Parse the 'YIELD" field for quantity and units
+ *
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  yield_p             Pointer to a a line of text to be scanned.
+ *
+ *  @return                     TRUE when the text string matches a known
+ *                              end of recipe marker, else FALSE
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+DECODE_RXF__parse_yield(
+    struct  recipe_t            *   recipe_p,
+    char                        *   yield_p
+    )
+{
+    /**
+     * @param rxf_rc            Return Code                                 */
+    int                             rxf_rc;
+    /**
+     *  @param  local_amount    Local buffer for AMOUNT                     */
+    char                            local_amount[ MAX_LINE_L ];
+    /**
+     *  @param  local_unit      Local buffer for UNIT                       */
+    char                            local_unit[ MAX_LINE_L ];
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume success
+    rxf_rc = false;
+
+    // Wipe clean the local buffers
+    memset( local_amount,
+            '\0',
+            sizeof ( local_amount ) );
+    memset( local_unit,
+            '\0',
+            sizeof ( local_unit ) );
+
+    /************************************************************************
+     *  The input format should be number units
+     ************************************************************************/
+
+    //  Skip everything if this is a blank line
+    if ( text_is_blank_line( yield_p ) != true )
+    {
+        yield_p = text_skip_past_whitespace( yield_p );
+
+        //  The first part should be an amount
+        for (;
+              ( ( isspace( yield_p[ 0 ] ) == 0 )
+                && ( yield_p[ 0 ] != '\0' ) );
+              yield_p++ )
+        {
+            strncat( local_amount, &yield_p[ 0 ], 1 );
+        }
+        //  Skip over spaces and or tabs between the
+        //  amount and unit fields
+        yield_p = text_skip_past_whitespace( yield_p );
+
+        //  Copy the units field
+        for (;
+              yield_p[ 0 ] != '\0';
+              yield_p++ )
+        {
+            strncat( local_unit, &yield_p[ 0 ], 1 );
+        }
+        //  Change the pass_fail flag to PASS
+        rxf_rc = true;
+    }
+
+    //  Before we go any farther.  Make sure there was something
+    //  in the input data.
+    if ( strlen( local_amount ) > 0 )
+    {
+        //  YES:    Something here so save it.
+        recipe_p->makes_p      = text_copy_to_new( local_amount );
+
+        recipe_p->makes_unit_p = text_copy_to_new( local_unit );
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return ( rxf_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Parse the recipe categories.
+ *
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  categories_p        Pointer to a a line of text to be scanned.
+ *
+ *  @return                     true when a the recipe title is located and
+ *                              processed else false.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+static
+int
+DECODE_RXF__parse_data(
+    struct  recipe_t            *   recipe_p,
+    char                        *   data_p,
+    enum    data_type_e             data_type
+    )
+{
+    /**
+     *  @param rxf_rc           Return Code                                 */
+    int                             rxf_rc;
+    /**
+     *  @param  raw_chapter     A temporary holding buffer for a chapter    */
+    char                            raw_chapter[ MAX_LINE_L ];
+    /**
+     *  @param  tmp_p           A temporary data buffer pointer             */
+    char                        *   tmp_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  The assumption is that this is NOT the start of a Meal-Master recipe
+    rxf_rc = false;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+    //  Skip everything if this is a blank line
+    if ( text_is_blank_line( data_p ) != true )
+    {
+        data_p = text_skip_past_whitespace( data_p );
+
+        //  Should be pointing to the start of a chapter or
+        //  the end of the line.
+        while ( data_p[ 0 ] != '\0' )
+        {
+            //  Wipe the temporary chapter buffer clean
+            memset( &raw_chapter,
+                    '\0',
+                    sizeof ( raw_chapter ) );
+
+            data_p = text_skip_past_whitespace( data_p );
+
+            //  Copy the new chapter to the temp buffer
+            for (  ;
+                  (    ( data_p[ 0 ] != ',' )
+                    && ( data_p[ 0 ] != '\0' ) );
+                  data_p ++ )
+            {
+                strncat( raw_chapter, data_p, 1 );
+            }
+            //  Skip past the ','
+            data_p += 1;
+
+            //  Translate the chapter
+            tmp_p = xlate_chapter( raw_chapter );
+
+            //  Do we have a chapter to save ?
+            if ( tmp_p != NULL )
+            {
+                //  YES:    Save it
+                switch( data_type )
+                {
+                    case    RXF_DT_CATEGORIES:
+                    {
+                        decode_save_chapter( tmp_p, recipe_p );
+                    }
+                    case    RXF_DT_CUISINE:
+                    {
+                        decode_append( recipe_p->cuisine_p, tmp_p );
+                    }
+                    default :
+                    {
+                    }
+                }
+            }
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return ( rxf_rc );
+}
 
 /****************************************************************************/
 /**
@@ -238,6 +444,56 @@ DECODE_RXF__is_description(
 
 /****************************************************************************/
 /**
+ *  Test the string for the start of the recipe data section.
+ *      FORMATS:
+ *          1   ----- Recipe Data -----
+ *
+ *  @param  data_p              Pointer to a a line of text to be scanned.
+ *
+ *  @return                     TRUE when the text string matches a known
+ *                              end of recipe marker, else FALSE
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE_RXF__is_recipe_data(
+    char                        *   data_p
+    )
+{
+    /**
+     * @param rxf_rc            Return Code                                 */
+    int                             rxf_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume this is NOT a recipe end tag
+    rxf_rc = false;
+
+    /************************************************************************
+     *  Test for a valid recipe end string
+     ************************************************************************/
+
+    //  Is this the start of a Big-Oven RXF recipe ?
+    if ( strncmp( data_p, RXF_RECIPE_DATA, RXF_RECIPE_DATA_L  ) == 0 )
+    {
+        //  YES:    Change the return code
+        rxf_rc = true;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return ( rxf_rc );
+}
+
+/****************************************************************************/
+/**
  *  Search for and process the recipe title.
  *
  *  @param  recipe_p            Pointer to a recipe structure.
@@ -282,8 +538,6 @@ DECODE_RXF__do_title(
         //  Save the recipe title (name)
         recipe_p->name_p = text_copy_to_new( title_p );
 
-        log_write( MID_DEBUG_1, "decode_rxf_lib.c", "Line: %d\n", __LINE__ );
-
         // Change the pass_fail flag to PASS
         rxf_rc = true;
     }
@@ -324,7 +578,7 @@ DECODE_RXF__do_description(
      *  Function Initialization
      ************************************************************************/
 
-    //  Assume this is NOT a DIRECTION
+    //  Assume this is NOT a DESCRIPTION
     rxf_rc = false;
 
     /************************************************************************
@@ -339,6 +593,298 @@ DECODE_RXF__do_description(
 
         //  This is a directions line of text
         rxf_rc = true;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( rxf_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Everything from here to the next blank line is AUIP.
+ *
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
+ *
+ *  @return                     true when a new recipe is detected
+ *                              else FRC_FAIL.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE_RXF__do_auip(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    )
+{
+    /**
+     * @param rxf_rc            Return Code                                 */
+    int                             rxf_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume this is NOT an AUIP
+    rxf_rc = false;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+    //  Skip everything if this is a blank line
+    if ( text_is_blank_line( in_buffer_p ) != true )
+    {
+        //  Process the first half (or the entire line)
+        in_buffer_p = text_skip_past_whitespace( in_buffer_p );
+
+        // Format the AUIP line
+        decode_fmt_auip( recipe_p, in_buffer_p, RECIPE_FORMAT_RXF );
+
+        //  Set the return code
+        rxf_rc = true;
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return ( rxf_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Everything from here to END-OF-RECIPE is 'DIRECTIONS'.
+ *
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
+ *
+ *  @return                     true when a new recipe is detected
+ *                              else FRC_FAIL.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE_RXF__do_directions(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    )
+{
+    /**
+     * @param rxf_rc            Return Code                                 */
+    int                             rxf_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume this is NOT a DIRECTION
+    rxf_rc = false;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+    //  Format the DIRECTIONS line
+    decode_add_instructions( recipe_p, in_buffer_p );
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( rxf_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Process everything is the recipe data segment
+ *
+ *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
+ *
+ *  @return                     true when a new recipe is detected
+ *                              else FRC_FAIL.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE_RXF__do_recipe_data(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    )
+{
+    /**
+     * @param rxf_rc            Return Code                                 */
+    int                             rxf_rc;
+    /**
+     * @param tmp_data_p        Pointer to a temp data buffer               */
+    char                        *   tmp_data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Assume this is NOT a DIRECTION
+    rxf_rc = false;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+    //  Skip past any leading whitespace.
+    in_buffer_p = text_skip_past_whitespace( in_buffer_p );
+
+    //  AUTHOR:
+    if ( strncmp( in_buffer_p, RXF_RECIPE_AUTHOR, RXF_RECIPE_AUTHOR_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_AUTHOR_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the recipe author
+        recipe_p->author_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  SERVES:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_SERVES, RXF_RECIPE_SERVES_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_SERVES_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        recipe_p->serves_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  TIME_PREP:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_T_PREP, RXF_RECIPE_T_PREP_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_T_PREP_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  TIME_COOK:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_T_COOK, RXF_RECIPE_T_COOK_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_T_COOK_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        recipe_p->time_cook_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  TIME_WAIT:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_T_WAIT, RXF_RECIPE_T_WAIT_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_T_WAIT_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        recipe_p->time_wait_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  TIME_REST:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_T_REST, RXF_RECIPE_T_REST_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_T_REST_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        recipe_p->time_rest_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  YIELD:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_YIELD, RXF_RECIPE_YIELD_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_YIELD_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the serves quantity
+        DECODE_RXF__parse_yield( recipe_p, tmp_data_p );
+
+    }
+    //------------------------------------------------------------------------
+    //  SOURCE:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_SOURCE, RXF_RECIPE_SOURCE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_SOURCE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  @ToDo:  2   There is a CR-LF when the data is written out
+        //  Save the serves quantity
+        recipe_p->source_p = text_copy_to_new( tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  NOTES:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_NOTES, RXF_RECIPE_NOTES_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_NOTES_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the notes data
+        decode_fmt_notes( recipe_p, tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  CUISINE:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_CUISINE, RXF_RECIPE_CUISINE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_CUISINE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the cuisine data
+        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CUISINE );
     }
 
     /************************************************************************
@@ -399,8 +945,6 @@ DECODE_RXF__recipe_by(
 
         //  Save the recipe title (name)
         recipe_p->author_p = text_copy_to_new( tmp_data_p );
-
-        log_write( MID_DEBUG_1, "decode_rxf_lib.c", "Line: %d\n", __LINE__ );
     }
     else
     {
@@ -469,8 +1013,6 @@ DECODE_RXF__srv_size(
 
         //  Save the recipe title (name)
         recipe_p->serves_p = text_copy_to_new( tmp_data_p );
-
-        log_write( MID_DEBUG_1, "decode_rxf_lib.c", "Line: %d\n", __LINE__ );
     }
     else
     {
@@ -591,120 +1133,6 @@ DECODE_RXF__categories(
 
     //  DONE!
     return ( rxf_rc );
-}
-
-/****************************************************************************/
-/**
- *  Everything from here to the next blank line is AUIP.
- *
- *  @param  recipe_p            Pointer to a recipe structure.
- *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
- *
- *  @return                     true when a new recipe is detected
- *                              else FRC_FAIL.
- *
- *  @note
- *
- ****************************************************************************/
-
-int
-DECODE_RXF__auip(
-    struct  recipe_t            *   recipe_p,
-    char                        *   in_buffer_p
-    )
-{
-    /**
-     * @param rxf_rc            Return Code                                 */
-    int                             rxf_rc;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-    //  Assume this is NOT an AUIP
-    rxf_rc = false;
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Skip everything if this is a blank line
-    if ( text_is_blank_line( in_buffer_p ) != true )
-    {
-        //  Process the first half (or the entire line)
-        in_buffer_p = text_skip_past_whitespace( in_buffer_p );
-
-        // Format the AUIP line
-        decode_fmt_auip( recipe_p, in_buffer_p, RECIPE_FORMAT_RXF );
-
-        //  Set the return code
-        rxf_rc = true;
-    }
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-    return ( rxf_rc );
-}
-
-/****************************************************************************/
-/**
- *  Everything from here to END-OF-RECIPE is 'DIRECTIONS'.
- *
- *  @param  recipe_p            Pointer to a recipe structure.
- *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
- *
- *  @return                     true when a new recipe is detected
- *                              else FRC_FAIL.
- *
- *  @note
- *
- ****************************************************************************/
-
-int
-DECODE_RXF__directions(
-    struct  recipe_t            *   recipe_p,
-    char                        *   in_buffer_p
-    )
-{
-    /**
-     * @param rxf_rc            Return Code                                 */
-    int                             rxf_rc;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-    //  Assume this is NOT a DIRECTION
-    rxf_rc = false;
-
-    /************************************************************************
-     *  Function Body
-     ************************************************************************/
-
-    //  Is this the end-of-recipe tag ?
-    if ( DECODE_RXF__end( in_buffer_p ) == false )
-    {
-        //  Format the AUIP line
-        decode_add_instructions( recipe_p, in_buffer_p );
-
-        //  This is a directions line of text
-        rxf_rc = true;
-    }
-    else
-    {
-        //  YES:    NOT a directions line
-        rxf_rc = false;
-    }
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-    return( rxf_rc );
 }
 #endif
 

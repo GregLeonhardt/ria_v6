@@ -9,7 +9,7 @@
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains private definitions (etc.) that apply to internal 
+ *  This file contains private definitions (etc.) that apply to internal
  *  library components of the 'decode_rxf' library.
  *
  *  @note
@@ -51,8 +51,86 @@
 #define RXF_DESCRIPTION         "Description:"
 #define RXF_DESCRIPTION_L       strlen( RXF_DESCRIPTION )
 //----------------------------------------------------------------------------
-
-
+#define RXF_RECIPE_DATA         "----- Recipe Data -----"
+#define RXF_RECIPE_DATA_L       strlen( RXF_RECIPE_DATA )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_AUTHOR       "AUTHOR:"
+#define RXF_RECIPE_AUTHOR_L     strlen( RXF_RECIPE_AUTHOR )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_SERVES       "SERVES:"
+#define RXF_RECIPE_SERVES_L     strlen( RXF_RECIPE_SERVES )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_T_PREP       "TIME PREP:"
+#define RXF_RECIPE_T_PREP_L     strlen( RXF_RECIPE_T_PREP )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_T_COOK       "TIME COOK:"
+#define RXF_RECIPE_T_COOK_L     strlen( RXF_RECIPE_T_COOK )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_T_WAIT       "TIME WAIT:"
+#define RXF_RECIPE_T_WAIT_L     strlen( RXF_RECIPE_T_WAIT )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_T_REST       "TIME REST:"
+#define RXF_RECIPE_T_REST_L     strlen( RXF_RECIPE_T_REST )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_SOURCE       "SOURCE:"
+#define RXF_RECIPE_SOURCE_L     strlen( RXF_RECIPE_SOURCE )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_NOTES        "NOTES:"
+#define RXF_RECIPE_NOTES_L      strlen( RXF_RECIPE_NOTES )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_CUISINE      "CUISINE:"
+#define RXF_RECIPE_CUISINE_L    strlen( RXF_RECIPE_CUISINE )
+//----------------------------------------------------------------------------
+#if 0
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_YIELD        "TIME_YIELD:"
+#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+#endif
 
 #define RXF_BY                  "Recipe By:"
 #define RXF_BY_L                strlen( RXF_BY )
@@ -89,6 +167,7 @@ enum    rxf_decode_state_e
     RXF_DS_START                =   0,
     RXF_DS_TITLE                =   1,
     RXF_DS_DESCRIPTION          =   2,
+    RXF_DS_RECIPE_DATA          =   3,
 
     RXF_DS_NEXT_SEGMENT         =  72,
     RXF_DS_BY                   =  73,
@@ -139,6 +218,11 @@ DECODE_RXF__is_description(
     char                        *   char_string_p
     );
 //----------------------------------------------------------------------------
+int
+DECODE_RXF__is_recipe_data(
+    char                        *   char_string_p
+    );
+//----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
 int
@@ -152,6 +236,19 @@ DECODE_RXF__do_description(
     struct  recipe_t            *   recipe_p,
     char                        *   in_buffer_p
     );
+//----------------------------------------------------------------------------
+int
+DECODE_RXF__do_auip(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    );
+//----------------------------------------------------------------------------
+int
+DECODE_RXF__do_recipe_data(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    );
+//----------------------------------------------------------------------------
 
 
 
@@ -177,13 +274,19 @@ DECODE_RXF__categories(
     );
 //----------------------------------------------------------------------------
 int
-DECODE_RXF__auip(
+DECODE_RXF__directions(
     struct  recipe_t            *   recipe_p,
     char                        *   in_buffer_p
     );
 //----------------------------------------------------------------------------
 int
-DECODE_RXF__directions(
+DECODE_RXF__do_auip(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    );
+//----------------------------------------------------------------------------
+int
+DECODE_RXF__do_directions(
     struct  recipe_t            *   recipe_p,
     char                        *   in_buffer_p
     );

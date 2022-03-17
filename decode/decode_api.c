@@ -1508,11 +1508,9 @@ decode(
             }   break;
             case    RECIPE_FORMAT_RXF:
             {
-                //  @ToDo: 3 rxf decode
-                log_write( MID_WARNING, tcb_p->thread_name,
-                           "Decode for recipe format 'RXF' is not available\n" );
-                //  Clean out the recipe control block
-                ok_to_encode = false;
+                //  Decode a Recipe eXchange Format recipe
+                decode_rxf( rcb_p );
+                ok_to_encode = true;
             }   break;
             case    RECIPE_FORMAT_NYC:
             {

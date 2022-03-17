@@ -636,12 +636,13 @@ MMF__yield(
     )
 {
     /**
-     * @param mmf_rc            Return Code                                 */
+     *  @param  mmf_rc          Return Code                                 */
     int                             mmf_rc;
-    // Local buffer for AMOUNT
+    /**
+     *  @param  local_amount    Local buffer for AMOUNT                     */
     char                            local_amount[ MAX_LINE_L ];
-
-    // Local buffer for UNIT
+    /**
+     *  @param  local_unit      Local buffer for UNIT                       */
     char                            local_unit[ MAX_LINE_L ];
 
     /************************************************************************

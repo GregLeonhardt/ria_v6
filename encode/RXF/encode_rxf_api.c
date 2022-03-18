@@ -372,7 +372,7 @@ encode_rxf(
     }
     //-----------------------------------------------------------------------
     //  NOTES:
-    asprintf( &write_data_p, "NOTES:          " );
+    asprintf( &write_data_p, "NOTES:\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( list_query_count( rcb_p->recipe_p->notes_p ) > 0 )
@@ -385,11 +385,9 @@ encode_rxf(
             list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }
-    else
-    {
-        asprintf( &write_data_p, "\n" );
-        list_put_last( rcb_p->export_list_p, write_data_p );
-    }
+    //  Put a blank line following the notes.
+    asprintf( &write_data_p, "%s\n", tmp_data_p );
+    list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  CATEGORIES
     asprintf( &write_data_p, "CATEGORIES:\n" );

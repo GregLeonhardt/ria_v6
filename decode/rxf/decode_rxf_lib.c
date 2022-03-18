@@ -86,6 +86,10 @@ enum    data_type_e
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+/**
+ * @param notes_parsing_flag        Set TRUE when parsing the notes segment */
+static
+int                                 notes_parsing_flag;
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -773,6 +777,7 @@ DECODE_RXF__do_recipe_data(
     //  Skip past any leading whitespace.
     in_buffer_p = text_skip_past_whitespace( in_buffer_p );
 
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
     //  AUTHOR:
     if ( strncmp( in_buffer_p, RXF_RECIPE_AUTHOR, RXF_RECIPE_AUTHOR_L  ) == 0 )
     {
@@ -783,7 +788,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the recipe author
-        recipe_p->author_p = text_copy_to_new( tmp_data_p );
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->author_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR\n" );
     }
     //------------------------------------------------------------------------
     //  SERVES:
@@ -797,7 +804,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the serves quantity
-        recipe_p->serves_p = text_copy_to_new( tmp_data_p );
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->serves_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR\n" );
     }
     //------------------------------------------------------------------------
     //  TIME_PREP:
@@ -810,8 +819,10 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the serves quantity
-        recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
+        //  Save the preperation time
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SERVES\n" );
     }
     //------------------------------------------------------------------------
     //  TIME_COOK:
@@ -824,8 +835,10 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the serves quantity
-        recipe_p->time_cook_p = text_copy_to_new( tmp_data_p );
+        //  Save the cooking time
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->time_cook_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_COOK\n" );
     }
     //------------------------------------------------------------------------
     //  TIME_WAIT:
@@ -838,8 +851,10 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the serves quantity
-        recipe_p->time_wait_p = text_copy_to_new( tmp_data_p );
+        //  Save the waiting time
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->time_wait_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_WAIT\n" );
     }
     //------------------------------------------------------------------------
     //  TIME_REST:
@@ -852,8 +867,10 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the serves quantity
-        recipe_p->time_rest_p = text_copy_to_new( tmp_data_p );
+        //  Save the resting time
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->time_rest_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_REST\n" );
     }
     //------------------------------------------------------------------------
     //  YIELD:
@@ -866,9 +883,11 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the serves quantity
-        DECODE_RXF__parse_yield( recipe_p, tmp_data_p );
+        //  Save the yield
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_yield( recipe_p, tmp_data_p );
 
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_YIELD\n" );
     }
     //------------------------------------------------------------------------
     //  SOURCE:
@@ -881,23 +900,35 @@ DECODE_RXF__do_recipe_data(
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  @ToDo:  2   There is a CR-LF when the data is written out
-        //  Save the serves quantity
-        recipe_p->source_p = text_copy_to_new( tmp_data_p );
+        //  Save the recipe source
+        if ( strlen( tmp_data_p ) >= 1 )
+            recipe_p->source_p = text_copy_to_new( tmp_data_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE\n" );
     }
     //------------------------------------------------------------------------
     //  NOTES:
     else
     if ( strncmp( in_buffer_p, RXF_RECIPE_NOTES, RXF_RECIPE_NOTES_L  ) == 0 )
     {
-        //  YES:    Jump past the search string
-        tmp_data_p = in_buffer_p + RXF_RECIPE_NOTES_L;
+        //  YES:    Set the notes processing flag
+        notes_parsing_flag = true;
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE = TRUE\n" );
+    }
+    //  NOTES:
+    else
+    if ( notes_parsing_flag == true  )
+    {
+        //  YES:    Add the text to the notes.
+        decode_fmt_notes( recipe_p, in_buffer_p );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_NOTES --- '%s'\n", in_buffer_p );
 
-        //  Skip past any leading whitespace.
-        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+        // Is this the end of the notes ?
+        if ( strlen( in_buffer_p ) == 0 )
+        {
+            //  YES:    Set the flag to false.
+            notes_parsing_flag = false;
+        }
 
-        //  Save the notes data
-        decode_fmt_notes( recipe_p, tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  CUISINE:
@@ -911,7 +942,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the cuisine data
-        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CUISINE );
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CUISINE );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_CUISINE\n" );
     }
     //------------------------------------------------------------------------
     //  OCCASION:
@@ -925,7 +958,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the cuisine data
-        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_OCCASION );
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_OCCASION );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_OCCASION\n" );
     }
     //------------------------------------------------------------------------
     //  COURSE:
@@ -939,7 +974,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the cuisine data
-        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_COURSE );
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_COURSE );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COURSE\n" );
     }
     //------------------------------------------------------------------------
     //  DIET:
@@ -953,7 +990,9 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the cuisine data
-        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_DIET );
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_DIET );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_DIET\n" );
     }
     //------------------------------------------------------------------------
     //  APPLIANCE:
@@ -967,7 +1006,17 @@ DECODE_RXF__do_recipe_data(
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
         //  Save the cuisine data
-        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_APPLIANCE );
+        if ( strlen( tmp_data_p ) >= 1 )
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_APPLIANCE );
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_APPLIANCE\n" );
+    }
+    //------------------------------------------------------------------------
+    //  NONE OF THE ABOVE.
+    else
+    {
+        //  We are not parsing the notes field yet.
+        notes_parsing_flag = false;
+//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DEFAULT: notes_parsing_flag = false\n" );
     }
 
     /************************************************************************

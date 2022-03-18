@@ -134,27 +134,6 @@
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
 #endif
-
-#define RXF_BY                  "Recipe By:"
-#define RXF_BY_L                strlen( RXF_BY )
-//----------------------------------------------------------------------------
-#define RXF_SERVING             "Serving Size:"
-#define RXF_SERVING_L           strlen( RXF_SERVING )
-//----------------------------------------------------------------------------
-#define RXF_CUISINE             "Cuisine:"
-#define RXF_CUISINE_L           strlen( RXF_CUISINE )
-//----------------------------------------------------------------------------
-#define RXF_MAIN                "Main Ingredient:"
-#define RXF_MAIN_L              strlen( RXF_MAIN )
-//----------------------------------------------------------------------------
-#define RXF_CATEGORY            "Categories:"
-#define RXF_CATEGORY_L          strlen( RXF_CATEGORY )
-//----------------------------------------------------------------------------
-#define RXF_INGREDIENTS         "-= Ingredients =-"
-#define RXF_INGREDIENTS_L       strlen( RXF_INGREDIENTS )
-//----------------------------------------------------------------------------
-#define RXF_INSTRUCTIONS        "-= Instructions =-"
-#define RXF_INSTRUCTIONS_L      strlen( RXF_INSTRUCTIONS )
 //----------------------------------------------------------------------------
 #define RXF_END                 "-----  Recipe Import Assist End -----"
 #define RXF_END_L               strlen( RXF_END )

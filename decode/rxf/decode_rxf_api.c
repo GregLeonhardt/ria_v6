@@ -225,6 +225,7 @@ decode_rxf(
         //  Remove the line from the list
         list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
 
+//log_write( MID_INFO, "decode_rxf", "%s\n", list_data_p );
         /*********************************************************************
          *  Look for a segment change
          *********************************************************************/
@@ -333,6 +334,7 @@ decode_rxf(
                 //  Change recipe Decode State
                 rxf_state = RXF_DS_TITLE;
 
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_START\n" );
             }   break;
 
             /****************************************************************
@@ -349,6 +351,8 @@ decode_rxf(
 
                     //  Change recipe Decode State
                     rxf_state = RXF_DS_NEXT_SEGMENT;
+
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_TITLE\n" );
                 }
             }   break;
 
@@ -367,6 +371,8 @@ decode_rxf(
                     //  There may be some data in the description processing buffer.
                     //  This call will flush it out.
                     DECODE_RXF__do_description( rcb_p->recipe_p, "   " );
+
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_DESCRIPTION\n" );
                 }
             }   break;
 
@@ -381,6 +387,8 @@ decode_rxf(
                 {
                     //  Change recipe Decode State
                     rxf_state = RXF_DS_DIRECTIONS;
+
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_AUIP\n" );
                 }
             }   break;
 
@@ -392,6 +400,7 @@ decode_rxf(
             {
                 //  Locate and process the recipe title
                 DECODE_RXF__do_directions( rcb_p->recipe_p, list_data_p );
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_DIRECTIONS\n" );
 
             }   break;
 
@@ -404,6 +413,7 @@ decode_rxf(
                 //  Locate and process the recipe title
                 DECODE_RXF__do_recipe_data( rcb_p->recipe_p, list_data_p );
 
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_RECIPE_DATA\n" );
             }   break;
 #if 0
 

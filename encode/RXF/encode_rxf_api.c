@@ -334,7 +334,7 @@ encode_rxf(
     }
     //-----------------------------------------------------------------------
     //  YIELD:
-    asprintf( &write_data_p, "YIELD: " );
+    asprintf( &write_data_p, "YIELD:          " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->makes_p != NULL )
@@ -357,7 +357,7 @@ encode_rxf(
     }
     //-----------------------------------------------------------------------
     //  SOURCE:
-    asprintf( &write_data_p, "SOURCE: " );
+    asprintf( &write_data_p, "SOURCE:         " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( rcb_p->recipe_p->source_p != NULL )
@@ -372,7 +372,7 @@ encode_rxf(
     }
     //-----------------------------------------------------------------------
     //  NOTES:
-    asprintf( &write_data_p, "NOTES:\n" );
+    asprintf( &write_data_p, "NOTES:          " );
     list_put_last( rcb_p->export_list_p, write_data_p );
 
     if ( list_query_count( rcb_p->recipe_p->notes_p ) > 0 )

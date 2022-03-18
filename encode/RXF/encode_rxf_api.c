@@ -362,7 +362,7 @@ encode_rxf(
 
     if ( rcb_p->recipe_p->source_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n\n", rcb_p->recipe_p->source_p );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->source_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else

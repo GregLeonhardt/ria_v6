@@ -96,10 +96,22 @@
 #define RXF_RECIPE_APPLIANCE    "APPLIANCE:"
 #define RXF_RECIPE_APPLIANCE_L  strlen( RXF_RECIPE_APPLIANCE )
 //----------------------------------------------------------------------------
-#if 0
+#define RXF_RECIPE_CHAPTER      "CHAPTER:"
+#define RXF_RECIPE_CHAPTER_L    strlen( RXF_RECIPE_CHAPTER )
 //----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+#define RXF_RECIPE_COPYRIGHT    "COPYRIGHT:"
+#define RXF_RECIPE_COPYRIGHT_L  strlen( RXF_RECIPE_COPYRIGHT )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_SKILL_LEVEL  "SKILL LEVEL:"
+#define RXF_RECIPE_SKILL_LEVEL_L strlen( RXF_RECIPE_SKILL_LEVEL )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_RATING       "RATING:"
+#define RXF_RECIPE_RATING_L     strlen( RXF_RECIPE_RATING )
+//----------------------------------------------------------------------------
+#define RXF_SOURCE_INFO         "----- Source Info -----"
+#define RXF_SOURCE_INFO_L       strlen( RXF_SOURCE_INFO )
+//----------------------------------------------------------------------------
+#if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
@@ -150,6 +162,7 @@ enum    rxf_decode_state_e
     RXF_DS_TITLE                =   1,
     RXF_DS_DESCRIPTION          =   2,
     RXF_DS_RECIPE_DATA          =   3,
+    RXF_DS_SOURCE_INFO          =   4,
 
     RXF_DS_NEXT_SEGMENT         =  72,
     RXF_DS_BY                   =  73,
@@ -205,6 +218,11 @@ DECODE_RXF__is_recipe_data(
     char                        *   char_string_p
     );
 //----------------------------------------------------------------------------
+int
+DECODE_RXF__is_source_info(
+    char                        *   char_string_p
+    );
+//----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------
 int
@@ -231,11 +249,17 @@ DECODE_RXF__do_recipe_data(
     char                        *   in_buffer_p
     );
 //----------------------------------------------------------------------------
+int
+DECODE_RXF__do_source_info(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    );
+//----------------------------------------------------------------------------
 
 
 
 
-
+#if 0
 //----------------------------------------------------------------------------
 int
 DECODE_RXF__recipe_by(
@@ -273,6 +297,7 @@ DECODE_RXF__do_directions(
     char                        *   in_buffer_p
     );
 //----------------------------------------------------------------------------
+#endif
 
 /****************************************************************************/
 

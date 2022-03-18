@@ -254,6 +254,13 @@ decode_rxf(
             //  YES:    Change the decode state
             rxf_state = RXF_DS_RECIPE_DATA;
         }
+        //--------------------------------------------------------------------
+        //  ----- Source_info ----- ?
+        if ( DECODE_RXF__is_source_info( tmp_data_p ) == true )
+        {
+            //  YES:    Change the decode state
+            rxf_state = RXF_DS_SOURCE_INFO;
+        }
 #if 0
         //--------------------------------------------------------------------
         //  Recipe By: ?
@@ -405,15 +412,27 @@ decode_rxf(
             }   break;
 
             /****************************************************************
-             *  Process Recipe-Data
+             *  Process Recipe Data
              ****************************************************************/
 
             case RXF_DS_RECIPE_DATA:
             {
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_RECIPE_DATA -- %s\n", list_data_p );
+
                 //  Locate and process the recipe title
                 DECODE_RXF__do_recipe_data( rcb_p->recipe_p, list_data_p );
+            }   break;
 
-//log_write( MID_INFO, "decode_rxf", "RXF_DS_RECIPE_DATA\n" );
+            /****************************************************************
+             *  Process Source Info
+             ****************************************************************/
+
+            case RXF_DS_SOURCE_INFO:
+            {
+//log_write( MID_INFO, "decode_rxf", "RXF_DS_SOURCE_INFO -- %s\n", list_data_p );
+
+                //  Locate and process the recipe title
+                DECODE_RXF__do_source_info( rcb_p->recipe_p, list_data_p );
             }   break;
 #if 0
 

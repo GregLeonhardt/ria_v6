@@ -415,7 +415,7 @@ encode_rxf(
                 }
                 else
                 {
-                    asprintf( &write_data_p, ", %s", write_data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
                     list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
@@ -446,7 +446,7 @@ encode_rxf(
                 }
                 else
                 {
-                    asprintf( &write_data_p, ", %s", write_data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
                     list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
@@ -477,7 +477,7 @@ encode_rxf(
                 }
                 else
                 {
-                    asprintf( &write_data_p, ", %s", write_data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
                     list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
@@ -508,7 +508,7 @@ encode_rxf(
                 }
                 else
                 {
-                    asprintf( &write_data_p, ", %s", write_data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
                     list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }
@@ -539,7 +539,7 @@ encode_rxf(
                 }
                 else
                 {
-                    asprintf( &write_data_p, ", %s", write_data_p );
+                    asprintf( &write_data_p, ", %s", tmp_data_p );
                     list_put_last( rcb_p->export_list_p, write_data_p );
                 }
             }

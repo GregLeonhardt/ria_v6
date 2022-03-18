@@ -13,6 +13,7 @@
 ##############################################################################
 ################################# VERSION ####################################
 #
+#   1.0.7  20220318  Many categories were not listed as a lookup.
 #   1.0.6  20180106  Removed 'BURGERS' because of tuna burgers. 
 #                    Removed 'Steak' because of salmon steak. 
 #                    Added 'Bake' and 'Baked'
@@ -220,26 +221,30 @@ Appliance:Wok,                      Wok
 #############################
 ####    Special diets
 #############################
-Diet:Baby,                          Baby Recipes, Baby, Baby Food, Baby-Food
+Diet:Baby,                          Baby, Baby Recipes, Baby Food, Baby-Food
 Diet:Cyberealm,                     Cyberealm
-Diet:Diabetic,                      DIABETIC
-Diet:Gluten-Free,                   Gluten-Free, Gluten Free, GlutenFree
-Diet:High-Fiber,                    HighFiber, HIGHFIBRE
-Diet:Fat-Free,                      FATFREE, FATFREE, Fat Free, Fat-Free
-Diet:Lantose-Free,                  LantoseFree, LactFree
-Diet:Low-Calorie,                   LowCal, LowCalorie, LoCal, Low Calorie, Low-cal
-Diet:Low-Carb,                      LowCarb
-Diet:Low-Cholesterol,               LowCholesterol, Low Cholesterol
-Diet:Low-Fat,                       LowFat, LowFatCal, LowFatLow, NoLowFat
-Diet:Low-Fat,                       Eat-Lf Mailing List, Very Low Fat, Low Fat
-Diet:Low-Fat,                       Low-Fat
-Diet:Low-Sodium,                    LOWSODIUM, Low Sodium
-Diet:Ovo-Lacto,                     OVOLACTO, Lacto, Ovo-Lacto
+Diet:Diabetic,                      Diabetic
+Diet:Gluten Free,                   Gluten Free, Gluten-Free
+Diet:Gluten Free,                   Gluten Free, GlutenFree
+Diet:High Fiber,                    High Fiber, HighFiber, HIGHFIBRE
+Diet:Fat Free,                      Fat Free, FATFREE, FATFREE, Fat Free
+Diet:Lantose Free,                  Lantose Free, Lantose-Free, LantoseFree, LactFree
+Diet:Low Calorie,                   Low Calorie, Low-Calorie
+Diet:Low Calorie,                   LowCal, LowCalorie, LoCal, Low Calorie, Low-cal
+Diet:Low Carb,                      Low Carb, LowCarb, Low-Carb
+Diet:Low Cholesterol,               Low Cholesterol, Low-Cholesterol
+Diet:Low Cholesterol,               Low Cholesterol, LowCholesterol, Low Cholesterol
+Diet:Low Fat,                       Low Fat, Low-Fat
+Diet:Low Fat,                       LowFat, LowFatCal, LowFatLow, NoLowFat
+Diet:Low Fat,                       Eat-Lf Mailing List, Very Low Fat, Low Fat
+Diet:Low Sodium,                    Low Sodium, Low-Sodium, LOWSODIUM
+Diet:Ovo Lacto,                     Ovo Lacto, Ovo-Lacto, OVOLACTO, Lacto
 Diet:Ornish,                        Ornish
-Diet:Vegan,                         VEGAN
-Diet:Vegetarian,                    VEGETARIAN
+Diet:Vegan,                         Vegan
+Diet:Vegetarian,                    Vegetarian
+Diet:Weight Watchers,               Weight Watchers, Weight-Watchers
 Diet:Weight Watchers,               WeightWatchers, WW, WEIGHTWATCH, WTWATCHERS
-Diet:Yeast-Free,                    YeastFree
+Diet:Yeast Free,                    Yeast Free, YeastFree
 #############################
 ####    Major meal categories
 #############################
@@ -251,10 +256,11 @@ Course:Brunch,                      Brunch, LUNCHEON, Breakfast/Brunch
 Course:Buffet,                      Buffet
 Course:Desserts,                    Desserts, DESSERT, Cobbler
 Course:Lunch,                       Lunch
-Course:Main Dish,                   MainDish, MainDishes, Main, Entree, MAINCOARSE
-Course:Main Dish,                   MainCoarse, Main Course, Main Dish, Main Dishes
-Course:Side Dish,                   SideDish, SideDishes, Side, Side Dish
-Course:Side Dish,                   Side Dishes
+Course:Main Dish,                   Main Dish, Main-Dish
+Course:Main Dish,                   MainDish, MainDishes, Main, Entree
+Course:Main Dish,                   MainCoarse, Main Course, Main Dishes, MAINCOARSE
+Course:Side Dish,                   Side Dish, Side-Dish, Side Dishes
+Course:Side Dish,                   SideDish, SideDishes, Side
 Course:Snack,                       Snack, Snacks, snack, snaks, Party
 #############################
 ####    Part of the world the recipe would be associated with.
@@ -269,78 +275,77 @@ Cuisine:Austrian,                   Austrian
 Cuisine:Bangladesh,                 Bangladesh
 Cuisine:British,                    British, Londontowne
 Cuisine:Burma,                      Burma
-Cuisine:California,                 CALIFORNIA
+Cuisine:California,                 California
 Cuisine:Cambodian,                  Cambodian
 Cuisine:Canadian,                   Canadian
 Cuisine:Cajun,                      Cajun, Jambalaya, Cajun/Creole
 Cuisine:Caribbean,                  Caribbean
-Cuisine:Children,                   CHILDREN, Kids
+Cuisine:Children,                   Children, Kids
 Cuisine:Chinese,                    Chinese, China, Hunan
 Cuisine:Cuban,                      Cuban
 Cuisine:Columbian,                  Columbian, COLUMBIA
-Cuisine:Costs Rica,                 CostaRica
+Cuisine:Costs Rica,                 Costs Rica, CostaRica
 Cuisine:Czech,                      Czech
 Cuisine:Dutch,                      Dutch
 Cuisine:English,                    English
 Cuisine:Fillipino,                  Fillipino, Filipino
 Cuisine:Finnish,                    Finish, Finland, Finnish
-Cuisine:French,                     FRENCH, FRANCE
-Cuisine:German,                     GERMAN, GERMANY
-Cuisine:Greek,                      GREEK, GREECE
-Cuisine:Guatemala,                  GUATEMALA
+Cuisine:French,                     French, FRANCE
+Cuisine:German,                     German, GERMANY
+Cuisine:Greek,                      Greek, GREECE
+Cuisine:Guatemala,                  Guatemala
 Cuisine:Hawaiian,                   Hawaiian, Hawaii
 Cuisine:Hungarian,                  Hungarian, Hungary
 Cuisine:Hunan,                      Hunsn
 Cuisine:Indian,                     Indian, India
 Cuisine:Indonesian,                 Indonesian
-Cuisine:Italian,                    ITALIAN, ITAILIAN, ITALY, ITALIANDIS, ITALIANTUS
+Cuisine:Italian,                    Italian, ITAILIAN, ITALY, ITALIANDIS, ITALIANTUS
 Cuisine:Iranian,                    Iranian
-Cuisine:Irish & Welsh,              Irish, Ireland, Welsh
+Cuisine:Irish & Welsh,              Irish & Welsh, Irish, Ireland, Welsh
 Cuisine:Jamaican,                   Jamaican, Jamica, JAMAICA, JAMAIICAN
 Cuisine:Japanese,                   Japanese, Japan
-Cuisine:Jewish,                     JEWISH, Israeli, Kosher, Passover, Jewish Recipes
+Cuisine:Jewish,                     Jewish, Israeli, Kosher, Passover, Jewish Recipes
 Cuisine:Jewish,                     Jewish Foods
 Cuisine:Kerdish,                    Kerdish
 Cuisine:Korean,                     Korean
 Cuisine:Korma,                      Korma
 Cuisine:Laotian,                    Laotian, Laos
 Cuisine:Malaysian,                  Malaysian, Malaysia
-Cuisine:Mediterranean,              MEDITERRANEAN
-Cuisine:Mexican,                    MEXICAN, Mexico, CINCODEMAYO
-Cuisine:Mid Eastern,                MidEast, MidEastern, MiddleEast
+Cuisine:Mediterranean,              Mediterranean
+Cuisine:Mexican,                    Mexican, Mexico, CINCODEMAYO
+Cuisine:Mid Eastern,                Mid Eastern, MidEast, MidEastern, MiddleEast
 Cuisine:Mongolian,                  Mongolian, Mongolia
 Cuisine:Moroccan,                   Moroccan
-Cuisine:Native American,            NativeAmer
+Cuisine:Native American,            Native American, NativeAmer
 Cuisine:Norwegian,                  Norwegian, NORWAY
 Cuisine:New Zealand,                NewZealand
 Cuisine:Oriental,                   Oriental, ChinJapan
 Cuisine:Pakistan,                   Pakistan
-Cuisine:Penn-Dutch,                 PennDutch
+Cuisine:Penn Dutch,                 Penn Dutch, PennDutch
 Cuisine:Persian,                    Persian
 Cuisine:Peru,                       Peru
 Cuisine:Philippines,                Philippines, Lumpia, PHILLIPINES
-Cuisine:Polish,                     Poland, Polish
+Cuisine:Polish,                     Polish, Poland
 Cuisine:Polynesian,                 Polynesian
 Cuisine:Portuguese,                 Portuguese, Linguica, Portuguese, Portugal
 Cuisine:Russian,                    Russian
-Cuisine:Romanian,                   ROUMANIAN, ROMANIAN
+Cuisine:Romanian,                   Romanian, ROUMANIAN
 Cuisine:Scottish,                   Scottish, Scotland
 Cuisine:Singapore,                  Singapore
-Cuisine:Sri Lanka,                  SriLanka, Ceylon
+Cuisine:Sri Lanka,                  Sri Lanka, SriLanka, Ceylon
 Cuisine:Scandinavian,               Scandinavian, Scandinavia
 Cuisine:Soul Food,                  Soul Food
 Cuisine:Southern,                   Southern
-Cuisine:South West,                 SOUTH WESTERN, SOUTHWESTERN, SOUTH WEST, SOUTHWEST
-Cuisine:South West,                 TEXMEX, TexasSW, NewMex, Southwestern Cuisine
+Cuisine:South Western,              South Western, SOUTHWESTERN, SOUTH WEST, SOUTHWEST
+Cuisine:South Western,              TEXMEX, TexasSW, NewMex, Southwestern Cuisine
 Cuisine:Spanish,                    Spain, Spanish
-Cuisine:Stir Fry,                   StirFry
+Cuisine:Stir Fry,                   Stir Fry, StirFry
 Cuisine:Swedish,                    Swedish, SWEDEN
-Cuisine:Switzerland,                Switzerland
-Cuisine:Swiss,                      Swiss
+Cuisine:Swiss,                      Swiss, Switzerland
 Cuisine:Thai,                       Thai, Thailand
 Cuisine:Tahiti,                     Tahiti
-Cuisine:Tibetan,                    Tibet, Tibetan
-Cuisine:Turkey,                     TURKISH
+Cuisine:Tibetan,                    Tibetan, Tibet
+Cuisine:Turkish,                    Turkish
 Cuisine:Vietnamese,                 Vietnamese, Vietnam
 Cuisine:Viennese,                   Viennese
 Cuisine:Yucatan,                    Yucatan
@@ -348,111 +353,122 @@ Cuisine:Zimbabwe,                   Zimbabwe
 #############################
 ####    Any special season the recipe would be associated with.
 #############################
-Occasion:Christmas,                 CHRISTMAS, XMAS, HOLIDAY, HOLIDAYS, Gifts
+Occasion:Christmas,                 Christmas, XMAS, HOLIDAY, HOLIDAYS, Gifts
 Occasion:Christmas,                 Gift, FoodGift
-Occasion:Easter,                    EASTER
-Occasion:Halloween,                 HALLOWEEN
+Occasion:Easter,                    Easter
+Occasion:Halloween,                 Halloween
 Occasion:Passover,                  Passover
 Occasion:Thanksgiving,              Thanksgiving, Thanksgivin, Thnksgiving
 #############################
 ####    Any food Categories the recipe belongs to
 #############################
-Category:Barbecue,                  BBQ, Barbeque, BbqGrill, Barbecue, BarBQ, Barbecued
-Category:Bars & Cookies,            Bars, Cookies, Biscotti, MrsFields
+Category:Barbecue,                  Barbeque, BBQ, BbqGrill, Barbecue, BarBQ, Barbecued
+Category:Bars & Cookies,            Bars & Cookies, Bars, Cookies, Biscotti, MrsFields
 Category:Bars & Cookies,            CookyBars, Cookie, CookieBars, BarCookies
 Category:Bars & Cookies,            Cookie And Bar, No-Bake Cookies, Bar Cookies
 Category:Bars & Cookies,            Scones
-Category:Beef,                      BEEF, GroundBeef, PotRost, Hamburger
+Category:Beef,                      Beef, GroundBeef, PotRost, Hamburger
 Category:Beef,                      Roast, Roasts, BRISKET, Flank Steak
 Category:Beef,                      Ground Beef
 Category:Beverages,                 Beverages, BEVERAGE, Liquor, Drinks, Cocktails
 Category:Beverages,                 MixedDrink, Punch, Punches
-Category:Bread,                     BREADS, BREAD, QUICKBREADS, Sourdough, Rye
-Category:Bread,                     Bread-Bakers Mailing List, Breads & Muffins
-Category:Bread,                     Bread Mailing List, Bread/Muffins/Rolls
-Category:Bread,                     Bread With Yeast, Breads For Dessert
-Category:Bread,                     Breads, Yeast
+Category:Breads,                    Breads, BREAD, QUICKBREADS, Sourdough, Rye
+Category:Breads,                    Bread-Bakers Mailing List, Breads & Muffins
+Category:Breads,                    Bread Mailing List, Bread/Muffins/Rolls
+Category:Breads,                    Bread With Yeast, Breads For Dessert
+Category:Breads,                    Breads, Yeast
 Category:Brownies,                  Brownies, Squares, Brownie
-Category:Biscuits & Muffins,        Biscuits, Muffins
-Category:Cake,                      CAKES, CAKE
+Category:Biscuits & Muffins,        Biscuits & Muffins, Biscuits, Muffins
+Category:Cakes,                     Cakes, CAKE
 Category:Camping,                   Camping
-Category:Candy,                     CANDIES, CANDY, Candied, Candy And Confections
-Category:Canning & Preserving,      Canning, PRESERVING
-Category:Casserole,                 Casseroles, Casserole, Cassarole
+Category:Candy,                     Candy, CANDIES, Candied, Candy And Confections
+Category:Canning & Preserving,      Canning & Preserving, Canning, Preserving
+Category:Casseroles,                Casseroles, Casserole, Cassarole
 Category:Chocolate,                 Chocolate, GHIRARDELLI
 Category:Cheesecakes,               Cheesecakes, Cheesecake
-Category:Chili,                     CHILI
-Category:Condiments & Relishes,     CONDIMENTS, Condiment
+Category:Chili,                     Chili
+Category:Condiments & Relishes,     Condiments & Relishes, CONDIMENTS, Condiment
 Category:Condiments & Relishes,     Relishes, Relish
-Category:Creole & Gumbos,           Creole, Gumbos, Gumbo
+Category:Creole & Gumbos,           Creole & Gumbos, Creole, Gumbos, Gumbo
 Category:Crepas,                    Crepas, Crep
 Category:Curries,                   Curries
 Category:Custard,                   Custard, Custards
-Category:Dairy,                     DAIRY, CHEESEEGGS, CHEESEEGG, Cheese, Eggs
+Category:Dairy,                     Dairy, CHEESEEGGS, CHEESEEGG, Cheese, Eggs
 Category:Dairy,                     Cheese/Eggs, Eggs/Cheese
-Category:Dip,                       DIPS, DIP
+Category:Dip,                       Dip, DIPS
 Category:Dressings,                 Dressings, SaladDress, Vinaigrette
 Category:Duck,                      Duck
-Category:Flatbreads,                Flatbread, Flatbreads
+Category:Flatbreads,                Flatbreads, Flatbread
 Category:Fondue,                    Fondue
-Category:Fruit & Nuts,              FRUITS, FRUIT, FruitNuts, Nuts
+Category:Fruit & Nuts,              Fruit & Nuts, FRUITS, FRUIT, FruitNuts, Nuts
 Category:Fruit & Nuts,              Banana, NutsGrains, Bananas, FruitsNuts
 Category:Frogs,                     Frogs, Frog
-Category:Frostings & Iceing,        Frostings, Frosting, Iceings, Iceing
-Category:Frostings & Iceing,        Toppings, Topping, ICINGS
+Category:Frostings & Iceing,        Frostings & Iceing, Frostings, Frosting, Iceings
+Category:Frostings & Iceing,        Iceing, Toppings, Topping, ICINGS
 Category:Goat,                      Goat
+Category:Herbs & Spices,            Herbs & Spices
 Category:Herbs & Spices,            HerbSpice, Herb, Herbs, Spice, Spices
-Category:Ice Cream,                 IceCream, IceCreams, Ice Cream
+Category:Ice Cream,                 Ice Cream, IceCream, IceCreams
 Category:Information,               Information, InfoTips, InfoHelp, Info, Tips
 Category:Information,               HowTo, Instruction, How To, How-To
+Category:Jam Jelly & Preserves,     Jam Jelly & Preserves
 Category:Jam Jelly & Preserves,     JAMJELLY, JELLYJAM, JAM, JELLY, PRESERVES
 Category:Jam Jelly & Preserves,     Spreads, Preserve, JamsJelly, JAMS, JELLIES
 Category:Jam Jelly & Preserves,     Jams & Jellies, Jams/Jellies
-Category:Lamb & Mutton,             Lamb, LambMutton, Mutton
-Category:Legumes,                   LEGUMES, Beans, Peas, Bean, GreenBean
+Category:Lamb & Mutton,             Lamb & Mutton, Lamb, LambMutton, Mutton
+Category:Legumes,                   Legumes, Beans, Peas, Bean, GreenBean
 Category:Legumes,                   BeanLegume, Lentils, Beans & Rice
 Category:Legumes,                   Beans/Legumes, Chick Peas
-Category:Low Cost,                  LowCost, Tightwad
-Category:Marinades & Rubs,          Marinades, Marinade, Rubs
-Category:Pastries & Tarts,          Pastries, Pastry, Tart, Tarts, Popovers, Popover
+Category:Low Cost,                  Low Coast, LowCost, Tightwad
+Category:Marinades & Rubs,          Marinades & Rubs, Marinades, Marinade, Rubs
+Category:Pasta & Pasta Sauces,      Pasta & Pasta Sauces
 Category:Pasta & Pasta Sauces,      PASTA, Spaghetti, PastaNoodle, Pasta & Pasta Sauces
 Category:Pets,                      Pets, PetFoods, PetFood
 Category:Pie Pastries & Tarts,      Pastries, Pastry, Tart, Tarts, Popovers, Popover
 Category:Pie Pastries & Tarts,      PIES, PIE, PastryPie, Pies & Pastry, Pies & Pastry
-Category:Pizza,                     PIZZAS, PIZZA
-Category:Pork & Ham,                Pork, PorkHam, PorkChops, Ham, HamPork
+Category:Pie Pastries & Tarts,      Pastries & Tarts
+Category:Pie Pastries & Tarts,      Pastries, Pastry, Tart, Tarts, Popovers, Popover
+Category:Pizza,                     Pizza, PIZZAS
 Category:Pork & Ham,                Pork & Ham
+Category:Pork & Ham,                Pork, PorkHam, PorkChops, Ham, HamPork
+Category:Poultry,                   Poultry
 Category:Poultry,                   Chicken, Wings, Poultry, TURKEY, Leftover Turkey
 Category:Pudding,                   Puddings, Pudding
 Category:Quiche,                    Quiche, Quiches
 Category:Quail,                     Quail
+Category:Rice & Grains,             Rice & Grains
 Category:Rice & Grains,             Rice, Grains, RiceGrains, Pilaf, WildRice
 Category:Rice & Grains,             GRAINSRICE, Pilaf, Pilafi, Rice/grains
 Category:Rice & Grains,             Rice & Couscous, Rice Dishes
 Category:Rolls,                     Rolls
 Category:Salsas,                    Salsas, Salsa
-Category:Salad,                     SALADS, SALAD
+Category:Salad,                     Salad, SALADS
 Category:Sandwiches,                Sandwiches, Sandwich
+Category:Sauces & Gravies,          Sauces & Gravies
 Category:Sauces & Gravies,          SAUCES, SAUCE, SaucesAnd, SauceGravy
 Category:Sauces & Gravies,          BbqSauce, BbqSauces, GRAVY Gravies
 Category:Sausage,                   Sausage, Sausages
+Category:Seafood,                   Seafood
 Category:Seafood,                   SEAFOODS, SEAFOOD, FISH, FishSea, FishAndSe
 Category:Seafood,                   Salmon, Trout, CATFISH, Tuna, Fish And Seafood
 Category:Seafood,                   Fish - Salmon, Fish & Seafood
+Category:Shell Fish,                Shell Fish
 Category:Shell Fish,                ShellFish, Toheroa, Shrimp, FishShell
 Category:Shell Fish,                Crawfish, Crab, Clams, Lobster
+Category:Soup Stew & Chowders,      Soup Stew & Chowders
 Category:Soup Stew & Chowders,      SOUPS, SOUP, STEWS, STEW, SoupsStews, SoupStews
 Category:Soup Stew & Chowders,      Chowders, Chowder, Soups & Stews
+Category:Spices & Seasonings,       Spices & Seasonings
 Category:Spices & Seasonings,       Spices, SpicesEtc, Seasoning, Seasonings
 Category:Spreads,                   Spreads
-Category:Stocks & Broths,           Stocks, Stock, Broaths, Broath
-Category:Stuffings,                 Dressings, Dressing, Stuffings, Stuffing
+Category:Stocks & Broths,           Stocks & Broths, Stocks, Stock, Broaths, Broath
+Category:Stuffings,                 Stuffings, Dressings, Dressing, Stuffing
 Category:Syrups,                    Syrups, Syrup
 Category:Tofu,                      Tofu
 Category:Veal,                      Veal
+Category:Wild Game,                 Wild Game, CARIBOU
 Category:Wild Game,                 WildGame, Game, Rabbit, Moose, Venison, Rabbit
-Category:Wild Game,                 CARIBOU
-Category:Vegetable,                 VEGETABLES, VEGETABLE, Veges, Veggies, Potatoes
+Category:Vegetable,                 Vegetable, VEGETABLES, Veges, Veggies, Potatoes
 #############################
 
 ##############################################################################

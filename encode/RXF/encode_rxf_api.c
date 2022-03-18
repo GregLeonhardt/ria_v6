@@ -385,6 +385,11 @@ encode_rxf(
             list_put_last( rcb_p->export_list_p, write_data_p );
         }
     }
+    else
+    {
+        asprintf( &write_data_p, "\n" );
+        list_put_last( rcb_p->export_list_p, write_data_p );
+    }
     //-----------------------------------------------------------------------
     //  CATEGORIES
     asprintf( &write_data_p, "CATEGORIES:\n" );

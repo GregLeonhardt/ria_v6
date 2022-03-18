@@ -200,20 +200,22 @@ Table: Categories
 #############################
 ####    Major cooking appliances
 #############################
+Appliance:Bread Machine,            Bread Machine
 Appliance:Bread Machine,            BREADMACHINE, ABM, Breadmaker, Machine
 Appliance:Bread Machine,            Breadmakers, BRDMAKER, BRDMACHINE
 Appliance:Bread Machine,            BreadMachi, BreadBaker, BreadsBM
-Appliance:Clay Pot,                 ClayPot
-Appliance:Dutch-Oven,               DutchOven
+Appliance:Clay Pot,                 Clay Pot, ClayPot
+Appliance:Dutch-Oven,               Dutch-Oven, DutchOven
 Appliance:Fryer,                    Fryer, Fried
 Appliance:Grill,                    Grill, Grilled
 Appliance:Microwave,                MICROWAVE
 Appliance:Oven,                     Oven, Rost, Rosted, Bake, Baked
+Appliance:Pressure Cooker,          Pressure Cooker
 Appliance:Pressure Cooker,          PressureCooker, Pressure, PRESCOOKER
+Appliance:Slow Cooker,              Slow Cooker, Crock Pot Dishes
 Appliance:Slow Cooker,              SLOWCOOKER, CROCKPOT, Crocker, CP, CROCK
-Appliance:Slow Cooker,              Crock Pot Dishes
 Appliance:Smoker,                   Smoker
-Appliance:Sous Vide                 Sous
+Appliance:Sous Vide                 Sous Vide, Sous
 Appliance:Wok,                      Wok
 #############################
 ####    Special diets

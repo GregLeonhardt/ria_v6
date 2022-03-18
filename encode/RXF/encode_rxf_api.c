@@ -310,7 +310,7 @@ encode_rxf(
     list_put_last( rcb_p->export_list_p, write_data_p );
     if ( rcb_p->recipe_p->time_rest_p != NULL )
     {
-        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_rest_p );
+        asprintf( &write_data_p, "%s\n", rcb_p->recipe_p->time_wait_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }
     else

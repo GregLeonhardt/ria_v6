@@ -58,8 +58,11 @@
 enum    data_type_e
 {
     RXF_DT_VOID                 =   0,
-    RXF_DT_CATEGORIES           =   1,
-    RXF_DT_CUISINE              =   2,
+    RXF_DT_CUISINE              =   1,
+    RXF_DT_OCCASION             =   2,
+    RXF_DT_COURSE               =   3,
+    RXF_DT_DIET                 =   4,
+    RXF_DT_APPLIANCE            =   5,
     RXF_DT_END                  =   9
 };
 //----------------------------------------------------------------------------
@@ -253,11 +256,13 @@ DECODE_RXF__parse_data(
             {
                 strncat( raw_chapter, data_p, 1 );
             }
+//log_write( MID_INFO, "DECODE_RXF__", "TMP: %s\n", raw_chapter );
             //  Skip past the ','
             data_p += 1;
 
             //  Translate the chapter
             tmp_p = xlate_chapter( raw_chapter );
+//log_write( MID_INFO, "DECODE_RXF__", "%s = TRANSLATE( %s );\n", tmp_p, raw_chapter );
 
             //  Do we have a chapter to save ?
             if ( tmp_p != NULL )
@@ -265,14 +270,36 @@ DECODE_RXF__parse_data(
                 //  YES:    Save it
                 switch( data_type )
                 {
-                    case    RXF_DT_CATEGORIES:
-                    {
-                        decode_save_chapter( tmp_p, recipe_p );
-                    }
                     case    RXF_DT_CUISINE:
                     {
-                        decode_append( recipe_p->cuisine_p, tmp_p );
-                    }
+//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_CUISINE:\t%s\n", raw_chapter );
+                        decode_append( recipe_p->cuisine_p, raw_chapter );
+                    }   break;
+                    //
+                    case    RXF_DT_OCCASION:
+                    {
+//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_OCCASION:\t%s\n", raw_chapter );
+                        decode_append( recipe_p->occasion_p, raw_chapter );
+                    }   break;
+                    //
+                    case    RXF_DT_COURSE:
+                    {
+//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_COURSE:\t\t%s\n", raw_chapter );
+                        decode_append( recipe_p->course_p, raw_chapter );
+                    }   break;
+                    //
+                    case    RXF_DT_DIET:
+                    {
+//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_DIET:\t\t%s\n", raw_chapter );
+                        decode_append( recipe_p->diet_p, raw_chapter );
+                    }   break;
+                    //
+                    case    RXF_DT_APPLIANCE:
+                    {
+//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_APPLIANCE:\t%s\n", raw_chapter );
+                        decode_append( recipe_p->appliance_p, raw_chapter );
+                    }   break;
+                    //
                     default :
                     {
                     }
@@ -885,6 +912,62 @@ DECODE_RXF__do_recipe_data(
 
         //  Save the cuisine data
         DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CUISINE );
+    }
+    //------------------------------------------------------------------------
+    //  OCCASION:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_OCCASION, RXF_RECIPE_OCCASION_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_OCCASION_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the cuisine data
+        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_OCCASION );
+    }
+    //------------------------------------------------------------------------
+    //  COURSE:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_COURSE, RXF_RECIPE_COURSE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_COURSE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the cuisine data
+        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_COURSE );
+    }
+    //------------------------------------------------------------------------
+    //  DIET:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_DIET, RXF_RECIPE_DIET_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_DIET_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the cuisine data
+        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_DIET );
+    }
+    //------------------------------------------------------------------------
+    //  APPLIANCE:
+    else
+    if ( strncmp( in_buffer_p, RXF_RECIPE_APPLIANCE, RXF_RECIPE_APPLIANCE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_APPLIANCE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the cuisine data
+        DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_APPLIANCE );
     }
 
     /************************************************************************

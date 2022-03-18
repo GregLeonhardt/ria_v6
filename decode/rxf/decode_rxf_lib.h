@@ -84,16 +84,19 @@
 #define RXF_RECIPE_CUISINE      "CUISINE:"
 #define RXF_RECIPE_CUISINE_L    strlen( RXF_RECIPE_CUISINE )
 //----------------------------------------------------------------------------
+#define RXF_RECIPE_OCCASION     "OCCASION:"
+#define RXF_RECIPE_OCCASION_L   strlen( RXF_RECIPE_OCCASION )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_COURSE       "COURSE:"
+#define RXF_RECIPE_COURSE_L     strlen( RXF_RECIPE_COURSE )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_DIET         "DIET:"
+#define RXF_RECIPE_DIET_L       strlen( RXF_RECIPE_DIET )
+//----------------------------------------------------------------------------
+#define RXF_RECIPE_APPLIANCE    "APPLIANCE:"
+#define RXF_RECIPE_APPLIANCE_L  strlen( RXF_RECIPE_APPLIANCE )
+//----------------------------------------------------------------------------
 #if 0
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )

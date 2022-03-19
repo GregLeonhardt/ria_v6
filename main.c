@@ -979,9 +979,18 @@ main(
 
         //  Build the file path & name
         memset( file_path, '\0', sizeof( file_path ) );
-        snprintf( file_path, sizeof( file_path ), "%s/%s",
-                  &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
-                  file_info_p->file_name );
+
+        //  Are we in the input directory root ?
+        if ( strlen( file_info_p->dir_name ) != strlen( in_dir_name_p ) )
+        {
+            snprintf( file_path, sizeof( file_path ), "%s/%s",
+                      &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
+                      file_info_p->file_name );
+        }
+        else
+        {
+            strncpy( file_path, file_info_p->file_name, sizeof( file_path ) );
+        }
 
         //  Is there anything in the file ?
         if ( text_to_long( file_info_p->file_size ) >= 100 )

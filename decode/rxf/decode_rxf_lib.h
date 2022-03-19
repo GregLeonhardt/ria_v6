@@ -51,6 +51,8 @@
 #define RXF_DESCRIPTION         "Description:"
 #define RXF_DESCRIPTION_L       strlen( RXF_DESCRIPTION )
 //----------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------
 #define RXF_RECIPE_DATA         "----- Recipe Data -----"
 #define RXF_RECIPE_DATA_L       strlen( RXF_RECIPE_DATA )
 //----------------------------------------------------------------------------
@@ -108,6 +110,8 @@
 #define RXF_RECIPE_RATING       "RATING:"
 #define RXF_RECIPE_RATING_L     strlen( RXF_RECIPE_RATING )
 //----------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------
 #define RXF_SOURCE_INFO         "----- Source Info -----"
 #define RXF_SOURCE_INFO_L       strlen( RXF_SOURCE_INFO )
 //----------------------------------------------------------------------------
@@ -146,6 +150,8 @@
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
 #endif
+//----------------------------------------------------------------------------
+
 //----------------------------------------------------------------------------
 #define RXF_END                 "-----  Recipe Import Assist End -----"
 #define RXF_END_L               strlen( RXF_END )
@@ -244,6 +250,12 @@ DECODE_RXF__do_auip(
     );
 //----------------------------------------------------------------------------
 int
+DECODE_RXF__do_directions(
+    struct  recipe_t            *   recipe_p,
+    char                        *   in_buffer_p
+    );
+//----------------------------------------------------------------------------
+int
 DECODE_RXF__do_recipe_data(
     struct  recipe_t            *   recipe_p,
     char                        *   in_buffer_p
@@ -277,12 +289,6 @@ int
 DECODE_RXF__categories(
     struct   recipe_t           *   recipe_p,
     char                        *   data_p
-    );
-//----------------------------------------------------------------------------
-int
-DECODE_RXF__directions(
-    struct  recipe_t            *   recipe_p,
-    char                        *   in_buffer_p
     );
 //----------------------------------------------------------------------------
 int

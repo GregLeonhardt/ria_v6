@@ -1145,7 +1145,6 @@ DECODE_RXF__do_recipe_data(
     return( rxf_rc );
 }
 
-
 /****************************************************************************/
 /**
  *  Process everything is the recipe data segment

@@ -634,16 +634,69 @@ encode_rxf(
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  SOURCE FORMAT:
-    if ( rcb_p->recipe_format == RECIPE_FORMAT_RXF )
+    switch ( rcb_p->recipe_format )
     {
-        asprintf( &write_data_p, "SOURCE FORMAT:  RXF\n" );
-        list_put_last( rcb_p->export_list_p, write_data_p );
-    }
-    else
-    if ( rcb_p->recipe_format == RECIPE_FORMAT_MMF )
-    {
-        asprintf( &write_data_p, "SOURCE FORMAT:  Meal-Master\n" );
-        list_put_last( rcb_p->export_list_p, write_data_p );
+        case    RECIPE_FORMAT_BOF:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Big Oven Format\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_CP2:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Cooken Pro 2.0\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_ERD:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Easy Recipe Deluxe\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_GRF:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Generic Format #1     [[[[[\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_GF2:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Generic Format #2     @@@@@\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_MMF:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  MealMaster Format\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_MXP:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  MasterCook eXport\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_MX2:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  MasterCook XML\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_NYC:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Now You're Cooking!\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_RXF:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Recipe eXchange Format\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        case    RECIPE_FORMAT_TXT:
+        {
+            asprintf( &write_data_p, "SOURCE FORMAT:  Unformatted text data\n" );
+            list_put_last( rcb_p->export_list_p, write_data_p );
+        }   break;
+        default :
+        {
+            log_write( MID_WARNING, "encode_rxf",
+                       "Unknown recipe format ( %d ) detected @ Line %d\n",
+                       rcb_p->recipe_format, __LINE__ );
+        }   break;
     }
     //-----------------------------------------------------------------------
     //  <IMPORTED_FROM>

@@ -235,6 +235,7 @@ recipe_new(
         }
         //--------------------------------------------------------------------
     }
+log_write( MID_INFO, "recipe_new", "Recipe Format -- %s\n", recipe_p->source_format_p );
 
     //  Initialize the recipe decode stuff
     recipe_p->categories_scan_state = CSS_IDLE;

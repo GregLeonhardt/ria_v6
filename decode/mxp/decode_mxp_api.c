@@ -223,7 +223,7 @@ decode_mxp(
      ************************************************************************/
 
     //  Allocate a new recipe data structure
-    rcb_p->recipe_p = recipe_new( rcb_p, RECIPE_FORMAT_MMF );
+    rcb_p->recipe_p = recipe_new( rcb_p, RECIPE_FORMAT_MXP );
 
     /************************************************************************
      *  Function

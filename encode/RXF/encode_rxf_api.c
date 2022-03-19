@@ -386,7 +386,7 @@ encode_rxf(
         }
     }
     //  Put a blank line following the notes.
-    asprintf( &write_data_p, "%s\n", tmp_data_p );
+    asprintf( &write_data_p, "\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  CATEGORIES

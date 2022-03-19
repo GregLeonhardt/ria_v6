@@ -432,7 +432,7 @@ decode_rxf(
 //log_write( MID_INFO, "decode_rxf", "RXF_DS_SOURCE_INFO -- %s\n", list_data_p );
 
                 //  Locate and process the recipe title
-                DECODE_RXF__do_source_info( rcb_p->recipe_p, list_data_p );
+                DECODE_RXF__do_source_info( rcb_p, list_data_p );
             }   break;
 #if 0
 

@@ -1149,7 +1149,7 @@ DECODE_RXF__do_recipe_data(
 /**
  *  Process everything is the recipe data segment
  *
- *  @param  recipe_p            Pointer to a recipe structure.
+ *  @param  rcb_p               Pointer to a recipe control block
  *  @param  in_buffer_p         Pointer to a a line of text to be scanned.
  *
  *  @return                     true when a new recipe is detected
@@ -1161,7 +1161,7 @@ DECODE_RXF__do_recipe_data(
 
 int
 DECODE_RXF__do_source_info(
-    struct  recipe_t            *   recipe_p,
+    struct  rcb_t               *   rcb_p,
     char                        *   in_buffer_p
     )
 {
@@ -1179,6 +1179,9 @@ DECODE_RXF__do_source_info(
     //  Assume this is NOT a DIRECTION
     rxf_rc = false;
 
+    //  Initialize variables
+    tmp_data_p = NULL;
+
     /************************************************************************
      *  Function Body
      ************************************************************************/
@@ -1187,6 +1190,47 @@ DECODE_RXF__do_source_info(
     in_buffer_p = text_skip_past_whitespace( in_buffer_p );
 
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
+
+    //------------------------------------------------------------------------
+    //  START or END:
+    if ( strncmp( in_buffer_p, "----- Source ", 13  ) == 0 )
+    {
+        //  YES:    Just ignore these tags
+        {
+        }
+    }
+#if 0   //  Use the original RECIPE-ID in case the AUIP have been changed
+    //------------------------------------------------------------------------
+    //  RECIPE-ID:
+    if ( strncmp( in_buffer_p, RXF_RECIPE_ID, RXF_RECIPE_ID_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_RECIPE_ID_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the rating data
+        if ( strlen( tmp_data_p ) >= 1 )
+        {
+            if ( rcb_p->recipe_p->recipe_id_p != NULL )
+            {
+                //  Remove the old Recipe-ID
+                mem_free( rcb_p->recipe_p->recipe_id_p );
+                rcb_p->recipe_p->recipe_id_p = NULL;
+            }
+            rcb_p->recipe_p->recipe_id_p = text_copy_to_new( tmp_data_p );
+        }
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_ID -- %s\n", rcb_p->recipe_p->recipe_id_p );
+    }
+#endif
+    //------------------------------------------------------------------------
+    //  NONE OF THE ABOVE.
+    else
+    {
+        if ( strlen( in_buffer_p ) >= 1 )
+            log_write( MID_INFO, "DECODE_RXF__do_source_info", "UNKNOWN -- '%s'\n", in_buffer_p );
+    }
 
     /************************************************************************
      *  Function Exit

@@ -115,6 +115,9 @@
 #define RXF_SOURCE_INFO         "----- Source Info -----"
 #define RXF_SOURCE_INFO_L       strlen( RXF_SOURCE_INFO )
 //----------------------------------------------------------------------------
+#define RXF_RECIPE_ID           "Recipe-ID:"
+#define RXF_RECIPE_ID_L         strlen( RXF_RECIPE_ID )
+//----------------------------------------------------------------------------
 #if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
@@ -263,7 +266,7 @@ DECODE_RXF__do_recipe_data(
 //----------------------------------------------------------------------------
 int
 DECODE_RXF__do_source_info(
-    struct  recipe_t            *   recipe_p,
+    struct  rcb_t               *   rcb_p,
     char                        *   in_buffer_p
     );
 //----------------------------------------------------------------------------

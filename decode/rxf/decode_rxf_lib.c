@@ -1393,6 +1393,38 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_SUBJECT -- %s\n", 
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_DATE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
+    //  FORMATTED_BY:
+    else
+    if ( strncmp( in_buffer_p, RXF_FORMATTED_BY, RXF_FORMATTED_BY_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_FORMATTED_BY_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the skill level data
+        if ( strlen( tmp_data_p ) >= 1 )
+            rcb_p->recipe_p->formatted_by_p = text_copy_to_new( tmp_data_p );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FORMATTED_BY -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  EDITED_BY:
+    else
+    if ( strncmp( in_buffer_p, RXF_EDITED_BY, RXF_EDITED_BY_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_EDITED_BY_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the skill level data
+        if ( strlen( tmp_data_p ) >= 1 )
+            rcb_p->recipe_p->edited_by_p = text_copy_to_new( tmp_data_p );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EDITED_BY -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.
     else
     {

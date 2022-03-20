@@ -145,26 +145,11 @@
 #define RXF_EMAIL_DATE          "eMail-DATE:"
 #define RXF_EMAIL_DATE_L        strlen( RXF_EMAIL_DATE )
 //----------------------------------------------------------------------------
-#if 0
+#define RXF_FORMATTED_BY        "FormattedBy:"
+#define RXF_FORMATTED_BY_L      strlen( RXF_FORMATTED_BY )
 //----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-#endif
+#define RXF_EDITED_BY           "EditedBy:"
+#define RXF_EDITED_BY_L         strlen( RXF_EDITED_BY )
 //----------------------------------------------------------------------------
 
 //----------------------------------------------------------------------------

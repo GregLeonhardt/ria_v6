@@ -740,7 +740,7 @@ encode_rxf(
         list_put_last( rcb_p->export_list_p, write_data_p );
         //  ####################
         //  GROUP-SUBJECT:
-        asprintf( &write_data_p, "GROUP_SUBJECT:  " );
+        asprintf( &write_data_p, "GROUP-SUBJECT:  " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         if ( rcb_p->email_info_p->g_subject != NULL )
@@ -752,7 +752,7 @@ encode_rxf(
         list_put_last( rcb_p->export_list_p, write_data_p );
         //  ####################
         //  GROUP-DATE:
-        asprintf( &write_data_p, "GROUP_DATE:     " );
+        asprintf( &write_data_p, "GROUP-DATE:     " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         if ( rcb_p->email_info_p->g_datetime != NULL )

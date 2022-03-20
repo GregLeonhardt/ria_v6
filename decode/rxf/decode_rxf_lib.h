@@ -127,16 +127,16 @@
 #define RXF_FILE_SIZE           "FileSize:"
 #define RXF_FILE_SIZE_L         strlen( RXF_FILE_SIZE )
 //----------------------------------------------------------------------------
+#define RXF_GROUP_NAME          "GROUP-NAME:"
+#define RXF_GROUP_NAME_L        strlen( RXF_GROUP_NAME )
+//----------------------------------------------------------------------------
+#define RXF_GROUP_SUBJECT       "GROUP-SUBJECT:"
+#define RXF_GROUP_SUBJECT_L     strlen( RXF_GROUP_SUBJECT )
+//----------------------------------------------------------------------------
+#define RXF_GROUP_DATE          "GROUP-DATE:"
+#define RXF_GROUP_DATE_L        strlen( RXF_GROUP_DATE )
+//----------------------------------------------------------------------------
 #if 0
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
-//----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )

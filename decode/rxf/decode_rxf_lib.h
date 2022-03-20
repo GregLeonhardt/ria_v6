@@ -121,10 +121,10 @@
 #define RXF_SOURCE_FORMAT       "SOURCE FORMAT:"
 #define RXF_SOURCE_FORMAT_L     strlen( RXF_SOURCE_FORMAT )
 //----------------------------------------------------------------------------
-#if 0
+#define RXF_FILE_NAME           "FileName:"
+#define RXF_FILE_NAME_L         strlen( RXF_FILE_NAME )
 //----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+#if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )

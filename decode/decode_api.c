@@ -1175,16 +1175,22 @@ decode_append(
     //  Initialize the search buffer
     memset( search_data, ' ', sizeof( search_data ) );
     search_data[ sizeof( search_data ) ] = '\0';
+
+    // Will the new data fit into the search data buffer ?
     if ( sizeof( search_data ) > strlen( data_p ) )
     {
+        //  YES:    Copy the data
         memcpy( search_data, data_p, strlen( data_p ) );
     }
     else
     {
-        log_write( MID_FATAL, "FATAL-ERROR:",
+        //  NO:     This is a fatal error.
+        log_write( MID_INFO, "FATAL-ERROR:",
                    "%s @ line %d (D:%d < S:%d)\n",
                    __FILE__, __LINE__,
                    sizeof( search_data ), strlen( data_p ) );
+        log_write( MID_INFO,  "FATAL-ERROR:", "S: '%s'\n", search_data );
+        log_write( MID_FATAL, "FATAL-ERROR:", "D: '%s'\n", data_p );
     }
 
     /************************************************************************

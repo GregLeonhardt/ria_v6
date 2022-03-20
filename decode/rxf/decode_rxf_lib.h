@@ -118,10 +118,10 @@
 #define RXF_RECIPE_ID           "Recipe-ID:"
 #define RXF_RECIPE_ID_L         strlen( RXF_RECIPE_ID )
 //----------------------------------------------------------------------------
-#if 0
+#define RXF_SOURCE_FORMAT       "SOURCE FORMAT:"
+#define RXF_SOURCE_FORMAT_L     strlen( RXF_SOURCE_FORMAT )
 //----------------------------------------------------------------------------
-#define RXF_RECIPE_YIELD        "TIME_YIELD:"
-#define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )
+#if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"
 #define RXF_RECIPE_YIELD_L      strlen( RXF_RECIPE_T_YIELD )

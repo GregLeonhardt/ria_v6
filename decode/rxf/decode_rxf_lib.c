@@ -264,13 +264,11 @@ DECODE_RXF__parse_data(
             {
                 strncat( raw_chapter, data_p, 1 );
             }
-//log_write( MID_INFO, "DECODE_RXF__", "TMP: %s\n", raw_chapter );
             //  Skip past the ','
             data_p += 1;
 
             //  Translate the chapter
             tmp_p = xlate_chapter( raw_chapter );
-//log_write( MID_INFO, "DECODE_RXF__", "%s = TRANSLATE( %s );\n", tmp_p, raw_chapter );
 
             //  Do we have a chapter to save ?
             if ( tmp_p != NULL )
@@ -280,31 +278,26 @@ DECODE_RXF__parse_data(
                 {
                     case    RXF_DT_CUISINE:
                     {
-//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_CUISINE:\t%s\n", raw_chapter );
                         decode_append( recipe_p->cuisine_p, raw_chapter );
                     }   break;
                     //
                     case    RXF_DT_OCCASION:
                     {
-//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_OCCASION:\t%s\n", raw_chapter );
                         decode_append( recipe_p->occasion_p, raw_chapter );
                     }   break;
                     //
                     case    RXF_DT_COURSE:
                     {
-//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_COURSE:\t\t%s\n", raw_chapter );
                         decode_append( recipe_p->course_p, raw_chapter );
                     }   break;
                     //
                     case    RXF_DT_DIET:
                     {
-//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_DIET:\t\t%s\n", raw_chapter );
                         decode_append( recipe_p->diet_p, raw_chapter );
                     }   break;
                     //
                     case    RXF_DT_APPLIANCE:
                     {
-//log_write( MID_INFO, "DECODE_RXF__", "RXF_DT_APPLIANCE:\t%s\n", raw_chapter );
                         decode_append( recipe_p->appliance_p, raw_chapter );
                     }   break;
                     //
@@ -1199,7 +1192,6 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p )
         {
         }
     }
-#if 0   //  Use the original RECIPE-ID in case the AUIP have been changed
     //------------------------------------------------------------------------
     //  RECIPE-ID:
     if ( strncmp( in_buffer_p, RXF_RECIPE_ID, RXF_RECIPE_ID_L  ) == 0 )
@@ -1223,7 +1215,54 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p )
         }
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_ID -- %s\n", rcb_p->recipe_p->recipe_id_p );
     }
-#endif
+    //------------------------------------------------------------------------
+    //  SOURCE_FORMAT:
+    if ( strncmp( in_buffer_p, RXF_SOURCE_FORMAT, RXF_SOURCE_FORMAT_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_SOURCE_FORMAT_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the rating data
+        if ( strlen( tmp_data_p ) >= 1 )
+        {
+            if ( strncmp( tmp_data_p, "Big Oven Format",        sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_BOF;
+            else
+            if ( strncmp( tmp_data_p, "Cooken Pro 2.0",         sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_CP2;
+            else
+            if ( strncmp( tmp_data_p, "Easy Recipe Deluxe",     sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_ERD;
+            else
+            if ( strncmp( tmp_data_p, "Generic Format #1",      sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_GRF;
+            else
+            if ( strncmp( tmp_data_p, "Generic Format #2",      sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_GF2;
+            else
+            if ( strncmp( tmp_data_p, "MealMaster",             sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_MMF;
+            else
+            if ( strncmp( tmp_data_p, "MasterCook eXport",      sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_MXP;
+            else
+            if ( strncmp( tmp_data_p, "MasterCook XML",         sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_MX2;
+            else
+            if ( strncmp( tmp_data_p, "Now You're Cooking!",    sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_NYC;
+            else
+            if ( strncmp( tmp_data_p, "Recipe eXchange Format", sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_RXF;
+            else
+            if ( strncmp( tmp_data_p, "Unformatted text data",  sizeof( in_buffer_p ) ) == 0 )
+                rcb_p->recipe_format = RECIPE_FORMAT_TXT;
+        }
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_SOURCE_FORMAT -- %s\n", rcb_p->recipe_p->recipe_id_p );
+    }
     //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.
     else

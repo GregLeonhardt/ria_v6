@@ -1280,6 +1280,22 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_SOURCE_FORMAT -- %s\n", 
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_NAME -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
+    //  FILE-SIZE:
+    else
+    if ( strncmp( in_buffer_p, RXF_FILE_SIZE, RXF_FILE_SIZE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_FILE_SIZE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the file name where the recipe was first imported from
+        if ( strlen( tmp_data_p ) >= 1 )
+            strncpy( rcb_p->file_info_p->file_size, tmp_data_p, sizeof( rcb_p->file_info_p->file_size ) );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_SIZE -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.
     else
     {

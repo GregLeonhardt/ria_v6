@@ -124,6 +124,9 @@
 #define RXF_FILE_NAME           "FileName:"
 #define RXF_FILE_NAME_L         strlen( RXF_FILE_NAME )
 //----------------------------------------------------------------------------
+#define RXF_FILE_SIZE           "FileSize:"
+#define RXF_FILE_SIZE_L         strlen( RXF_FILE_SIZE )
+//----------------------------------------------------------------------------
 #if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"

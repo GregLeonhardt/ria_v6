@@ -825,7 +825,7 @@ DECODE_RXF__do_recipe_data(
     //  Skip past any leading whitespace.
     in_buffer_p = text_skip_past_whitespace( in_buffer_p );
 
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
     //  AUTHOR:
     if ( strncmp( in_buffer_p, RXF_RECIPE_AUTHOR, RXF_RECIPE_AUTHOR_L  ) == 0 )
     {
@@ -838,7 +838,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the recipe author
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->author_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  SERVES:
@@ -854,7 +854,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the serves quantity
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->serves_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_AUTHOR -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  TIME_PREP:
@@ -870,7 +870,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the preperation time
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SERVES -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SERVES -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  TIME_COOK:
@@ -886,7 +886,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the cooking time
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->time_cook_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_COOK -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_COOK -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  TIME_WAIT:
@@ -902,7 +902,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the waiting time
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->time_wait_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_WAIT -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_WAIT -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  TIME_REST:
@@ -918,7 +918,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the resting time
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->time_rest_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_REST -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_T_REST -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  YIELD:
@@ -935,7 +935,7 @@ DECODE_RXF__do_recipe_data(
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_yield( recipe_p, tmp_data_p );
 
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_YIELD -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_YIELD -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  SOURCE:
@@ -951,7 +951,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the recipe source
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->source_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  NOTES:
@@ -960,7 +960,7 @@ DECODE_RXF__do_recipe_data(
     {
         //  YES:    Set the notes processing flag
         notes_parsing_flag = true;
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE = TRUE\n" );
+        log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SOURCE = TRUE\n" );
     }
     //  NOTES:
     else
@@ -968,7 +968,7 @@ DECODE_RXF__do_recipe_data(
     {
         //  YES:    Add the text to the notes.
         decode_fmt_notes( recipe_p, in_buffer_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_NOTES -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_NOTES -- %s\n", in_buffer_p );
 
         // Is this the end of the notes ?
         if ( strlen( in_buffer_p ) == 0 )
@@ -992,7 +992,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the cuisine data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CUISINE );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_CUISINE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_CUISINE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  OCCASION:
@@ -1008,7 +1008,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the occasion data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_OCCASION );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_OCCASION -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_OCCASION -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  COURSE:
@@ -1024,7 +1024,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the course data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_COURSE );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COURSE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COURSE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  DIET:
@@ -1040,7 +1040,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the diet data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_DIET );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_DIET -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_DIET -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  APPLIANCE:
@@ -1056,7 +1056,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the appliance data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_APPLIANCE );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_APPLIANCE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_APPLIANCE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  CHAPTER:
@@ -1072,7 +1072,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the chapter data
         if ( strlen( tmp_data_p ) >= 1 )
             DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_CHAPTER );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_CHAPTER -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_CHAPTER -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  COPYRIGHT:
@@ -1088,7 +1088,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the copyright information
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->copyright_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COPYRIGHT -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COPYRIGHT -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  SKILL LEVEL:
@@ -1104,7 +1104,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the skill level data
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->skill_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SKILL_LEVEL -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_SKILL_LEVEL -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RATING:
@@ -1120,7 +1120,7 @@ DECODE_RXF__do_recipe_data(
         //  Save the rating data
         if ( strlen( tmp_data_p ) >= 1 )
             recipe_p->rating_p = text_copy_to_new( tmp_data_p );
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_RATING -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_RATING -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.
@@ -1128,7 +1128,7 @@ DECODE_RXF__do_recipe_data(
     {
         //  We are not parsing the notes field yet.
         notes_parsing_flag = false;
-//log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DEFAULT: notes_parsing_flag = false\n" );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "DEFAULT: notes_parsing_flag = false\n" );
     }
 
     /************************************************************************
@@ -1183,7 +1183,7 @@ DECODE_RXF__do_source_info(
     //  Skip past any leading whitespace.
     in_buffer_p = text_skip_past_whitespace( in_buffer_p );
 
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p );
 
     //------------------------------------------------------------------------
     //  START or END:
@@ -1214,7 +1214,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "DATA: '%s'\n", in_buffer_p )
             }
             rcb_p->recipe_p->recipe_id_p = text_copy_to_new( tmp_data_p );
         }
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_ID -- %s\n", rcb_p->recipe_p->recipe_id_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_ID -- %s\n", rcb_p->recipe_p->recipe_id_p );
     }
     //------------------------------------------------------------------------
     //  SOURCE_FORMAT:
@@ -1262,7 +1262,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_ID -- %s\n", rcb_
             if ( strncmp( tmp_data_p, "Unformatted text data",  sizeof( in_buffer_p ) ) == 0 )
                 rcb_p->recipe_format = RECIPE_FORMAT_TXT;
         }
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_SOURCE_FORMAT -- %s\n", rcb_p->recipe_p->recipe_id_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_SOURCE_FORMAT -- %s\n", rcb_p->recipe_p->recipe_id_p );
     }
     //------------------------------------------------------------------------
     //  FILE-NAME:
@@ -1278,7 +1278,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_SOURCE_FORMAT -- %s\n", 
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->file_path, tmp_data_p, sizeof( rcb_p->file_path ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_NAME -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_FILE_NAME -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  FILE-SIZE:
@@ -1294,7 +1294,23 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_NAME -- %s\n", tmp_
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->file_info_p->file_size, tmp_data_p, sizeof( rcb_p->file_info_p->file_size ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_SIZE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_FILE_SIZE -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  FILE-DATETIME:
+    else
+    if ( strncmp( in_buffer_p, RXF_FILE_DATETIME, RXF_FILE_DATETIME_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_FILE_DATETIME_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the file name where the recipe was first imported from
+        if ( strlen( tmp_data_p ) >= 1 )
+            strncpy( rcb_p->file_info_p->date_time, tmp_data_p, sizeof( rcb_p->file_info_p->date_time ) );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_FILE_DATETIME -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_GROUP_NAME:
@@ -1310,7 +1326,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_SIZE -- %s\n", tmp_
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->g_from, tmp_data_p, sizeof( rcb_p->email_info_p->g_from ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_NAME -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_GROUP_NAME -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_GROUP_SUBJECT:
@@ -1326,7 +1342,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_NAME -- %s\n", tmp
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->g_subject, tmp_data_p, sizeof( rcb_p->email_info_p->g_subject ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_SUBJECT -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_GROUP_SUBJECT -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_GROUP_DATE:
@@ -1342,7 +1358,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_SUBJECT -- %s\n", 
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->g_datetime, tmp_data_p, sizeof( rcb_p->email_info_p->g_datetime ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_DATE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_GROUP_DATE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_EMAIL_FROM:
@@ -1358,7 +1374,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_DATE -- %s\n", tmp
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->e_from, tmp_data_p, sizeof( rcb_p->email_info_p->e_from ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_FROM -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_FROM -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_EMAIL_SUBJECT:
@@ -1374,7 +1390,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_FROM -- %s\n", tmp
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->e_subject, tmp_data_p, sizeof( rcb_p->email_info_p->e_subject ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_SUBJECT -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_SUBJECT -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  RXF_EMAIL_DATE:
@@ -1390,7 +1406,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_SUBJECT -- %s\n", 
         //  Save the file name where the recipe was first imported from
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->e_datetime, tmp_data_p, sizeof( rcb_p->email_info_p->e_datetime ) );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_DATE -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_DATE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  FORMATTED_BY:
@@ -1406,7 +1422,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_DATE -- %s\n", tmp
         //  Save the skill level data
         if ( strlen( tmp_data_p ) >= 1 )
             rcb_p->recipe_p->formatted_by_p = text_copy_to_new( tmp_data_p );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FORMATTED_BY -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_FORMATTED_BY -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  EDITED_BY:
@@ -1422,14 +1438,14 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FORMATTED_BY -- %s\n", t
         //  Save the skill level data
         if ( strlen( tmp_data_p ) >= 1 )
             rcb_p->recipe_p->edited_by_p = text_copy_to_new( tmp_data_p );
-log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EDITED_BY -- %s\n", tmp_data_p );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_EDITED_BY -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.
     else
     {
         if ( strlen( in_buffer_p ) >= 1 )
-            log_write( MID_INFO, "DECODE_RXF__do_source_info", "UNKNOWN -- '%s'\n", in_buffer_p );
+            log_write( MID_WARNING, "DECODE_RXF__do_source_info", "UNKNOWN -- '%s'\n", in_buffer_p );
     }
 
     /************************************************************************

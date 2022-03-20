@@ -127,6 +127,9 @@
 #define RXF_FILE_SIZE           "FileSize:"
 #define RXF_FILE_SIZE_L         strlen( RXF_FILE_SIZE )
 //----------------------------------------------------------------------------
+#define RXF_FILE_DATETIME       "FileDateTime:"
+#define RXF_FILE_DATETIME_L     strlen( RXF_FILE_DATETIME )
+//----------------------------------------------------------------------------
 #define RXF_GROUP_NAME          "GROUP-NAME:"
 #define RXF_GROUP_NAME_L        strlen( RXF_GROUP_NAME )
 //----------------------------------------------------------------------------

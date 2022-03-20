@@ -136,6 +136,15 @@
 #define RXF_GROUP_DATE          "GROUP-DATE:"
 #define RXF_GROUP_DATE_L        strlen( RXF_GROUP_DATE )
 //----------------------------------------------------------------------------
+#define RXF_EMAIL_FROM          "eMail-FROM:"
+#define RXF_EMAIL_FROM_L        strlen( RXF_EMAIL_FROM )
+//----------------------------------------------------------------------------
+#define RXF_EMAIL_SUBJECT       "eMail-SUBJECT:"
+#define RXF_EMAIL_SUBJECT_L     strlen( RXF_EMAIL_SUBJECT )
+//----------------------------------------------------------------------------
+#define RXF_EMAIL_DATE          "eMail-DATE:"
+#define RXF_EMAIL_DATE_L        strlen( RXF_EMAIL_DATE )
+//----------------------------------------------------------------------------
 #if 0
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_YIELD        "TIME_YIELD:"

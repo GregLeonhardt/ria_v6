@@ -1297,7 +1297,7 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_NAME -- %s\n", tmp_
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_FILE_SIZE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
-    //  RXF_RECIPE_NAME:
+    //  RXF_GROUP_NAME:
     else
     if ( strncmp( in_buffer_p, RXF_GROUP_NAME, RXF_GROUP_NAME_L  ) == 0 )
     {
@@ -1343,6 +1343,54 @@ log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_SUBJECT -- %s\n", 
         if ( strlen( tmp_data_p ) >= 1 )
             strncpy( rcb_p->email_info_p->g_datetime, tmp_data_p, sizeof( rcb_p->email_info_p->g_datetime ) );
 log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_GROUP_DATE -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  RXF_EMAIL_FROM:
+    else
+    if ( strncmp( in_buffer_p, RXF_EMAIL_FROM, RXF_EMAIL_FROM_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_EMAIL_FROM_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the file name where the recipe was first imported from
+        if ( strlen( tmp_data_p ) >= 1 )
+            strncpy( rcb_p->email_info_p->e_from, tmp_data_p, sizeof( rcb_p->email_info_p->e_from ) );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_FROM -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  RXF_EMAIL_SUBJECT:
+    else
+    if ( strncmp( in_buffer_p, RXF_EMAIL_SUBJECT, RXF_EMAIL_SUBJECT_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_EMAIL_SUBJECT_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the file name where the recipe was first imported from
+        if ( strlen( tmp_data_p ) >= 1 )
+            strncpy( rcb_p->email_info_p->e_subject, tmp_data_p, sizeof( rcb_p->email_info_p->e_subject ) );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_SUBJECT -- %s\n", tmp_data_p );
+    }
+    //------------------------------------------------------------------------
+    //  RXF_EMAIL_DATE:
+    else
+    if ( strncmp( in_buffer_p, RXF_EMAIL_DATE, RXF_EMAIL_DATE_L  ) == 0 )
+    {
+        //  YES:    Jump past the search string
+        tmp_data_p = in_buffer_p + RXF_EMAIL_DATE_L;
+
+        //  Skip past any leading whitespace.
+        tmp_data_p = text_skip_past_whitespace( tmp_data_p );
+
+        //  Save the file name where the recipe was first imported from
+        if ( strlen( tmp_data_p ) >= 1 )
+            strncpy( rcb_p->email_info_p->e_datetime, tmp_data_p, sizeof( rcb_p->email_info_p->e_datetime ) );
+log_write( MID_INFO, "DECODE_RXF__do_recipe_data", "RXF_EMAIL_DATE -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  NONE OF THE ABOVE.

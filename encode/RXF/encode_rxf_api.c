@@ -774,8 +774,8 @@ encode_rxf(
         asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
         //  ####################
-        //  eMAIL-SUBJECT:
-        asprintf( &write_data_p, "eMAIL-SUBJECT:  " );
+        //  eMail-SUBJECT:
+        asprintf( &write_data_p, "eMail-SUBJECT:  " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         if ( rcb_p->email_info_p->e_subject != NULL )
@@ -786,8 +786,8 @@ encode_rxf(
         asprintf( &write_data_p, "\n" );
         list_put_last( rcb_p->export_list_p, write_data_p );
         //  ####################
-        //  eMAIL-DATE:
-        asprintf( &write_data_p, "eMAIL-DATE:     " );
+        //  eMail-DATE:
+        asprintf( &write_data_p, "eMail-DATE:     " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         if ( rcb_p->email_info_p->e_datetime != NULL )

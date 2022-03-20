@@ -153,7 +153,7 @@ Jar,            JAR
 Kilogram,       KILOGRAMS,   KILOGRAM,   KG
 Large,          LARGE,       LRG,        LG
 Liter,          LITERS,      LITER,      l,       L
-Loave,          LOAVES,      LOAVE
+Loaf,           LOAF,        LOAVES,     LOAVES,  LOAVE
 Medium,         MEDIUM,      MED,        MD
 Mild,           MILD
 Milligram,      MILLIGRAMS,  MILLIGRAM,  MG
@@ -216,7 +216,7 @@ Appliance:Pressure Cooker,          PressureCooker, Pressure, PRESCOOKER
 Appliance:Slow Cooker,              Slow Cooker, Crock Pot Dishes
 Appliance:Slow Cooker,              SLOWCOOKER, CROCKPOT, Crocker, CP, CROCK
 Appliance:Smoker,                   Smoker
-Appliance:Sous Vide                 Sous Vide, Sous
+Appliance:Sous Vide,                Sous Vide, Sous
 Appliance:Wok,                      Wok
 #############################
 ####    Special diets
@@ -228,17 +228,20 @@ Diet:Gluten Free,                   Gluten Free, Gluten-Free
 Diet:Gluten Free,                   Gluten Free, GlutenFree
 Diet:High Fiber,                    High Fiber, HighFiber, HIGHFIBRE
 Diet:Fat Free,                      Fat Free, FATFREE, FATFREE, Fat Free
-Diet:Lantose Free,                  Lantose Free, Lantose-Free, LantoseFree, LactFree
+Diet:Lactose Free,                  Lactose Free, Lactose-Free, LactoseFree
+Diet:Lactose Free,                  Lantose Free, Lantose-Free, LantoseFree, LactFree
 Diet:Low Calorie,                   Low Calorie, Low-Calorie
 Diet:Low Calorie,                   LowCal, LowCalorie, LoCal, Low Calorie, Low-cal
-Diet:Low Carb,                      Low Carb, LowCarb, Low-Carb
+Diet:Low Carbohydrate,              Low Carbohydrate, Low-Carbohydrate
+Diet:Low Carbohydrate,              Low Carb, LowCarb, Low-Carb
 Diet:Low Cholesterol,               Low Cholesterol, Low-Cholesterol
 Diet:Low Cholesterol,               Low Cholesterol, LowCholesterol, Low Cholesterol
 Diet:Low Fat,                       Low Fat, Low-Fat
 Diet:Low Fat,                       LowFat, LowFatCal, LowFatLow, NoLowFat
 Diet:Low Fat,                       Eat-Lf Mailing List, Very Low Fat, Low Fat
 Diet:Low Sodium,                    Low Sodium, Low-Sodium, LOWSODIUM
-Diet:Ovo Lacto,                     Ovo Lacto, Ovo-Lacto, OVOLACTO, Lacto
+Diet:Lacto-Ovo,                     Lacto-Ovo, Lacto Ovo, LACTOOVO, Lacto
+Diet:Lacto-Ovo,                     Ovo Lacto, Ovo-Lacto, OVOLACTO
 Diet:Ornish,                        Ornish
 Diet:Vegan,                         Vegan
 Diet:Vegetarian,                    Vegetarian
@@ -266,7 +269,7 @@ Course:Snack,                       Snack, Snacks, snack, snaks, Party
 ####    Part of the world the recipe would be associated with.
 #############################
 Cuisine:African,                    African, Africa, WestAfrica
-Cuisine:Afganistan,                 Afghanistan, Afghan, AFGHANI
+Cuisine:Afghanistan,                Afghanistan, Afghan, AFGHANI
 Cuisine:Ancient,                    Ancient, Medieval, HEIRLOOM
 Cuisine:Amish,                      Amish
 Cuisine:Asian,                      Asian
@@ -284,11 +287,11 @@ Cuisine:Children,                   Children, Kids
 Cuisine:Chinese,                    Chinese, China, Hunan
 Cuisine:Cuban,                      Cuban
 Cuisine:Columbian,                  Columbian, COLUMBIA
-Cuisine:Costs Rica,                 Costs Rica, CostaRica
+Cuisine:Costa Rica,                 Costa Rica, Costs Rica, CostaRica
 Cuisine:Czech,                      Czech
 Cuisine:Dutch,                      Dutch
 Cuisine:English,                    English
-Cuisine:Fillipino,                  Fillipino, Filipino
+Cuisine:Filipino,                   Filipino, Fillipino, Filipino
 Cuisine:Finnish,                    Finish, Finland, Finnish
 Cuisine:French,                     French, FRANCE
 Cuisine:German,                     German, GERMANY
@@ -306,7 +309,7 @@ Cuisine:Jamaican,                   Jamaican, Jamica, JAMAICA, JAMAIICAN
 Cuisine:Japanese,                   Japanese, Japan
 Cuisine:Jewish,                     Jewish, Israeli, Kosher, Passover, Jewish Recipes
 Cuisine:Jewish,                     Jewish Foods
-Cuisine:Kerdish,                    Kerdish
+Cuisine:Kurdish,                    Kurdish, Kurdistan, Kerdish
 Cuisine:Korean,                     Korean
 Cuisine:Korma,                      Korma
 Cuisine:Laotian,                    Laotian, Laos
@@ -390,7 +393,7 @@ Category:Chili,                     Chili
 Category:Condiments & Relishes,     Condiments & Relishes, CONDIMENTS, Condiment
 Category:Condiments & Relishes,     Relishes, Relish
 Category:Creole & Gumbos,           Creole & Gumbos, Creole, Gumbos, Gumbo
-Category:Crepas,                    Crepas, Crep
+Category:Crêpe,                     Crêpe, Crepe, Crepas, Crep
 Category:Curries,                   Curries
 Category:Custard,                   Custard, Custards
 Category:Dairy,                     Dairy, CHEESEEGGS, CHEESEEGG, Cheese, Eggs
@@ -398,13 +401,13 @@ Category:Dairy,                     Cheese/Eggs, Eggs/Cheese
 Category:Dip,                       Dip, DIPS
 Category:Dressings,                 Dressings, SaladDress, Vinaigrette
 Category:Duck,                      Duck
-Category:Flatbreads,                Flatbreads, Flatbread
+Category:Flatbread,                 Flatbreads, Flatbread
 Category:Fondue,                    Fondue
 Category:Fruit & Nuts,              Fruit & Nuts, FRUITS, FRUIT, FruitNuts, Nuts
 Category:Fruit & Nuts,              Banana, NutsGrains, Bananas, FruitsNuts
 Category:Frogs,                     Frogs, Frog
-Category:Frostings & Iceing,        Frostings & Iceing, Frostings, Frosting, Iceings
-Category:Frostings & Iceing,        Iceing, Toppings, Topping, ICINGS
+Category:Frostings & Icing,         Frostings & Icing, Frostings, Frosting, Icings
+Category:Frostings & Icing,         Icing, Toppings, Topping, ICINGS
 Category:Goat,                      Goat
 Category:Herbs & Spices,            Herbs & Spices
 Category:Herbs & Spices,            HerbSpice, Herb, Herbs, Spice, Spices

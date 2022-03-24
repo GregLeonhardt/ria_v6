@@ -66,7 +66,8 @@ enum    recipe_format_e
     RECIPE_FORMAT_MXP           =   7,      //  MasterCook eXport
     RECIPE_FORMAT_MX2           =   8,      //  MasterCook XML
     RECIPE_FORMAT_NYC           =   9,      //  Now You're Cooking!
-    RECIPE_FORMAT_RXF           =  10,      //  Recipe eXchange Format (Native)
+    RECIPE_FORMAT_RXF           =  10,      //  Recipe eXchange Format
+    RECIPE_FORMAT_XML           =  11,      //  Recipe XML Format (Native)
     RECIPE_FORMAT_TXT           =  99       //  Unformatted text data
 };
 //----------------------------------------------------------------------------

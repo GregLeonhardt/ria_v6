@@ -286,6 +286,7 @@ recipe_kill(
     if ( recipe_p->rcb_p != NULL)            recipe_p->rcb_p->recipe_p = NULL;
     if ( recipe_p->name_p != NULL)             mem_free( recipe_p->name_p );
     if ( recipe_p->recipe_id_p != NULL)        mem_free( recipe_p->recipe_id_p );
+    if ( recipe_p->web_address_p != NULL)      mem_free( recipe_p->web_address_p );
     if ( recipe_p->author_p != NULL)           mem_free( recipe_p->author_p );
     if ( recipe_p->source_format_p != NULL)    mem_free( recipe_p->source_format_p );
     if ( recipe_p->wine_p != NULL)             mem_free( recipe_p->wine_p );

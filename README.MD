@@ -3,6 +3,17 @@
  
 #   Run these commands before first compile and run:
 
+    sudo apt install mysql-server
+    sudo mysql_secure_installation
+        0           # LOW
+        {password}
+        Y           # Everything else
+    mysql -u root -p
+        ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password \
+            BY 'very_strong_password';
+        FLUSH PRIVILEGES;
+
+    sudo apt install libmysqlclient-dev 
     sudo apt install libssl-dev
 
     mkdir ~/.LibTools

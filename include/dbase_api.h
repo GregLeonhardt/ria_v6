@@ -6,15 +6,65 @@
  *
  ****************************************************************************/
 
-#ifndef RCB_API_H
-#define RCB_API_H
+#ifndef DBASE_API_H
+#define DBASE_API_H
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains public definitions (etc.) that apply to external
- *  library components of the 'rcb' library.
+ *  This file contains public definitions (etc.) that apply to external 
+ *  library components of the 'dbase' library.
  *
  *  @note
+ *      TABLE   ROW             TYPE
+ *      -----   -----           ---------------------------------------------
+ *      RECIPE
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              RECIPE          BLOB
+ *      INFO
+ *              RECIPE-ID       TINYBLOB
+ *              AUTHOR          TINYBLOB
+ *              YIELD           TINYBLOB
+ *              TIME-PREP       DATETIME
+ *              TIME-COOK       DATETIME
+ *              TIME-WAIT       DATETIME
+ *              TIME-REST       DATETIME
+ *              SOURCE          TINYBLOB
+ *              COPYRIGHT       TINYBLOB
+ *              SKILL           TINYINT
+ *              RATING          TINYINT
+ *      CUISINE
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      OCCASION
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      COURSE
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      DIET
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      APPLIANCE
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      CHAPTER
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              NAME            TINYBLOB
+ *      SOURCE
+ *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              SRC-FORMAT      TINYBLOB
+ *              FILE-NAME       TINYBLOB
+ *              FILE-SIZE       INTEGER
+ *              FILE-DATE-TIME  DATETIME
+ *              GROUP-NAME      TINYBLOB
+ *              GROUP-SUBJECT   TINYBLOB
+ *              GROUP-DATE-TIME DATETIME
+ *              EMAIL-NAME      TINYBLOB
+ *              EMAIL-SUBJECT   TINYBLOB
+ *              EMAIL-DATE-TIME DATETIME
+ *      EDITED-BY
+ *              RECIPE-ID       TINYBLOB
+ *              USER-ID         TINYBLOB
  *
  ****************************************************************************/
 
@@ -42,6 +92,7 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
+#define RECIPE_ID_L                 ( 45 )
 //----------------------------------------------------------------------------
 
 /****************************************************************************
@@ -56,43 +107,10 @@
  ****************************************************************************/
 
 //----------------------------------------------------------------------------
-/**
- *  @param  rcb                 Recipe Control Block                        */
-struct  rcb_t
+struct  recipe_table
 {
-    /**
-     *  @param  tcb_p           Pointer to the local Thread Control Block   */
-    struct  tcb_t           *   tcb_p;
-    /**
-     *  @param  file_info_p     Pointer to a file information structure     */
-    struct  file_info_t     *   file_info_p;
-    /**
-     *  @param  file_path       File path & name                            */
-    char                        file_path[ FILENAME_MAX ];
-    /**
-     *  @param  destination     Destination Thread                          */
-    enum    destination_e       dst_thread;
-    /**
-     * @param import_list_p     Pointer to a list for import data           */
-    struct  list_base_t     *   import_list_p;
-    /**
-     * @param export_list_p     Pointer to a list for export data           */
-    struct  list_base_t     *   export_list_p;
-    /**
-     *  @param  file_p          File pointer for the import file            */
-    FILE                    *   file_p;
-    /**
-     *  @param  recipe_p        Pointer to a recipe structure               */
-    struct  recipe_t        *   recipe_p;
-    /**
-     *  @param  email_info_p    e-Mail from, date, time etc                 */
-    struct  email_info_t    *   email_info_p;
-    /**
-     *  @param  recipe_format   Format code for this recipe                 */
-    enum    recipe_format_e     recipe_format;
-    /**
-     *  @param  db_recipe_p     Pointer to the database recipe buffer       */
-    char                    *   db_recipe_p;
+    char                            recipe_id[ RECIPE_ID_L ];
+    char                        *   recipe_data;
 };
 //----------------------------------------------------------------------------
 
@@ -108,39 +126,12 @@ struct  rcb_t
  ****************************************************************************/
 
 //---------------------------------------------------------------------------
-void
-rcb_kill(
-    struct  rcb_t           *   rcb_p
+int
+dbase_init(
+    void
     );
 //---------------------------------------------------------------------------
-struct  rcb_t   *
-rcb_new(
-    struct  rcb_t           *   rcb_p
-    );
-//---------------------------------------------------------------------------
-//  DBASE__recipe.c
-//---------------------------------------------------------------------------
-int
-dbase_insert(
-    struct  rcb_t           *   rcb_p
-    );
-//----------------------------------------------------------------------------
-char *
-DBASE__recipe_read(
-    struct  rcb_t           *   rcb_p
-    );
-//----------------------------------------------------------------------------
-int
-DBASE__recipe_update(
-    struct  rcb_t           *   rcb_p
-    );
-//----------------------------------------------------------------------------
-int
-DBASE__recipe_delete(
-    struct  rcb_t           *   rcb_p
-    );
-//----------------------------------------------------------------------------
 
 /****************************************************************************/
 
-#endif                      //    RCB_API_H
+#endif                      //    DBASE_API_H

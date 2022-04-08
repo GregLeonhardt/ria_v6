@@ -113,50 +113,62 @@ enum    destination_e
 //----------------------------------------------------------------------------
 /**
  * @param monitor_tcb           TCB list for the monitor thread             */
-    struct  tcb_t           *   monitor_tcb;
+MAIN_EXT
+struct  tcb_t           *   monitor_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param import_tcb            TCB list for all import threads             */
-    struct  tcb_t           *   import_tcb;
+MAIN_EXT
+struct  tcb_t           *   import_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param email_tcb             TCB list for all import threads             */
-    struct  tcb_t           *   email_tcb;
+MAIN_EXT
+struct  tcb_t           *   email_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param decode_tcb            TCB list for all decode threads             */
-    struct  tcb_t           *   decode_tcb;
+MAIN_EXT
+struct  tcb_t           *   decode_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param decode_tcb            TCB list for all encode threads             */
-    struct  tcb_t           *   encode_tcb;
+MAIN_EXT
+struct  tcb_t           *   encode_tcb;
 //----------------------------------------------------------------------------
 /**
  * @param export_tcb            TCB list for all export threads             */
-    struct  tcb_t           *   export_tcb;
+MAIN_EXT
+struct  tcb_t           *   export_tcb;
 //---------------------------------------------------------------------------
 /**
  *  @param  store_value_p       ID number for the DECODE queue              */
-char                        *   recipe_id_p;
+MAIN_EXT
+char                    *   recipe_id_p;
 //----------------------------------------------------------------------------
 /**
  *  @param  file_list           Pointer to a list of files                  */
+MAIN_EXT
 struct  list_base_t         *   file_list_p;
 //----------------------------------------------------------------------------
 /**
  * @param in_file_name_p        Pointer to the input file name              */
+MAIN_EXT
 char                        *   in_file_name_p;
 //----------------------------------------------------------------------------
 /**
  * @param in_dir_name_p         Pointer to the input directory name         */
+MAIN_EXT
 char                        *   in_dir_name_p;
 //----------------------------------------------------------------------------
 /**
  * @param out_dir_name_p        Pointer to the output directory name       */
+MAIN_EXT
 char                        *   out_dir_name_p;
 //----------------------------------------------------------------------------
 /**
  * @param delete_flag           Delete input file when true                 */
+MAIN_EXT
 int                             delete_flag;
 //----------------------------------------------------------------------------
 

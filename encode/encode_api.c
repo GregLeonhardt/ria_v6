@@ -46,6 +46,7 @@
                                 //*******************************************
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
+#include "dbase_api.h"          //  API for all dbase_*             PUBLIC
                                 //*******************************************
 #include "encode_api.h"         //  API for all encode_*            PUBLIC
 #include "encode_lib.h"         //  API for all ENCODE__*           PRIVATE
@@ -280,18 +281,35 @@ encode(
         //  Did we get a new recipe to encode ?
         if ( rcb_p->recipe_p != NULL )
         {
-            //  YES:    Go encode it.
-//          encode_mmf( rcb_p );    //  @ToDo: 3 mmf encode
-//          encode_mx2( rcb_p );    //  @ToDo: 3 mx2 encode
-//          encode_mxp( rcb_p );    //  @ToDo: 3 mxp encode
-//          encode_rxf( rcb_p );    //  @ToDo: 3 rxf encode
-//          encode_ria( rcb_p );    //  @ToDo: 3 ria encode
-//          encode_txt( rcb_p );    //  @ToDo: 3 ria encode
-            encode_xml( rcb_p );    //  XML export format
+            //  YES:    Are we encoding to a file ?
+            if ( out_dir_name_p != NULL )
+            {
+                //  YES:    Go encode it.
+//              encode_mmf( rcb_p );    //  @ToDo: 3 mmf encode
+//              encode_mx2( rcb_p );    //  @ToDo: 3 mx2 encode
+//              encode_mxp( rcb_p );    //  @ToDo: 3 mxp encode
+//              encode_rxf( rcb_p );    //  @ToDo: 3 rxf encode
+//              encode_ria( rcb_p );    //  @ToDo: 3 ria encode
+//              encode_txt( rcb_p );    //  @ToDo: 3 ria encode
+                encode_xml( rcb_p );    //  XML export format
+            }
+            else
+            {
+                //  NO:     I guess we are exporting to the dBase
+                dbase_insert( rcb_p );
+            }
         }
 
-        //  Put it in one of the DECODE queue
-        queue_put_payload( export_tcb->queue_id, rcb_p  );
+        //  Is this recipe going to a file ?
+        if ( out_dir_name_p != NULL )
+        {
+            //  YES:    Put it in one of the DECODE queues
+            queue_put_payload( export_tcb->queue_id, rcb_p  );
+        }
+        else
+        {
+            //  NO:     @ToDo   1   I think we need to delete the RCB_P.
+        }
 
 #else
 

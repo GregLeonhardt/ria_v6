@@ -78,6 +78,7 @@
 #include "monitor_api.h"        //  API for all monitor_*           PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
+#include "dbase_api.h"          //  API for all dbase_*             PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
 #include "email_api.h"          //  API for all email_*             PUBLIC
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
@@ -225,7 +226,7 @@ command_line(
     out_dir_name_p  = get_cmd_line_parm( argc, argv, "od" );
 
     //  Scan for        DELETE input file after processing.
-    delete_flag = is_cmd_line_parm( argc, argv, "del" );
+    delete_flag = is_cmd_line_parm( argc, argv, "delete" );
 
 #if DEBUG_CMD_LINE
     in_dir_name_p        = "/home/greg/work/RecipeSourceFiles";
@@ -786,6 +787,18 @@ main(
 
     //  Create the file-list
     file_list_p = list_new( );
+
+    /************************************************************************
+     *  Initialize the database
+     ************************************************************************/
+
+
+    //  Will we be putting the recipes into the dBase ?
+    if ( out_dir_name_p == NULL )
+    {
+        //  YES:    OK, then initialize the interface.
+        dbase_init( );
+    }
 
     /************************************************************************
      *  Initialize the queue process

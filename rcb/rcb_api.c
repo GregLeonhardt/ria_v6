@@ -171,6 +171,14 @@ rcb_kill(
     //  Reset the destination thread id.
     rcb_p->recipe_format = RECIPE_FORMAT_NONE;
     //------------------------------------------------------------------------
+    //  Is there a recipe dBase recipe string ?
+    if ( rcb_p->db_recipe_p != NULL )
+    {
+        //  YES:    Free it
+        mem_free( rcb_p->db_recipe_p );
+        rcb_p->db_recipe_p = NULL;
+    }
+    //------------------------------------------------------------------------
     //  Does an e-Mail information structure exist ?
     if ( rcb_p->email_info_p != NULL )
     {

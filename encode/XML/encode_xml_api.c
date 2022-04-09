@@ -197,15 +197,15 @@ encode_xml(
     asprintf( &write_data_p, "<PepperAndSalt>\n" );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
-    //  <TITLE><?TITLE>
-    asprintf( &write_data_p, "    <title>%s</title>\n", 
+    //  <TITLE></TITLE>
+    asprintf( &write_data_p, "    <title>%s</title>\n",
                 rcb_p->recipe_p->name_p );
     list_put_last( rcb_p->export_list_p, write_data_p );
     //-----------------------------------------------------------------------
     //  <DESCRIPTION></DESCRIPTION>
     if ( rcb_p->recipe_p->description_p != NULL )
     {
-        asprintf( &write_data_p, "    <description>%s</description>\n", 
+        asprintf( &write_data_p, "    <description>%s</description>\n",
                     rcb_p->recipe_p->description_p );
         list_put_last( rcb_p->export_list_p, write_data_p );
     }

@@ -127,24 +127,30 @@ DBASE__recipe_build(
      ************************************************************************/
 
     //-----------------------------------------------------------------------
+    //  <TITLE></TITLE>
+    asprintf( &buf_a_p, "    <title>%s</title>\n",
+                rcb_p->recipe_p->name_p );
+    //-----------------------------------------------------------------------
     //  <DESCRIPTION></DESCRIPTION>
     if ( rcb_p->recipe_p->description_p != NULL )
     {
-        asprintf( &buf_a_p, "    <description>%s</description>\n",
+        asprintf( &buf_b_p, "    <description>%s</description>\n",
                     rcb_p->recipe_p->description_p );
     }
     else
     {
-        asprintf( &buf_a_p, "    <description></description>\n" );
+        asprintf( &buf_b_p, "    <description></description>\n" );
     }
+    buf_c_p = text_join( buf_a_p, buf_b_p, false, false );
+    free( buf_a_p ); free( buf_b_p ); buf_a_p = buf_c_p;
 
     //-----------------------------------------------------------------------
     //  <AUIP>
 
     //  Start tag
     asprintf( &buf_b_p, "    <auip-list>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, false, false );
-    free( buf_a_p ); free( buf_b_p ); buf_a_p = buf_c_p;
+    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
+    free( buf_b_p ); buf_a_p = buf_c_p;
 
     //  AUIP list
     if ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 )
@@ -450,7 +456,7 @@ DBASE__recipe_create(
               "INSERT INTO recipe_table (recipe_id, recipe) VALUES( '%s', '%s' ); ",
               rcb_p->recipe_p->recipe_id_p, db_escaped );
 
-    //  Now perform the insert.
+    //  Now perform the command.
     sql_rc = mysql_query( con, db_command );
 
 #if DBASE_ACCESS_LOG == 1
@@ -527,6 +533,7 @@ DBASE__recipe_read(
               "SELECT recipe FROM recipe_table WHERE recipe_id='%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
+    //  Now perform the command.
     sql_rc = mysql_query( con, db_command );
 
 #if DBASE_ACCESS_LOG == 1
@@ -638,7 +645,7 @@ DBASE__recipe_update(
               rcb_p->recipe_p->recipe_id_p,
               db_escaped );
 
-    //  Now perform the insert.
+    //  Now perform the command.
     sql_rc = mysql_query( con, db_command );
 
 #if DBASE_ACCESS_LOG == 1
@@ -707,11 +714,10 @@ DBASE__recipe_delete(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command ),
-//            DELETE FROM `table_name` [WHERE condition];
               "DELETE FROM  recipe_table WHERE recipe_id = '%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
-    //  Now perform the insert.
+    //  Now perform the command.
     sql_rc = mysql_query( con, db_command );
 
 #if DBASE_ACCESS_LOG == 1

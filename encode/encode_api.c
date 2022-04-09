@@ -292,23 +292,18 @@ encode(
 //              encode_ria( rcb_p );    //  @ToDo: 3 ria encode
 //              encode_txt( rcb_p );    //  @ToDo: 3 ria encode
                 encode_xml( rcb_p );    //  XML export format
+
+                //  Put it in one of the DECODE queues
+                queue_put_payload( export_tcb->queue_id, rcb_p  );
             }
             else
             {
                 //  NO:     I guess we are exporting to the dBase
                 dbase_insert( rcb_p );
-            }
-        }
 
-        //  Is this recipe going to a file ?
-        if ( out_dir_name_p != NULL )
-        {
-            //  YES:    Put it in one of the DECODE queues
-            queue_put_payload( export_tcb->queue_id, rcb_p  );
-        }
-        else
-        {
-            //  NO:     @ToDo   1   I think we need to delete the RCB_P.
+                //  Kill the Recipe Control Block
+                rcb_kill( rcb_p );
+            }
         }
 
 #else

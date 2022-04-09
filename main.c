@@ -762,7 +762,7 @@ main(
     log_write( MID_INFO, "main",
                          "Starting: Recipe Import Assist:\n" );
     log_write( MID_INFO, "main",
-                         "\tVersion: %02d:%02d - %s\n",
+                         "\tVersion: %02d.%02d - %s\n",
                          VER_MAJ, VER_MIN, __DATE__ );
 
     for ( int count = 0;

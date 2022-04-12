@@ -395,7 +395,7 @@ DBASE__open(
     //
     //  Create RECIPE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS recipe_table("
-                               "recipe_id VARCHAR(44),"
+                               "recipe_id VARCHAR(50),"
                                "recipe TEXT,"
                                "PRIMARY KEY(recipe_id)"
                                ");");
@@ -419,7 +419,7 @@ DBASE__open(
 
     //  Create ADDRESS_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS info_table("
-                               "recipe_id VARCHAR(44),"
+                               "recipe_id VARCHAR(50),"
                                "author TINYTEXT,"
                                "yield TINYTEXT,"
                                "time_prep DATETIME,"
@@ -452,9 +452,8 @@ DBASE__open(
 
     //  Create CUISINE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS cuisine_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -476,9 +475,8 @@ DBASE__open(
 
     //  Create OCCASION_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS occasion_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -500,9 +498,8 @@ DBASE__open(
 
     //  Create COURSE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS course_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -524,9 +521,8 @@ DBASE__open(
 
     //  Create DIET_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS diet_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -548,9 +544,8 @@ DBASE__open(
 
     //  Create APPLIANCE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS appliance_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -572,9 +567,8 @@ DBASE__open(
 
     //  Create CHAPTER_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS chapter_table ("
-                               "recipe_id VARCHAR(44),"
-                               "name TINYTEXT,"
-                               "PRIMARY KEY(recipe_id)"
+                               "recipe_id VARCHAR(50),"
+                               "name VARCHAR(35)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -596,7 +590,7 @@ DBASE__open(
 
     //  Create SOURCE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS source_table ("
-                               "recipe_id VARCHAR(44),"
+                               "recipe_id VARCHAR(50),"
                                "format TINYTEXT,"
                                "file_name TINYTEXT,"
                                "file_size INTEGER,"
@@ -606,8 +600,7 @@ DBASE__open(
                                "group_date_time DATETIME,"
                                "email_name TINYTEXT,"
                                "email_subject TINYTEXT,"
-                               "email_date_time DATETIME,"
-                               "PRIMARY KEY(recipe_id)"
+                               "email_date_time DATETIME"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -629,8 +622,8 @@ DBASE__open(
 
     //  Create EDITED_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS edited_table ("
-                               "recipe_id VARCHAR(44),"
-                               "user_id VARCHAR(44)"
+                               "recipe_id VARCHAR(50),"
+                               "user_id VARCHAR(50)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1

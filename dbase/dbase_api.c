@@ -170,7 +170,7 @@ dbase_insert(
               "%s - %s\n",
               rcb_p->recipe_p->recipe_id_p,
               rcb_p->recipe_p->name_p );
-#if 1
+
      //  Does this recipe already exist in the database ?
      if ( DBASE__recipe_exists( rcb_p ) == true )
      {
@@ -180,7 +180,6 @@ dbase_insert(
 
     //  Now insert the new recipe
     DBASE__recipe_create( rcb_p );
-#endif
 
     /************************************************************************
      *  Function Exit

@@ -325,14 +325,11 @@ DBASE__recipe_exists(
      *  @param  dbase_rc        Function return code                        */
     int                         dbase_rc;
     /**
-     *  @param  db_command      Where the MySQL command is built            */
-    char                        db_command[ DB_COMMAND_L + 256 ];
+     *  @param  func_rc         Called function return code                 */
+    int                         func_rc;
     /**
-     *  @param  sql_rc          Return code from MySQL function call.       */
-    int                         sql_rc;
-    /**
-     *  @param  result          MySQL structure with the results of a query */
-    MYSQL_RES               *   result;
+     *  @param  db_recipe_p     Structure to hold recipe data               */
+    struct  db_recipe_t         db_recipe_p;
 
     /************************************************************************
      *  Function Initialization
@@ -341,51 +338,27 @@ DBASE__recipe_exists(
     //  Variable initialization
     dbase_rc = false;
 
-    //  Clear out the MySQL command buffer.
-    memset( db_command, '\0', sizeof( db_command ) );
-
     /************************************************************************
      *  Function Code
      ************************************************************************/
 
-    //  Build the MySQL command
-    snprintf( db_command, sizeof( db_command ),
-              "SELECT * FROM recipe_table "
-              "WHERE recipe_id = '%s'; ",
-              rcb_p->recipe_p->recipe_id_p );
+    //  Attempt to read the recipe from the dBase
+    func_rc = DBASE__recipe_read( rcb_p, &db_recipe_p );
 
-    //  Now perform the command.
-    sql_rc = mysql_query( con, db_command );
-
-#if DBASE_ACCESS_LOG == 1
-    //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
-            "EXISTS: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
-#endif
-
-    //  Read all rows returned
-    result = mysql_store_result( con );
-
-    //  Does the RECIP-ID already exist ?
-    if (result != NULL)
+    //  Does the RECIPE-ID already exist ?
+    if( func_rc == true )
     {
-        //  YES:    Will be NOT be zero if the RECIPE-ID exists.
-        sql_rc = mysql_num_rows( result );
+        //  YES:    It already exists.
+        dbase_rc = true;
 
-        //  Does the RECIPE-ID already exist ?
-        if( sql_rc != 0 )
-        {
-            //  YES:    It already exists.
-            dbase_rc = true;
-        }
-
-        //  Free the result structure
-        mysql_free_result( result );
+        //  Release the storage used to hold the recipe
+        mem_free( db_recipe_p.recipe_id_p   );
+        mem_free( db_recipe_p.recipe_data_p );
     }
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__recipe",
             "EXISTS: %s\n", dbase_rc == 0?"FALSE":"TRUE" );
 #endif
 
@@ -461,7 +434,7 @@ DBASE__recipe_create(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__recipe",
             "CREATE: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -498,28 +471,38 @@ DBASE__recipe_create(
  *
  ****************************************************************************/
 
-char *
+int
 DBASE__recipe_read(
-    struct  rcb_t           *   rcb_p
+    struct  rcb_t           *   rcb_p,
+    struct  db_recipe_t     *   db_recipe_p
     )
 {
     /**
+     *  @param  dbase_rc        Function return code                        */
+    int                         dbase_rc;
+    /**
      *  @param  db_command      Where the MySQL command is built            */
     char                        db_command[ DB_COMMAND_L ];
-    char                    *   recipe_buffer_p;
-    unsigned long           *   recipe_buffer_l;
     /**
      *  @param  sql_rc          Return code from MySQL function call.       */
     int                         sql_rc;
+    /**
+     *  @param  result          .                                           */
     MYSQL_RES               *   result;
+    /**
+     *  @param  row             Returned database data                      */
     MYSQL_ROW                   row;
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Initialize the recipe buffer
-    recipe_buffer_p = NULL;
+    //  Variable initialization
+    dbase_rc = false;
+
+    //  Clear any old pointers in the recipe structure
+    db_recipe_p->recipe_id_p   = NULL;
+    db_recipe_p->recipe_data_p = NULL;
 
     //  Clear out the MySQL command buffer.
     memset( db_command, '\0', sizeof( db_command ) );
@@ -530,7 +513,7 @@ DBASE__recipe_read(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command),
-              "SELECT recipe FROM recipe_table WHERE recipe_id='%s'; ",
+              "SELECT recipe_id, recipe FROM recipe_table WHERE recipe_id='%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -538,7 +521,7 @@ DBASE__recipe_read(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__recipe",
             "READ: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -564,26 +547,32 @@ DBASE__recipe_read(
     //  Is there a row present ?
     if ( row != NULL )
     {
-        //  YES:    Get the size of the buffer needed to read the recipe.
-        recipe_buffer_l = mysql_fetch_lengths( result );
+        //  YES:    Read the RECIPE-ID
+        db_recipe_p->recipe_id_p   = text_copy_to_new( row[  0 ] );
+        db_recipe_p->recipe_data_p = text_copy_to_new( row[  1 ] );
 
-        //  Allocate storage for the recipe.
-        recipe_buffer_p = mem_malloc( recipe_buffer_l[ 0 ] + 1 );
+#if 0
+if ( strlen( row[ 0 ] ) != strlen( db_recipe_p->recipe_id_p ) )
+    log_write( MID_FATAL, "DBASE__recipe", "RECIPE_ID %d != %d\n", strlen( row[ 0 ] ), strlen( db_recipe_p->recipe_id_p ) );
+if ( strlen( row[ 1 ] ) != strlen( db_recipe_p->recipe_data_p ) )
+    log_write( MID_FATAL, "DBASE__recipe", "RECIPE_ID %d != %d\n", strlen( row[ 1 ] ), strlen( db_recipe_p->recipe_data_p ) );
 
-        //  Copy the recipe to the recipe buffer.
-        memcpy( recipe_buffer_p, row[ 0 ], recipe_buffer_l[ 0 ] );
+log_write( MID_INFO, "DBASE__recipe", "RECIPE_ID   length = %p, %4d, %s\n", db_recipe_p->recipe_id_p, strlen( db_recipe_p->recipe_id_p   ), db_recipe_p->recipe_id_p );
+log_write( MID_INFO, "DBASE__recipe", "RECIPE_DATA length = %p, %4d,\n %.100s\n", db_recipe_p->recipe_data_p, strlen( db_recipe_p->recipe_data_p ), db_recipe_p->recipe_data_p );
+#endif
 
+        //  Release the results
         mysql_free_result( result );
 
-        //  Point to the next row
-        sql_rc = mysql_next_result( con );
+        //  Set the return code for "record exists'.
+        dbase_rc = true;
     }
 
     /************************************************************************
      *  Function Exit
      ************************************************************************/
 
-    return( recipe_buffer_p );
+    return( dbase_rc );
 }
 
 /****************************************************************************/
@@ -650,7 +639,7 @@ DBASE__recipe_update(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__recipe",
             "UPDATE: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -714,7 +703,7 @@ DBASE__recipe_delete(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command ),
-              "DELETE FROM  recipe_table WHERE recipe_id = '%s'; ",
+              "DELETE FROM recipe_table WHERE recipe_id = '%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -722,7 +711,7 @@ DBASE__recipe_delete(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__recipe",
             "DELETE: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 

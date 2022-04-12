@@ -18,10 +18,10 @@
  *      TABLE   ROW             TYPE
  *      -----   -----           ---------------------------------------------
  *      RECIPE
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              RECIPE          BLOB
  *      INFO
- *              RECIPE-ID       TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              AUTHOR          TINYBLOB
  *              YIELD           TINYBLOB
  *              TIME-PREP       DATETIME
@@ -33,25 +33,25 @@
  *              SKILL           TINYINT
  *              RATING          TINYINT
  *      CUISINE
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      OCCASION
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      COURSE
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      DIET
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      APPLIANCE
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      CHAPTER
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
- *              NAME            TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              NAME            VARCHAR(35)
  *      SOURCE
- *              RECIPE-ID       TINYBLOB        PRIMARY KEY
+ *              RECIPE-ID       VARCHAR(50)
  *              SRC-FORMAT      TINYBLOB
  *              FILE-NAME       TINYBLOB
  *              FILE-SIZE       INTEGER
@@ -63,8 +63,8 @@
  *              EMAIL-SUBJECT   TINYBLOB
  *              EMAIL-DATE-TIME DATETIME
  *      EDITED-BY
- *              RECIPE-ID       TINYBLOB
- *              USER-ID         TINYBLOB
+ *              RECIPE-ID       VARCHAR(50)
+ *              USER-ID         VARCHAR(50)
  *
  ****************************************************************************/
 
@@ -129,6 +129,11 @@ struct  recipe_table
 int
 dbase_init(
     void
+    );
+//---------------------------------------------------------------------------
+int
+dbase_insert(
+    struct  rcb_t           *   rcb_p
     );
 //---------------------------------------------------------------------------
 

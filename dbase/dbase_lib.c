@@ -168,7 +168,7 @@ DBASE__address_get(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__address_get",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", db_command );
 #endif
 
@@ -284,7 +284,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "DROP DATABASE IF EXISTS recipes;" );
 #endif
 
@@ -301,7 +301,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE DATABASE IF NOT EXISTS recipes;" );
 #endif
 
@@ -393,6 +393,35 @@ DBASE__open(
     //  NOT NULL
     //  AUTO INCREMENT
     //
+
+    /************************************************************************
+     *  Create the TITLE table (If it doesn't already exist).
+     ************************************************************************/
+
+    //  Create TITLE_TABLE
+    sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS title_table("
+                               "recipe_id VARCHAR(50),"
+                               "title TEXT,"
+                               "PRIMARY KEY(recipe_id)"
+                               ");");
+
+#if DBASE_ACCESS_LOG == 1
+    //  Log the dBase access command
+    log_write( MID_INFO, "DBASE__open",
+            "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS title_table(" );
+#endif
+
+    //  Was the command successful ?
+    if ( sql_rc != 0 )
+    {
+        //  The database table creation filed.
+        MYQL__access_error( "CREATE TABLE ... title_table" );
+    }
+
+    /************************************************************************
+     *  Create the RECIPE table (If it doesn't already exist).
+     ************************************************************************/
+
     //  Create RECIPE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS recipe_table("
                                "recipe_id VARCHAR(50),"
@@ -402,7 +431,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS recipe_table(" );
 #endif
 
@@ -435,7 +464,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS info_table(" );
 #endif
 
@@ -458,7 +487,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS cuisine_table(" );
 #endif
 
@@ -481,7 +510,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS occasion_table(" );
 #endif
 
@@ -504,7 +533,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS course_table(" );
 #endif
 
@@ -527,7 +556,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS diet_table(" );
 #endif
 
@@ -550,7 +579,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS appliance_table(" );
 #endif
 
@@ -573,7 +602,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS chapter_table(" );
 #endif
 
@@ -605,7 +634,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS source_table(" );
 #endif
 
@@ -628,7 +657,7 @@ DBASE__open(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_INFO, "DBASE__recipe",
+    log_write( MID_INFO, "DBASE__open",
             "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS edited_table(" );
 #endif
 

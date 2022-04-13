@@ -20,6 +20,8 @@
  *      RECIPE
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              RECIPE          BLOB
+ *      TITLE   RECIPE_ID       VARCHAR(50)     PRIMARY KEY
+ *              TITLE           TINYBLOB
  *      INFO
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              AUTHOR          TINYBLOB

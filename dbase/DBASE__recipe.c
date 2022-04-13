@@ -127,30 +127,24 @@ DBASE__recipe_build(
      ************************************************************************/
 
     //-----------------------------------------------------------------------
-    //  <TITLE></TITLE>
-    asprintf( &buf_a_p, "    <title>%s</title>\n",
-                rcb_p->recipe_p->name_p );
-    //-----------------------------------------------------------------------
     //  <DESCRIPTION></DESCRIPTION>
     if ( rcb_p->recipe_p->description_p != NULL )
     {
-        asprintf( &buf_b_p, "    <description>%s</description>\n",
+        asprintf( &buf_a_p, "    <description>%s</description>\n",
                     rcb_p->recipe_p->description_p );
     }
     else
     {
-        asprintf( &buf_b_p, "    <description></description>\n" );
+        asprintf( &buf_a_p, "    <description></description>\n" );
     }
-    buf_c_p = text_join( buf_a_p, buf_b_p, false, false );
-    free( buf_a_p ); free( buf_b_p ); buf_a_p = buf_c_p;
 
     //-----------------------------------------------------------------------
     //  <AUIP>
 
     //  Start tag
     asprintf( &buf_b_p, "    <auip-list>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
+    buf_c_p = text_join( buf_a_p, buf_b_p, false, false );
+    free( buf_a_p ); free( buf_b_p ); buf_a_p = buf_c_p;
 
     //  AUIP list
     if ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 )
@@ -376,9 +370,8 @@ DBASE__recipe_exists(
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return                     A pointer to the recipe buffer, NULL
- *                              if the recipe-id is not located.
- *
+ *  @return                     TRUE when the record is successfully
+ *                              created, else FALSE.
  *  @note
  *
  ****************************************************************************/
@@ -445,6 +438,11 @@ DBASE__recipe_create(
         log_write( MID_FATAL, "DBASE__recipe",
                 "CREATE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
     }
+    else
+    {
+        //  Set the return code to success
+        dbase_rc = true;
+    }
 
     /************************************************************************
      *  Function Exit
@@ -460,8 +458,8 @@ DBASE__recipe_create(
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return                     A pointer to the recipe buffer, NULL
- *                              if the recipe-id is not located.
+ *  @return                     TRUE when the record is successfully
+ *                              read, else FALSE.
  *
  *  @note
  *      This function is unique to the normal CRUD functions as the
@@ -581,7 +579,8 @@ log_write( MID_INFO, "DBASE__recipe", "RECIPE_DATA length = %p, %4d,\n %.100s\n"
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return                     TRUE if the record is found, else FALSE.
+ *  @return                     TRUE when the record is successfully
+ *                              updated (replaced), else FALSE.
  *
  *  @note
  *
@@ -612,43 +611,18 @@ DBASE__recipe_update(
     //  Variable initialization
     dbase_rc = false;
 
-    //  Clear out the MySQL command buffer.
-    memset( db_command, '\0', sizeof( db_command ) );
-
     /************************************************************************
      *  Function Code
      ************************************************************************/
 
-    //  Build the recipe
-    rcb_p->db_recipe_p = DBASE__recipe_build( rcb_p );
+    //  Delete the existing record
+    dbase_rc = DBASE__recipe_delete( rcb_p );
 
-    //  Escape all special characters
-    mysql_real_escape_string( con,
-                              db_escaped,                       //  Destination
-                              rcb_p->db_recipe_p,               //  Source
-                              strlen( rcb_p->db_recipe_p ) );   //  Source length
-
-    //  Build the MySQL command
-    snprintf( db_command, sizeof( db_command ),
-              "UPDATE recipe_table SET recipe = '%s' WHERE recipe-id = '%s' ); ",
-              rcb_p->recipe_p->recipe_id_p,
-              db_escaped );
-
-    //  Now perform the command.
-    sql_rc = mysql_query( con, db_command );
-
-#if DBASE_ACCESS_LOG == 1
-    //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
-            "UPDATE: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
-#endif
-
-    //  Was the command successful ?
-    if ( sql_rc != 0 )
+    //  Was the delete successful ?
+    if ( dbase_rc == true )
     {
-        //  The database creation filed.
-        log_write( MID_FATAL, "DBASE__recipe",
-                "update: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
+        //  YES:    CREATE the new record
+        dbase_rc = DBASE__recipe_create( rcb_p );
     }
 
     /************************************************************************
@@ -665,7 +639,8 @@ DBASE__recipe_update(
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return                     TRUE if the record is found, else FALSE.
+ *  @return                     TRUE when the record is successfully
+ *                              deleted, else FALSE.
  *
  *  @note
  *
@@ -721,6 +696,11 @@ DBASE__recipe_delete(
         //  The database creation filed.
         log_write( MID_FATAL, "DBASE__recipe",
                 "DELETE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
+    }
+    else
+    {
+        //  Set the return code to success
+        dbase_rc = true;
     }
 
     /************************************************************************

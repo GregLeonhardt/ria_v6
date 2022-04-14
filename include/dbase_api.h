@@ -14,22 +14,24 @@
  *  This file contains public definitions (etc.) that apply to external 
  *  library components of the 'dbase' library.
  *
+ * DATETIME is stored as 'YYYY-MM-DD hh:mm:ss'
+ * 
  *  @note
  *      TABLE   ROW             TYPE
  *      -----   -----           ---------------------------------------------
+ *      TITLE   RECIPE_ID       VARCHAR(50)     PRIMARY KEY
+ *              TITLE           TINYBLOB
  *      RECIPE
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              RECIPE          BLOB
- *      TITLE   RECIPE_ID       VARCHAR(50)     PRIMARY KEY
- *              TITLE           TINYBLOB
  *      INFO
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              AUTHOR          TINYBLOB
  *              YIELD           TINYBLOB
- *              TIME-PREP       DATETIME
- *              TIME-COOK       DATETIME
- *              TIME-WAIT       DATETIME
- *              TIME-REST       DATETIME
+ *              TIME-PREP       VARCHAR(10)
+ *              TIME-COOK       VARCHAR(10)
+ *              TIME-WAIT       VARCHAR(10)
+ *              TIME-REST       VARCHAR(10)
  *              SOURCE          TINYBLOB
  *              COPYRIGHT       TINYBLOB
  *              SKILL           TINYINT

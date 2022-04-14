@@ -28,7 +28,7 @@
    #define DBASE_EXT         extern
 #endif
 
-#define DBASE_ACCESS_LOG        ( 0 )
+#define DBASE_ACCESS_LOG        ( 1 )
 
 /****************************************************************************
  * System APIs
@@ -78,6 +78,22 @@ struct  db_recipe_t
     char                    *   recipe_data_p;
 };
 //----------------------------------------------------------------------------
+struct  db_info_t
+{
+    char                    *   recipe_id_p;
+    char                    *   author_p;
+    char                    *   serves_p;
+    char                    *   makes_p;
+    char                    *   makes_unit_p;
+    char                    *   time_prep_p;
+    char                    *   time_cook_p;
+    char                    *   time_wait_p;
+    char                    *   time_rest_p;
+    char                    *   source_p;
+    char                    *   copyright_p;
+    int                         skill_p;
+    int                         rating_p;
+};
 
 /****************************************************************************
  * Library Private Storage Allocation
@@ -109,7 +125,7 @@ int
 DBASE__open(
     );
 //----------------------------------------------------------------------------
-//  DBASE__title_
+//  DBASE__title.c
 //----------------------------------------------------------------------------
 int
 DBASE__title_exists(
@@ -137,7 +153,7 @@ DBASE__title_delete(
     struct  rcb_t           *   rcb_p
     );
 //----------------------------------------------------------------------------
-//  DBASE__recipe_
+//  DBASE__recipe.c
 //----------------------------------------------------------------------------
 int
 DBASE__recipe_exists(
@@ -162,6 +178,34 @@ DBASE__recipe_update(
 //----------------------------------------------------------------------------
 int
 DBASE__recipe_delete(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+//  DBASE__info.c
+//----------------------------------------------------------------------------
+int
+DBASE__info_exists(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__info_create(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__info_read(
+    struct  rcb_t           *   rcb_p,
+    struct  db_info_t       *   db_info_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__info_update(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__info_delete(
     struct  rcb_t           *   rcb_p
     );
 //----------------------------------------------------------------------------

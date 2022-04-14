@@ -171,31 +171,26 @@ dbase_insert(
               rcb_p->recipe_p->recipe_id_p,
               rcb_p->recipe_p->name_p );
 
-    //------------------------
-    //  TITLE_TABLE
-    //------------------------
     //  Does this recipe already exist in the database ?
     if ( DBASE__title_exists( rcb_p ) == true )
     {
         //  YES:    Delete it.
         DBASE__title_delete( rcb_p );
+        DBASE__recipe_delete( rcb_p );
+        DBASE__info_delete( rcb_p );
     }
 
-    //  Now insert the new title
+    //-----------------------------------------------------------------------
+    //  TITLE_TABLE
     DBASE__title_create( rcb_p );
 
-    //------------------------
+    //-----------------------------------------------------------------------
     //  RECIPE_TABLE
-    //------------------------
-    //  Does this recipe already exist in the database ?
-    if ( DBASE__recipe_exists( rcb_p ) == true )
-    {
-        //  YES:    Delete it.
-        DBASE__recipe_delete( rcb_p );
-    }
-
-    //  Now insert the new recipe
     DBASE__recipe_create( rcb_p );
+
+    //-----------------------------------------------------------------------
+    //  INFO_TABLE
+    DBASE__info_create( rcb_p );
 
     /************************************************************************
      *  Function Exit

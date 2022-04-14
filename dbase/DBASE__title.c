@@ -333,7 +333,7 @@ DBASE__title_read(
         //  Release the results
         mysql_free_result( result );
 
-        //  Set the return code for "record exists'.
+        //  Set the return code for "record exists".
         dbase_rc = true;
     }
 

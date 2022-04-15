@@ -1064,6 +1064,9 @@ main(
      *  Wait for all threads to complete
      ************************************************************************/
 
+    //  Wait for all threads to get started
+    sleep( 10 );
+
     //  DO - WHILE any thread is still working
     while( 1 )
     {
@@ -1093,6 +1096,9 @@ main(
         if ( done_flag == true )
             break;
     }
+
+    //  Wait for another monitor output
+    sleep( 10 );
 
     /************************************************************************
      *  Application Exit

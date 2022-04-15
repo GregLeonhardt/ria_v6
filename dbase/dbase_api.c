@@ -165,32 +165,41 @@ dbase_insert(
      *  Function Body
      ************************************************************************/
 
-    //  Display progress.
-    log_write( MID_INFO, "dbase_insert",
-              "%s - %s\n",
-              rcb_p->recipe_p->recipe_id_p,
-              rcb_p->recipe_p->name_p );
-
-    //  Does this recipe already exist in the database ?
-    if ( DBASE__title_exists( rcb_p ) == true )
+    //  Three things that are needed to have a real recipe
+    //  1)  Name
+    //  2)  Ingredients
+    //  3)  Directions
+    if (    ( rcb_p->recipe_p->name_p != NULL )
+         && ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 )
+         && ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 ) )
     {
-        //  YES:    Delete it.
-        DBASE__title_delete( rcb_p );
-        DBASE__recipe_delete( rcb_p );
-        DBASE__info_delete( rcb_p );
+        //  Display progress.
+        log_write( MID_INFO, "dbase_insert",
+                  "%s - %s\n",
+                  rcb_p->recipe_p->recipe_id_p,
+                  rcb_p->recipe_p->name_p );
+
+        //  Does this recipe already exist in the database ?
+        if ( DBASE__title_exists( rcb_p ) == true )
+        {
+            //  YES:    Delete it.
+            DBASE__title_delete( rcb_p );
+            DBASE__recipe_delete( rcb_p );
+            DBASE__info_delete( rcb_p );
+        }
+
+        //-----------------------------------------------------------------------
+        //  TITLE_TABLE
+        DBASE__title_create( rcb_p );
+
+        //-----------------------------------------------------------------------
+        //  RECIPE_TABLE
+        DBASE__recipe_create( rcb_p );
+
+        //-----------------------------------------------------------------------
+        //  INFO_TABLE
+        DBASE__info_create( rcb_p );
     }
-
-    //-----------------------------------------------------------------------
-    //  TITLE_TABLE
-    DBASE__title_create( rcb_p );
-
-    //-----------------------------------------------------------------------
-    //  RECIPE_TABLE
-    DBASE__recipe_create( rcb_p );
-
-    //-----------------------------------------------------------------------
-    //  INFO_TABLE
-    DBASE__info_create( rcb_p );
 
     /************************************************************************
      *  Function Exit

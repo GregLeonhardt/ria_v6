@@ -679,3 +679,117 @@ DBASE__open(
 }
 
 /****************************************************************************/
+/**
+ *  Open the database.  If required create the database and/or tables.
+ *
+ *  @param  db_column_p         Pointer to a list of column names
+ *  @param  db_column_l         Size of the db_column buffer
+ *  @param  db_value_p          Pointer to a list of column values
+ *  @param  db_value_l          Size of the db_column values buffer
+ *  @param  name_p              Pointer to the name of the next column
+ *  @param  value_p             Pointer to the value of the next column
+ *
+ *  @return                     TRUE for success. Any other value is an error.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DBASE__add_col_val(
+    char                    *   db_column_p,
+    int                         db_column_l,
+    char                    *   db_value_p,
+    int                         db_value_l,
+    char                    *   name_p,
+    char                    *   value_p
+    )
+{
+    /**
+     *  @param  dbase_rc        Function return code                        */
+    int                         dbase_rc;
+    /**
+     *  @param  tmp_l           Temporary length variable                   */
+    int                         tmp_l;
+    /**
+     *  @param  tmp_data_p      Temporary data buffer                       */
+    char                    *   tmp_data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Variable initialization
+    dbase_rc = true;
+
+    //  Allocate storage for the temporary data buffer
+    tmp_data_p = mem_malloc( strlen( value_p ) * 2 );
+
+    /************************************************************************
+     *  Column Name
+     ************************************************************************/
+
+    //  Get the current length of the buffer
+    tmp_l = strlen( db_column_p );
+
+    //  Will this cause a buffer overflow ?
+    if ( ( db_column_l - tmp_l - strlen( name_p ) ) > 0 )
+    {
+        //  NO:     Is this the first column name ?
+        if ( tmp_l == 0 )
+        {
+            //  YES:    No leading coma
+            snprintf( ( db_column_p + tmp_l ),
+                      ( db_column_l - tmp_l ),
+                      "%s", name_p );
+        }
+        else
+        {
+            //  NO:     With a leading comma
+            snprintf( ( db_column_p + tmp_l ),
+                      ( db_column_l - tmp_l ),
+                      ", %s", name_p );
+        }
+    }
+
+    /************************************************************************
+     *  Column Value
+     ************************************************************************/
+
+    //  Escape to create a legal SQL string
+    mysql_real_escape_string( con, tmp_data_p, value_p, strlen( value_p ) );
+
+    //  Get the current length of the buffer
+    tmp_l = strlen( db_value_p );
+
+    //  Will this cause a buffer overflow ?
+    if ( ( db_value_l - tmp_l - strlen( tmp_data_p ) ) > 0 )
+    {
+        //  NO:     Is this the first column name ?
+        if ( tmp_l == 0 )
+        {
+            //  YES:    No leading coma
+            snprintf( ( db_value_p + tmp_l ),
+                      ( db_value_l - tmp_l ),
+                      "'%s'", tmp_data_p );
+        }
+        else
+        {
+            //  NO:     With a leading comma
+            snprintf( ( db_value_p + tmp_l ),
+                      ( db_value_l - tmp_l ),
+                      ", '%s'", tmp_data_p );
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  Release the temproary data buffer
+    mem_free( tmp_data_p );
+
+    //  Bye-Bye.
+    return ( dbase_rc );
+}
+/****************************************************************************/

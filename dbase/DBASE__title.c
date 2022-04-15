@@ -173,9 +173,11 @@ DBASE__title_create(
     /**
      *  @param  db_command      Where the MySQL command is built            */
     char                        db_command[ DB_COMMAND_L + 256 ];
+    char                        db_command_col[ DB_COMMAND_L / 2 ];
+    char                        db_command_val[ DB_COMMAND_L / 2 ];
     /**
-     *  @param  db_escaped      Where the MySQL command is built            */
-    char                        db_title[ DB_COMMAND_L ];
+     *  @param  count           Number of columns to insert                 */
+    int                         count;
     /**
      *  @param  sql_rc          Return code from MySQL function call.       */
     int                         sql_rc;
@@ -186,24 +188,56 @@ DBASE__title_create(
 
     //  Variable initialization
     dbase_rc = false;
+    count = 0;
 
     //  Clear out the MySQL command buffer.
     memset( db_command, '\0', sizeof( db_command ) );
+    memset( db_command_col, '\0', sizeof( db_command_col ) );
+    memset( db_command_val, '\0', sizeof( db_command ) );
 
     /************************************************************************
-     *  Function Code
+     *  Build the MySQL command
      ************************************************************************/
 
-    //  Escape all special characters
-    mysql_real_escape_string( con,
-                              db_title,                             //  Destination
-                              rcb_p->recipe_p->name_p,              //  Source
-                              strlen( rcb_p->recipe_p->name_p ) );  //  Source length
+    //    RECIPE_ID
+    if ( rcb_p->recipe_p->recipe_id_p != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "recipe_id", rcb_p->recipe_p->recipe_id_p );
 
-    //  Build the MySQL command
-    snprintf( db_command, sizeof( db_command ),
-              "INSERT INTO title_table (recipe_id, title) VALUES( '%s', '%s' ); ",
-              rcb_p->recipe_p->recipe_id_p, db_title );
+        count += 1;
+    }
+
+    //    TITLE
+    if ( rcb_p->recipe_p->name_p != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "title", rcb_p->recipe_p->name_p );
+
+        count += 1;
+    }
+
+    //  Are there more than one columns ?
+    if ( count > 1 )
+    {
+        //  YES:    Build the complete command
+        snprintf( db_command, sizeof( db_command ),
+                  "INSERT INTO title_table ( %s ) VALUES( %s );",
+                  db_command_col, db_command_val );
+    }
+    else
+    {
+        //  NO:     Build the complete command
+        snprintf( db_command, sizeof( db_command ),
+                  "INSERT INTO title_table ( %s ) VALUE( %s );",
+                  db_command_col, db_command_val );
+    }
+
+    /************************************************************************
+     *  Perform the MySQL query and validate the success or failure.
+     ************************************************************************/
 
     //  Now perform the command.
     sql_rc = mysql_query( con, db_command );

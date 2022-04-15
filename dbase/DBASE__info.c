@@ -182,14 +182,8 @@ DBASE__info_create(
     /**
      *  @param  db_command      Where the MySQL command is built            */
     char                        db_command[ DB_COMMAND_L + 256 ];
-    int                         db_command_l;
     char                        db_command_col[ DB_COMMAND_L / 2 ];
-    int                         db_command_col_l;
     char                        db_command_val[ DB_COMMAND_L / 2 ];
-    int                         db_command_val_l;
-    /**
-     *  @param  db_escaped      Where the MySQL command is built            */
-    char                        db_escaped[ DB_COMMAND_L ];
     /**
      *  @param  count           Number of columns to insert                 */
     int                         count;
@@ -203,9 +197,6 @@ DBASE__info_create(
 
     //  Variable initialization
     dbase_rc = false;
-    db_command_l = 0;
-    db_command_col_l = 0;
-    db_command_val_l = 0;
     count = 0;
 
     //  Clear out the MySQL command buffer.
@@ -214,211 +205,138 @@ DBASE__info_create(
     memset( db_command_val, '\0', sizeof( db_command ) );
 
     /************************************************************************
-     *  Function Code
+     *  Build the MySQL command
      ************************************************************************/
-
-    //  Build the MySQL command
 
     //    RECIPE_ID
     if ( rcb_p->recipe_p->recipe_id_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  "recipe_id" );
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->recipe_id_p,
-                          strlen( rcb_p->recipe_p->recipe_id_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  "'%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "recipe_id", rcb_p->recipe_p->recipe_id_p );
+
         count += 1;
     }
-#if 1
+
     //    AUTHOR
     if ( rcb_p->recipe_p->author_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", author" );
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->author_p,
-                          strlen( rcb_p->recipe_p->author_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "author", rcb_p->recipe_p->author_p );
+
         count += 1;
     }
 
     //    SERVES
     if ( rcb_p->recipe_p->serves_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", serves");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->serves_p,
-                          strlen( rcb_p->recipe_p->serves_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "serves", rcb_p->recipe_p->serves_p );
+
         count += 1;
     }
 
     //    MAKES
     if ( rcb_p->recipe_p->makes_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", makes");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->makes_p,
-                          strlen( rcb_p->recipe_p->makes_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "makes", rcb_p->recipe_p->makes_p );
+
         count += 1;
     }
 
     //    MAKES_UNIT
     if ( rcb_p->recipe_p->makes_unit_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", makes_unit");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->makes_unit_p,
-                          strlen( rcb_p->recipe_p->makes_unit_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "makes_unit", rcb_p->recipe_p->makes_unit_p );
+
         count += 1;
     }
 
     //    TIME_PREP
     if ( rcb_p->recipe_p->time_prep_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", time_prep");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->time_prep_p,
-                          strlen( rcb_p->recipe_p->time_prep_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "time_prep", rcb_p->recipe_p->time_prep_p );
+
         count += 1;
     }
 
     //    TIME_COOK
     if ( rcb_p->recipe_p->time_cook_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", time_cook");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->time_cook_p,
-                          strlen( rcb_p->recipe_p->time_cook_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", rcb_p->recipe_p->time_cook_p );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "time_cook", rcb_p->recipe_p->time_cook_p );
+
         count += 1;
     }
 
     //    TIME_WAIT
     if ( rcb_p->recipe_p->time_wait_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", time_wait");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->time_wait_p,
-                          strlen( rcb_p->recipe_p->time_wait_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "time_wait", rcb_p->recipe_p->time_wait_p );
+
         count += 1;
     }
 
     //    TIME_REST
     if ( rcb_p->recipe_p->time_rest_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", time_rest");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->time_rest_p,
-                          strlen( rcb_p->recipe_p->time_rest_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "time_rest", rcb_p->recipe_p->time_rest_p );
+
         count += 1;
     }
 
     //    SOURCE
     if ( rcb_p->recipe_p->source_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", source");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->source_p,
-                          strlen( rcb_p->recipe_p->source_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "source", rcb_p->recipe_p->source_p );
+
         count += 1;
     }
 
     //    COPYRIGHT
     if ( rcb_p->recipe_p->copyright_p != NULL )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", copyright");
-        memset( db_escaped, '\0', sizeof( db_escaped ) );
-        mysql_real_escape_string( con, db_escaped,
-                          rcb_p->recipe_p->copyright_p,
-                          strlen( rcb_p->recipe_p->copyright_p ) );
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  ", '%s'", db_escaped );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "copyright", rcb_p->recipe_p->copyright_p );
+
         count += 1;
     }
 
     //    SKILL
     if ( rcb_p->recipe_p->skill_p > 0 )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", skill");
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  "'%d'", atoi( rcb_p->recipe_p->skill_p ) );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "skill", rcb_p->recipe_p->skill_p );
+
         count += 1;
     }
 
     //    RATING
     if ( rcb_p->recipe_p->rating_p > 0 )
     {
-        db_command_col_l += snprintf( ( db_command_col + db_command_col_l ),
-                  ( sizeof( db_command_col ) - db_command_col_l ),
-                  ", rating");
-        db_command_val_l += snprintf( ( db_command_val + db_command_val_l ),
-                  ( sizeof( db_command_val ) - db_command_val_l ),
-                  "'%d'", atoi( rcb_p->recipe_p->skill_p ) );
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "rating", rcb_p->recipe_p->rating_p );
+
         count += 1;
     }
-#endif
 
     //  Are there more than one columns ?
     if ( count > 1 )
@@ -436,11 +354,9 @@ DBASE__info_create(
                   db_command_col, db_command_val );
     }
 
-    //  Escape all special characters
-//  mysql_real_escape_string( con,
-//                            db_escaped,               //  Destination
-//                            db_command,               //  Source
-//                            strlen( db_command ) );   //  Source length
+    /************************************************************************
+     *  Perform the MySQL query and validate the success or failure.
+     ************************************************************************/
 
     //  Now perform the command.
     sql_rc = mysql_query( con, db_command );

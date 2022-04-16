@@ -32,6 +32,7 @@
 #include <stdbool.h>            //  TRUE, FALSE, etc.
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
+#include <string.h>             //  Functions for managing strings
 #include <unistd.h>             //  UNIX standard library.
                                 //*******************************************
 
@@ -114,6 +115,9 @@ import(
     /**
      *  @param  read_data_l     Read data buffer                            */
     size_t                      read_data_l;
+    /**
+     *  @param  file_info_p     Pointer to file information             */
+    struct  file_info_t     *   file_info_p;
 
     /************************************************************************
      *  Function Initialization
@@ -160,57 +164,65 @@ import(
                   rcb_p->file_info_p->dir_name,
                   rcb_p->file_info_p->file_name );
 
-        //  Open the file for reading
-        rcb_p->file_p = file_open_read( file_name );
+        //  Verify the file exists
+        file_info_p = file_stat( file_name, NULL );
 
-        log_write( MID_DEBUG_0, tcb_p->thread_name,
-                      "Allocate a new list structure 'import_list_p' [%p].\n",
-                      rcb_p->import_list_p );
-
-        do
+        if ( file_info_p != NULL )
         {
-            //  Read a line of text
-            read_data_l = 0;
-            read_data_p = NULL;
-            read_data_l = getline( &read_data_p, &read_data_l, rcb_p->file_p );
+            //  Release storage
+            mem_free( file_info_p );
 
-            //  Was the read successful ?
-            if ( read_data_l != -1 )
+            //  Open the file for reading
+            rcb_p->file_p = file_open_read( file_name );
+
+            log_write( MID_DEBUG_0, tcb_p->thread_name,
+                          "Allocate a new list structure 'import_list_p' [%p].\n",
+                          rcb_p->import_list_p );
+
+            do
             {
-                //  YES:    Remove CR/LF
-                text_remove_crlf( read_data_p );
+                //  Read a line of text
+                read_data_l = 0;
+                read_data_p = NULL;
+                read_data_l = getline( &read_data_p, &read_data_l, rcb_p->file_p );
 
-                //  Is this a binary file ?
-                if ( text_is_binary( read_data_p, read_data_l ) == true )
+                //  Was the read successful ?
+                if ( read_data_l != -1 )
                 {
-                    //  YES:    Log the binary file
-                    log_write( MID_INFO, tcb_p->thread_name,
-                               "Skipping binary file '%s'\n",
-                               rcb_p->file_path );
+                    //  YES:    Remove CR/LF
+                    text_remove_crlf( read_data_p );
 
-                    //  Done reading this file.
-                    read_data_l = -1;
-                    break;
+                    //  Is this a binary file ?
+                    if ( text_is_binary( read_data_p, read_data_l ) == true )
+                    {
+                        //  YES:    Log the binary file
+                        log_write( MID_INFO, tcb_p->thread_name,
+                                   "Skipping binary file '%s'\n",
+                                   rcb_p->file_path );
+
+                        //  Done reading this file.
+                        read_data_l = -1;
+                        break;
+                    }
+                    else
+                    {
+                        //  NO:     Put the new line on the list
+                        list_put_last( rcb_p->import_list_p, read_data_p );
+                    }
                 }
-                else
-                {
-                    //  NO:     Put the new line on the list
-                    list_put_last( rcb_p->import_list_p, read_data_p );
-                }
+
+                //  Keep reading until we reach the end-of-file
+            }   while( read_data_l != -1 );
+
+            //  Close the import file
+            file_close( rcb_p->file_p ); rcb_p->file_p = 0;
+
+            //  Is the delete flag set ?
+            if ( delete_flag == true )
+            {
+                //  YES:    Delete the file
+                unlink( file_name );
             }
-
-            //  Keep reading until we reach the end-of-file
-        }   while( read_data_l != -1 );
-
-        //  Close the import file
-        file_close( rcb_p->file_p ); rcb_p->file_p = 0;
-
-        //  Is the delete flag set ?
-        if ( delete_flag == true )
-        {
-            //  YES:    Delete the file
-            unlink( file_name );
-        }
 
 #if DEBUG_STUB
         rcb_kill( rcb_p );
@@ -218,6 +230,15 @@ import(
         //  Put it in one of the IMPORT queue's
         queue_put_payload( email_tcb->queue_id, rcb_p  );
 #endif
+        }
+        else
+        {
+            //  Where did the file go.
+            log_write( MID_INFO, "import",
+                        "MISSING-FILE: %s/%s\n",
+                        rcb_p->file_info_p->dir_name,
+                        rcb_p->file_info_p->file_name );
+        }
 
         //  Change execution state to "INITIALIZED" for work.
         tcb_p->thread_state = TS_WAIT;

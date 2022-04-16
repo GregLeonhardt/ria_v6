@@ -529,9 +529,20 @@ DECODE_MXP__prep_time(
         //  YES:    Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the recipe title (name)
-        recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
-        log_write( MID_DEBUG_1, "decode_mxp_lib.c", "Line: %d\n", __LINE__ );
+        //  Is the PREP_TIME formatted correctly ?
+        if (    ( strlen( tmp_data_p ) == 4 )
+             || ( strlen( tmp_data_p ) == 5 ) )
+        {
+            //  YES:    Save the preparation time
+            recipe_p->time_prep_p = text_copy_to_new( tmp_data_p );
+            log_write( MID_DEBUG_1, "decode_mxp_lib.c", "Line: %d\n", __LINE__ );
+        }
+        else
+        {
+            //  NO:     Data in this field is invalid so discard it.
+            recipe_p->time_prep_p = text_copy_to_new( "0:00" );
+            log_write( MID_DEBUG_1, "decode_mxp_lib.c", "Line: %d\n", __LINE__ );
+        }
 
         //  Change the return code
         mxp_rc = true;

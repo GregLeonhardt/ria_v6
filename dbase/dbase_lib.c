@@ -786,7 +786,7 @@ DBASE__add_col_val(
      *  Function Exit
      ************************************************************************/
 
-    //  Release the temproary data buffer
+    //  Release the temporary data buffer
     mem_free( tmp_data_p );
 
     //  Bye-Bye.

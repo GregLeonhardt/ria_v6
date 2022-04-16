@@ -888,6 +888,17 @@ main(
                        "Skipping empty or small file: '%s'\n",
                        file_path );
 
+#if 0
+            //  Full dir/filename
+            snprintf( file_path, sizeof( file_path ), "%s/%s/%s",
+                      in_dir_name_p,
+                      &file_info_p->dir_name[ strlen( in_dir_name_p ) + 1 ],
+                      file_info_p->file_name );
+#endif
+
+            //  Log
+            log_write( MID_INFO, "main", "Deleting: %s\n", file_path );
+
             //  Is the delete flag set ?
             if ( delete_flag == true )
             {

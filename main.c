@@ -294,37 +294,6 @@ is_import_done(
      *  Check for complete
      ************************************************************************/
 
-#if 0
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
-    //  Loop through all IMPORT threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_IMPORT;
-         thread_id += 1 )
-    {
-        //  Anything in the input queue ?
-        if ( queue_get_count( import_tcb[ thread_id ]->queue_id ) != 0 )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-        else
-        //  NO:     Is the thread working on something
-        if ( import_tcb[ thread_id ]->thread_state == TS_WORKING )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-
-        //  Is this thread done ?
-        if ( func_rc == false )
-        {
-            //  NO:     No need to look at the others.
-            break;
-        }
-    }
-#else
     //  Anything in the input queue ?
     if ( queue_get_count( import_tcb->queue_id ) != 0 )
     {
@@ -338,7 +307,6 @@ is_import_done(
         //  YES:    It's still working
         func_rc = false;
     }
-#endif
 
     /************************************************************************
      *  Function Exit
@@ -382,37 +350,6 @@ is_email_done(
      *  Check for complete
      ************************************************************************/
 
-#if 0
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
-    //  Loop through all EMAIL threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_EMAIL;
-         thread_id += 1 )
-    {
-        //  Anything in the input queue ?
-        if ( queue_get_count( email_tcb[ thread_id ]->queue_id ) != 0 )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-        else
-        //  NO:     Is the thread working on something
-        if ( email_tcb[ thread_id ]->thread_state == TS_WORKING )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-
-        //  Is this thread done ?
-        if ( func_rc == false )
-        {
-            //  NO:     No need to look at the others.
-            break;
-        }
-    }
-#else
     //  Anything in the input queue ?
     if ( queue_get_count( email_tcb->queue_id ) != 0 )
     {
@@ -426,7 +363,6 @@ is_email_done(
         //  YES:    It's still working
         func_rc = false;
     }
-#endif
 
     /************************************************************************
      *  Function Exit
@@ -470,37 +406,6 @@ is_decode_done(
      *  Check for complete
      ************************************************************************/
 
-#if 0
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
-    //  Loop through all DECODE threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_DECODE;
-         thread_id += 1 )
-    {
-        //  Anything in the input queue ?
-        if ( queue_get_count( decode_tcb[ thread_id ]->queue_id ) != 0 )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-        else
-        //  NO:     Is the thread working on something
-        if ( decode_tcb[ thread_id ]->thread_state == TS_WORKING )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-
-        //  Is this thread done ?
-        if ( func_rc == false )
-        {
-            //  NO:     No need to look at the others.
-            break;
-        }
-    }
-#else
     //  Anything in the input queue ?
     if ( queue_get_count( decode_tcb->queue_id ) != 0 )
     {
@@ -514,7 +419,6 @@ is_decode_done(
         //  YES:    It's still working
         func_rc = false;
     }
-#endif
 
     /************************************************************************
      *  Function Exit
@@ -558,37 +462,6 @@ is_encode_done(
      *  Check for complete
      ************************************************************************/
 
-#if 0
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
-    //  Loop through all ENCODE threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_ENCODE;
-         thread_id += 1 )
-    {
-        //  Anything in the input queue ?
-        if ( queue_get_count( encode_tcb[ thread_id ]->queue_id ) != 0 )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-        else
-        //  NO:     Is the thread working on something
-        if ( encode_tcb[ thread_id ]->thread_state == TS_WORKING )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-
-        //  Is this thread done ?
-        if ( func_rc == false )
-        {
-            //  NO:     No need to look at the others.
-            break;
-        }
-    }
-#else
     //  Anything in the input queue ?
     if ( queue_get_count( encode_tcb->queue_id ) != 0 )
     {
@@ -602,7 +475,6 @@ is_encode_done(
         //  YES:    It's still working
         func_rc = false;
     }
-#endif
 
     /************************************************************************
      *  Function Exit
@@ -646,37 +518,6 @@ is_export_done(
      *  Check for complete
      ************************************************************************/
 
-#if 0
-    /**
-     * @param thread_id         Unique thread id number                     */
-    int                         thread_id;
-    //  Loop through all EXPORT threads
-    for( thread_id = 0;
-         thread_id < THREAD_COUNT_EXPORT;
-         thread_id += 1 )
-    {
-        //  Anything in the input queue ?
-        if ( queue_get_count( export_tcb[ thread_id ]->queue_id ) != 0 )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-        else
-        //  NO:     Is the thread working on something
-        if ( export_tcb[ thread_id ]->thread_state == TS_WORKING )
-        {
-            //  YES:    It's still working
-            func_rc = false;
-        }
-
-        //  Is this thread done ?
-        if ( func_rc == false )
-        {
-            //  NO:     No need to look at the others.
-            break;
-        }
-    }
-#else
     //  Anything in the input queue ?
     if ( queue_get_count( export_tcb->queue_id ) != 0 )
     {
@@ -690,7 +531,6 @@ is_export_done(
         //  YES:    It's still working
         func_rc = false;
     }
-#endif
 
     /************************************************************************
      *  Function Exit

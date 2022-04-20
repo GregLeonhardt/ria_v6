@@ -19,12 +19,12 @@
  *  @note
  *      TABLE   ROW             TYPE
  *      -----   -----           ---------------------------------------------
- *      TITLE   RECIPE_ID       VARCHAR(50)     PRIMARY KEY
+ *  #   TITLE   RECIPE_ID       VARCHAR(50)     PRIMARY KEY
  *              TITLE           TINYBLOB
- *      RECIPE
+ *  #   RECIPE
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              RECIPE          BLOB
- *      INFO
+ *  #   INFO
  *              RECIPE-ID       VARCHAR(50)     PRIMARY KEY
  *              AUTHOR          TINYBLOB
  *              YIELD           TINYBLOB

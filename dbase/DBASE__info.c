@@ -132,7 +132,7 @@ DBASE__info_exists(
         dbase_rc = true;
 
         //  Release the storage used to hold the info
-                                             mem_free( db_info_p.recipe_id_p   );
+                                              mem_free( db_info_p.recipe_id_p   );
         if ( db_info_p.author_p     != NULL ) mem_free( db_info_p.author_p );
         if ( db_info_p.serves_p     != NULL ) mem_free( db_info_p.serves_p );
         if ( db_info_p.makes_p      != NULL ) mem_free( db_info_p.makes_p );

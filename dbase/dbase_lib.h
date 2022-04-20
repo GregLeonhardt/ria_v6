@@ -94,6 +94,21 @@ struct  db_info_t
     int                         skill_p;
     int                         rating_p;
 };
+//----------------------------------------------------------------------------
+struct  db_source_t
+{
+    char                    *   recipe_id_p;
+    char                    *   src_format_p;
+    char                    *   file_name_p;
+    char                    *   file_size_p;
+    char                    *   file_date_time_p;
+    char                    *   group_name_p;
+    char                    *   group_subject_p;
+    char                    *   group_date_time_p;
+    char                    *   email_name_p;
+    char                    *   email_subject_p;
+    char                    *   email_date_time_p;
+};
 
 /****************************************************************************
  * Library Private Storage Allocation
@@ -216,6 +231,34 @@ DBASE__info_update(
 //----------------------------------------------------------------------------
 int
 DBASE__info_delete(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+//  DBASE__source.c
+//----------------------------------------------------------------------------
+int
+DBASE__source_exists(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__source_create(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__source_read(
+    struct  rcb_t           *   rcb_p,
+    struct  db_source_t     *   db_source_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__source_update(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__source_delete(
     struct  rcb_t           *   rcb_p
     );
 //----------------------------------------------------------------------------

@@ -44,6 +44,7 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
+#include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
 #include "decode_lib.h"         //  API for all DECODE__*           PRIVATE
@@ -92,6 +93,185 @@
  * LIB Functions
  ****************************************************************************/
 
+/****************************************************************************/
+/**
+ *  Convert a three character month text string into a two digit number.
+ *
+ *  @param  month_p             A pointer to an input string containing
+ *                              a three character abbreviated month.
+ *
+ *  @return                     is successful 1 -> 12, else 0.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE__month(
+    char                    *   month_p
+    )
+{
+    /**
+     *  @param  month           The numeric month                           */
+    int                         month;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    month = 0;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+         if ( strcasecmp( "Jan", month_p ) == 0 ) month =  1;
+    else if ( strcasecmp( "Feb", month_p ) == 0 ) month =  2;
+    else if ( strcasecmp( "Mar", month_p ) == 0 ) month =  3;
+    else if ( strcasecmp( "Apr", month_p ) == 0 ) month =  4;
+    else if ( strcasecmp( "May", month_p ) == 0 ) month =  5;
+    else if ( strcasecmp( "Jun", month_p ) == 0 ) month =  6;
+    else if ( strcasecmp( "Jul", month_p ) == 0 ) month =  7;
+    else if ( strcasecmp( "Aug", month_p ) == 0 ) month =  8;
+    else if ( strcasecmp( "Sep", month_p ) == 0 ) month =  9;
+    else if ( strcasecmp( "Oct", month_p ) == 0 ) month = 10;
+    else if ( strcasecmp( "Nov", month_p ) == 0 ) month = 11;
+    else if ( strcasecmp( "Dec", month_p ) == 0 ) month = 12;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( month );
+}
+
+/****************************************************************************/
+/**
+ *  Format an UNIT field.
+ *
+ *  @param  in_auip_p           A pointer to an input line containing
+ *                              an Unit Of Measurement
+ *  @param  unit_p              A pointer to a holding buffer for the
+ *                              unit field.
+ *  @param  out_buf_size        Size (in bytes) of the output buffer.
+ *
+ *  @return                     A pointer into the input buffer past the
+ *                              Unit Of Measurement field.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+char  *
+DECODE__fmt_unit(
+    char                    *   in_auip_p,
+    char                    *   unit_p,
+    int                         out_buf_size
+    )
+{
+    /**
+     *  @param  xlate_unit_p    A pointer to the translated units.          */
+    char                    *   xlate_unit_p;
+    /**
+     *  @param  unit            A local buffer for the unit of measurement  */
+    char                        tmp_unit[ out_buf_size + 1 ];
+    /**
+     *  @param  ndx             Reference index                             */
+    int                         ndx;
+    /**
+     *  @param  in_unit_p       Local pointer to input data                 */
+    char                    *   in_unit_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Skip over leading spaces and or tabs
+    in_unit_p = text_skip_past_whitespace( in_auip_p );
+
+    //  Initialize the translated units buffer
+    memset( tmp_unit, '\0', sizeof( tmp_unit) );
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+    //  Does this line ONLY contain 'preperations' ?
+    if ( DECODE__is_preperations( in_unit_p ) == false )
+    {
+        //  NO:     Start moving the amount to it's temporary buffer
+        for( ndx = 0;
+             ndx < ( out_buf_size );
+             ndx += 1 )
+        {
+            //  Is this an alpha [a-zA-Z] character ?
+            if ( isalpha( in_unit_p[ ndx ] ) != 0 )
+            {
+                //  YES:    Copy it to the temporary unit buffer
+                tmp_unit[ ndx ] = in_unit_p[ ndx ];
+            }
+            //  Is this a period ['.']
+            else
+            if ( in_unit_p[ ndx ] == '.' )
+            {
+                //  YES:    Throw it away
+                ndx += 1;
+            }
+            else
+            {
+                //  Nothing else here for the unit field
+                break;
+            }
+        }
+
+        //  Attempt to translate the unit of measurement
+        xlate_unit_p = xlate_units( tmp_unit );
+
+        //  Was a translated unit of measurement located ?
+        if ( xlate_unit_p != NULL )
+        {
+            //  YES:    Copy the translation to the output buffer
+            strncpy( unit_p, xlate_unit_p, out_buf_size );
+
+            //  Strip off any trailing spaces.
+            text_strip_whitespace( unit_p );
+
+            //  Set the return pointer to after the unit field
+            in_unit_p = &( in_unit_p[ ndx ] );
+
+            //---------------------------------------------------------------
+            //  Some recipe formats (CookenPro 2) add a '(s)' following the
+            //  unit of measurement.  We will now skip past it [if it is there].
+            //---------------------------------------------------------------
+
+            //  Does the character string '(s)' exist ?
+            if (    ( in_unit_p[ 0 ] == '(' )
+                 && ( in_unit_p[ 1 ] == 's' )
+                 && ( in_unit_p[ 2 ] == ')' ) )
+            {
+                //  YES:    Skip past it.
+                in_unit_p += 3;
+
+                //  And any white space following it.
+                text_strip_whitespace( in_unit_p );
+            }
+        }
+        else
+        {
+            //  NO:     Return the entry pointer
+            in_unit_p = in_auip_p;
+        }
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  Return the pointer that is set past the unit field
+    return ( in_unit_p );
+}
 
 /****************************************************************************/
 /**

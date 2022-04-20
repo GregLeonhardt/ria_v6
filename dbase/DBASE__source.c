@@ -9,7 +9,7 @@
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains the CRUD (Create, Read, Update, and Delete) functions
- *  for the RECIPE-TABLE in the RECIPE 'dbase' library.
+ *  for the SOURCE-TABLE in the RECIPE 'dbase' library.
  *
  *  @note
  *
@@ -46,6 +46,8 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "recipe_api.h"         //  API for all recipe_*            PUBLIC
+#include "email_api.h"          //  API for all email_*             PUBLIC
+#include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
 #include "dbase_api.h"          //  API for all dbase_*             PUBLIC
 #include "dbase_lib.h"          //  API for all DBASE__*            PRIVATE
@@ -85,221 +87,7 @@
 
 /****************************************************************************/
 /**
- *  Create a new record in the RECIPE-TABLE
- *
- *  @param  rcb_p               Pointer to a recipe control block
- *
- *  @return                     A pointer to the recipe buffer, NULL
- *                              if the recipe-id is not located.
- *
- *  @note
- *
- ****************************************************************************/
-
-char    *
-DBASE__recipe_build(
-    struct  rcb_t           *   rcb_p
-    )
-{
-    /**
-     *  @param  buf_a_p         A data buffer                               */
-    char                    *   buf_a_p;
-    /**
-     *  @param  buf_b_p         A data buffer                               */
-    char                    *   buf_b_p;
-    /**
-     *  @param  buf_c_p         A data buffer                               */
-    char                    *   buf_c_p;
-    /**
-     *  @param  auip_p          Pointer to AUIP structure                   */
-    struct  auip_t          *   auip_p;
-    /**
-     *  @param  tmp_data_p      Pointer to a temporary data buffer          */
-    char                    *   tmp_data_p;
-
-    /************************************************************************
-     *  Function Initialization
-     ************************************************************************/
-
-
-    /************************************************************************
-     *  Function Code
-     ************************************************************************/
-
-    //-----------------------------------------------------------------------
-    //  <DESCRIPTION></DESCRIPTION>
-    if ( rcb_p->recipe_p->description_p != NULL )
-    {
-        asprintf( &buf_a_p, "    <description>%s</description>\n",
-                    rcb_p->recipe_p->description_p );
-    }
-    else
-    {
-        asprintf( &buf_a_p, "    <description></description>\n" );
-    }
-
-    //-----------------------------------------------------------------------
-    //  <AUIP>
-
-    //  Start tag
-    asprintf( &buf_b_p, "    <auip-list>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, false, false );
-    free( buf_a_p ); free( buf_b_p ); buf_a_p = buf_c_p;
-
-    //  AUIP list
-    if ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 )
-    {
-        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient_p );
-             auip_p != NULL;
-             auip_p = list_get_next( rcb_p->recipe_p->ingredient_p, auip_p ) )
-        {
-            //-----------------------------------------------------------------
-            //  <TYPE></TYPE>
-            if ( auip_p->type_p != NULL )
-            {
-                asprintf( &buf_b_p, "        <type>?%s</type>\n", auip_p->type_p );
-            }
-            else
-            {
-                asprintf( &buf_b_p, "        <type>I</type>\n" );
-            }
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-
-            //-----------------------------------------------------------------
-            //  <AMOUNT></AMOUNT>
-            if ( auip_p->amount_p != NULL )
-            {
-                asprintf( &buf_b_p, "        <amount>%s</amount>\n", auip_p->amount_p );
-            }
-            else
-            {
-                asprintf( &buf_b_p, "        <amount></amount>\n" );
-            }
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-
-            //-----------------------------------------------------------------
-            //  <UNIT></UNIT>
-            if ( auip_p->unit_p != NULL )
-            {
-                asprintf( &buf_b_p, "        <unit>%s</unit>\n", auip_p->unit_p );
-            }
-            else
-            {
-                asprintf( &buf_b_p, "        <unit></unit>\n" );
-            }
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-
-            //-----------------------------------------------------------------
-            //  <INGREDIENT></INGREDIENT>
-            if ( auip_p->ingredient_p != NULL )
-            {
-                asprintf( &buf_b_p, "        <ingredient>%s</ingredient>\n", auip_p->ingredient_p );
-            }
-            else
-            {
-                asprintf( &buf_b_p, "        <ingredient></ingredient>\n" );
-            }
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-
-            //-----------------------------------------------------------------
-            //  <PREPERATION></PREPERATION>
-            if ( auip_p->preparation_p != NULL )
-            {
-                asprintf( &buf_b_p, "        <preperation>%s</preperation>\n", auip_p->preparation_p );
-            }
-            else
-            {
-                asprintf( &buf_b_p, "        <preperation></preperation>\n" );
-            }
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-
-        }
-    }
-
-    //  Ending tag
-    asprintf( &buf_b_p, "    </auip-list>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
-
-    //-----------------------------------------------------------------------
-    //  <DIRECTIONS></DIRECTIONS>
-
-    //  Start tag
-    asprintf( &buf_b_p, "    <directions>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
-
-    if ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 )
-    {
-        for( tmp_data_p = list_get_first( rcb_p->recipe_p->directions_p );
-             tmp_data_p != NULL;
-             tmp_data_p = list_get_next( rcb_p->recipe_p->directions_p, tmp_data_p ) )
-        {
-            //  Is there something to write ?
-            if ( text_is_blank_line( tmp_data_p ) != true )
-            {
-                //  YES:    Write the directions text.
-                asprintf( &buf_b_p, "        %s\n", tmp_data_p );
-                buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-                free( buf_b_p ); buf_a_p = buf_c_p;
-            }
-        }
-    }
-
-    //  Ending tag
-    asprintf( &buf_b_p, "    </directions>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
-    //-----------------------------------------------------------------------
-    //  <NOTES></NOTES>
-
-    //  Start tag
-    asprintf( &buf_b_p, "    <notes>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
-
-    if ( list_query_count( rcb_p->recipe_p->notes_p ) > 0 )
-    {
-        for( tmp_data_p = list_get_first( rcb_p->recipe_p->notes_p );
-             tmp_data_p != NULL;
-             tmp_data_p = list_get_next( rcb_p->recipe_p->notes_p, tmp_data_p ) )
-        {
-            asprintf( &buf_b_p, "        %s\n", tmp_data_p );
-            buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-            free( buf_b_p ); buf_a_p = buf_c_p;
-        }
-    }
-
-    //  Ending tag
-    asprintf( &buf_b_p, "    </notes>\n" );
-    buf_c_p = text_join( buf_a_p, buf_b_p, true, false );
-    free( buf_b_p ); buf_a_p = buf_c_p;
-
-    //  Will the recipe fit in a BLOB ?
-    if ( strlen( buf_c_p ) > 65536 )
-    {
-        //  YES:    OOPS the data won't fit into the allocated buffer.
-        log_write( MID_FATAL, "DBASE__recipe",
-                   "<NOTES>: At %d the recipe size too large to put into a 65536 "
-                   "byte buffer.", strlen( buf_c_p ) );
-    }
-
-    /************************************************************************
-     *  Function Exit
-     ************************************************************************/
-
-    //  DONE!
-    return( buf_c_p );
-}
-
-/****************************************************************************/
-/**
- *  Create a new record in the RECIPE-TABLE
+ *  Create a new record in the SOURCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -311,7 +99,7 @@ DBASE__recipe_build(
  ****************************************************************************/
 
 int
-DBASE__recipe_exists(
+DBASE__source_exists(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -322,8 +110,8 @@ DBASE__recipe_exists(
      *  @param  func_rc         Called function return code                 */
     int                         func_rc;
     /**
-     *  @param  db_recipe_p     Structure to hold recipe data               */
-    struct  db_recipe_t         db_recipe_p;
+     *  @param  db_source_p     Structure to hold source data               */
+    struct  db_source_t         db_source_p;
 
     /************************************************************************
      *  Function Initialization
@@ -336,8 +124,8 @@ DBASE__recipe_exists(
      *  Function Code
      ************************************************************************/
 
-    //  Attempt to read the recipe from the dBase
-    func_rc = DBASE__recipe_read( rcb_p, &db_recipe_p );
+    //  Attempt to read the source from the dBase
+    func_rc = DBASE__source_read( rcb_p, &db_source_p );
 
     //  Does the RECIPE-ID already exist ?
     if( func_rc == true )
@@ -345,14 +133,25 @@ DBASE__recipe_exists(
         //  YES:    It already exists.
         dbase_rc = true;
 
-        //  Release the storage used to hold the recipe
-        mem_free( db_recipe_p.recipe_id_p   );
-        mem_free( db_recipe_p.recipe_data_p );
+        //  Release the storage used to hold the source
+        //  Release the storage used to hold the info
+                                                     mem_free( db_source_p.recipe_id_p   );
+        if ( db_source_p.recipe_id_p       != NULL ) mem_free( db_source_p.recipe_id_p );
+        if ( db_source_p.src_format_p      != NULL ) mem_free( db_source_p.src_format_p );
+        if ( db_source_p.file_name_p       != NULL ) mem_free( db_source_p.file_name_p );
+        if ( db_source_p.file_size_p       != NULL ) mem_free( db_source_p.file_size_p );
+        if ( db_source_p.file_date_time_p  != NULL ) mem_free( db_source_p.file_date_time_p );
+        if ( db_source_p.group_name_p      != NULL ) mem_free( db_source_p.group_name_p );
+        if ( db_source_p.group_subject_p   != NULL ) mem_free( db_source_p.group_subject_p );
+        if ( db_source_p.group_date_time_p != NULL ) mem_free( db_source_p.group_date_time_p );
+        if ( db_source_p.email_name_p      != NULL ) mem_free( db_source_p.email_name_p );
+        if ( db_source_p.email_subject_p   != NULL ) mem_free( db_source_p.email_subject_p );
+        if ( db_source_p.email_date_time_p != NULL ) mem_free( db_source_p.email_date_time_p );
     }
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__source",
             "EXISTS: %s\n", dbase_rc == 0?"FALSE":"TRUE" );
 #endif
 
@@ -366,7 +165,7 @@ DBASE__recipe_exists(
 
 /****************************************************************************/
 /**
- *  Create a new record in the RECIPE-TABLE
+ *  Create a new record in the SOURCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -377,7 +176,7 @@ DBASE__recipe_exists(
  ****************************************************************************/
 
 int
-DBASE__recipe_create(
+DBASE__source_create(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -413,9 +212,6 @@ DBASE__recipe_create(
      *  Build the MySQL command
      ************************************************************************/
 
-    //  Build the recipe
-    rcb_p->db_recipe_p = DBASE__recipe_build( rcb_p );
-
     //    RECIPE_ID
     if ( rcb_p->recipe_p->recipe_id_p != NULL )
     {
@@ -426,12 +222,109 @@ DBASE__recipe_create(
         count += 1;
     }
 
-    //    RECIPE
-    if ( rcb_p->db_recipe_p != NULL )
+#if 0
+    //    SOURCE_FORMAT
+    if ( rcb_p->recipe_format != NULL )
     {
         DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
                             db_command_val, sizeof( db_command_val ),
-                            "recipe", rcb_p->db_recipe_p );
+                            "source_format", rcb_p->recipe_format );
+
+        count += 1;
+    }
+#endif
+
+    //    FILE_NAME
+    if ( rcb_p->file_path != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "file_name", rcb_p->file_path );
+
+        count += 1;
+    }
+
+    //    FILE_SIZE
+    if ( rcb_p->file_info_p->file_size != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "file_size", rcb_p->file_info_p->file_size );
+
+        count += 1;
+    }
+
+    //    FILE_DATE_TIME
+    if ( rcb_p->file_info_p->date_time != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "file_date_time",
+                            decode_fmt_datetime( rcb_p->file_info_p->date_time ) );
+
+        count += 1;
+    }
+
+    //    GROUP_NAME
+    if ( rcb_p->email_info_p->g_from != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "group_name", rcb_p->email_info_p->g_from );
+
+        count += 1;
+    }
+
+    //    GROUP_SUBJECT
+    if ( rcb_p->email_info_p->g_subject != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "group_subject", rcb_p->email_info_p->g_subject );
+
+        count += 1;
+    }
+
+    //    GROUP_DATE_TIME
+    if (    ( rcb_p->email_info_p->g_datetime != NULL )
+         && ( strlen( rcb_p->email_info_p->g_datetime ) > 8 ) )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "group_date_time",
+                            decode_fmt_datetime( rcb_p->email_info_p->g_datetime ) );
+
+        count += 1;
+    }
+
+    //    EMAIL_NAME
+    if ( rcb_p->email_info_p->e_from != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "email_name", rcb_p->email_info_p->e_from );
+
+        count += 1;
+    }
+
+    //    EMAIL_SUBJECT
+    if ( rcb_p->email_info_p->e_subject != NULL )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "email_subject", rcb_p->email_info_p->e_subject );
+
+        count += 1;
+    }
+
+    //    EMAIL_DATE_TIME
+    if (    ( rcb_p->email_info_p->e_datetime != NULL )
+         && ( strlen( rcb_p->email_info_p->e_datetime ) > 8 ) )
+    {
+        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                            db_command_val, sizeof( db_command_val ),
+                            "email_date_time",
+                            decode_fmt_datetime( rcb_p->email_info_p->e_datetime ) );
 
         count += 1;
     }
@@ -441,14 +334,14 @@ DBASE__recipe_create(
     {
         //  YES:    Build the complete command
         snprintf( db_command, sizeof( db_command ),
-                  "INSERT INTO recipe_table ( %s ) VALUES( %s );",
+                  "INSERT INTO source_table ( %s ) VALUES( %s );",
                   db_command_col, db_command_val );
     }
     else
     {
         //  NO:     Build the complete command
         snprintf( db_command, sizeof( db_command ),
-                  "INSERT INTO recipe_table ( %s ) VALUE( %s );",
+                  "INSERT INTO source_table ( %s ) VALUE( %s );",
                   db_command_col, db_command_val );
     }
 
@@ -461,7 +354,7 @@ DBASE__recipe_create(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__source",
             "CREATE: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -469,7 +362,7 @@ DBASE__recipe_create(
     if ( sql_rc != 0 )
     {
         //  The database creation filed.
-        log_write( MID_FATAL, "DBASE__recipe",
+        log_write( MID_FATAL, "DBASE__source",
                 "CREATE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
     }
     else
@@ -488,7 +381,7 @@ DBASE__recipe_create(
 
 /****************************************************************************/
 /**
- *  Read a record from the RECIPE-TABLE
+ *  Read a record from the SOURCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -500,9 +393,9 @@ DBASE__recipe_create(
  ****************************************************************************/
 
 int
-DBASE__recipe_read(
+DBASE__source_read(
     struct  rcb_t           *   rcb_p,
-    struct  db_recipe_t     *   db_recipe_p
+    struct  db_source_t     *   db_source_p
     )
 {
     /**
@@ -528,9 +421,19 @@ DBASE__recipe_read(
     //  Variable initialization
     dbase_rc = false;
 
-    //  Clear any old pointers in the recipe structure
-    db_recipe_p->recipe_id_p   = NULL;
-    db_recipe_p->recipe_data_p = NULL;
+    //  Clear any old pointers in the source structure
+    db_source_p->recipe_id_p       = NULL;
+    db_source_p->recipe_id_p       = NULL;
+    db_source_p->src_format_p      = NULL;
+    db_source_p->file_name_p       = NULL;
+    db_source_p->file_size_p       = NULL;
+    db_source_p->file_date_time_p  = NULL;
+    db_source_p->group_name_p      = NULL;
+    db_source_p->group_subject_p   = NULL;
+    db_source_p->group_date_time_p = NULL;
+    db_source_p->email_name_p      = NULL;
+    db_source_p->email_subject_p   = NULL;
+    db_source_p->email_date_time_p = NULL;
 
     //  Clear out the MySQL command buffer.
     memset( db_command, '\0', sizeof( db_command ) );
@@ -541,7 +444,10 @@ DBASE__recipe_read(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command),
-              "SELECT recipe_id, recipe FROM recipe_table WHERE recipe_id='%s'; ",
+              "SELECT recipe_id, format, file_name, file_size, file_date_time, "
+                      "group_name, group_subject, group_date_time, "
+                      "email_name, email_subject, email_date_time "
+                      " FROM source_table WHERE recipe_id='%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -549,7 +455,7 @@ DBASE__recipe_read(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__source",
             "READ: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -576,18 +482,17 @@ DBASE__recipe_read(
     if ( row != NULL )
     {
         //  YES:    Read the RECIPE-ID
-        db_recipe_p->recipe_id_p   = text_copy_to_new( row[  0 ] );
-        db_recipe_p->recipe_data_p = text_copy_to_new( row[  1 ] );
-
-#if 0
-if ( strlen( row[ 0 ] ) != strlen( db_recipe_p->recipe_id_p ) )
-    log_write( MID_FATAL, "DBASE__recipe", "RECIPE_ID %d != %d\n", strlen( row[ 0 ] ), strlen( db_recipe_p->recipe_id_p ) );
-if ( strlen( row[ 1 ] ) != strlen( db_recipe_p->recipe_data_p ) )
-    log_write( MID_FATAL, "DBASE__recipe", "RECIPE_ID %d != %d\n", strlen( row[ 1 ] ), strlen( db_recipe_p->recipe_data_p ) );
-
-log_write( MID_INFO, "DBASE__recipe", "RECIPE_ID   length = %p, %4d, %s\n", db_recipe_p->recipe_id_p, strlen( db_recipe_p->recipe_id_p   ), db_recipe_p->recipe_id_p );
-log_write( MID_INFO, "DBASE__recipe", "RECIPE_DATA length = %p, %4d,\n %.100s\n", db_recipe_p->recipe_data_p, strlen( db_recipe_p->recipe_data_p ), db_recipe_p->recipe_data_p );
-#endif
+        db_source_p->recipe_id_p        = text_copy_to_new( row[  0 ] );
+        db_source_p->src_format_p       = text_copy_to_new( row[  1 ] );
+        db_source_p->file_name_p        = text_copy_to_new( row[  2 ] );
+        db_source_p->file_size_p        = text_copy_to_new( row[  3 ] );
+        db_source_p->file_date_time_p   = text_copy_to_new( row[  4 ] );
+        db_source_p->group_name_p       = text_copy_to_new( row[  5 ] );
+        db_source_p->group_subject_p    = text_copy_to_new( row[  6 ] );
+        db_source_p->group_date_time_p  = text_copy_to_new( row[  7 ] );
+        db_source_p->email_name_p       = text_copy_to_new( row[  8 ] );
+        db_source_p->email_subject_p    = text_copy_to_new( row[  9 ] );
+        db_source_p->email_date_time_p  = text_copy_to_new( row[ 10 ] );
 
         //  Release the results
         mysql_free_result( result );
@@ -605,7 +510,7 @@ log_write( MID_INFO, "DBASE__recipe", "RECIPE_DATA length = %p, %4d,\n %.100s\n"
 
 /****************************************************************************/
 /**
- *  Update an existing record in the RECIPE-TABLE
+ *  Update an existing record in the SOURCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -617,7 +522,7 @@ log_write( MID_INFO, "DBASE__recipe", "RECIPE_DATA length = %p, %4d,\n %.100s\n"
  ****************************************************************************/
 
 int
-DBASE__recipe_update(
+DBASE__source_update(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -646,13 +551,13 @@ DBASE__recipe_update(
      ************************************************************************/
 
     //  Delete the existing record
-    dbase_rc = DBASE__recipe_delete( rcb_p );
+    dbase_rc = DBASE__source_delete( rcb_p );
 
     //  Was the delete successful ?
     if ( dbase_rc == true )
     {
         //  YES:    CREATE the new record
-        dbase_rc = DBASE__recipe_create( rcb_p );
+        dbase_rc = DBASE__source_create( rcb_p );
     }
 
     /************************************************************************
@@ -665,7 +570,7 @@ DBASE__recipe_update(
 
 /****************************************************************************/
 /**
- *  Delete a record from the RECIPE-TABLE
+ *  Delete a record from the SOURCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -677,7 +582,7 @@ DBASE__recipe_update(
  ****************************************************************************/
 
 int
-DBASE__recipe_delete(
+DBASE__source_delete(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -708,7 +613,7 @@ DBASE__recipe_delete(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command ),
-              "DELETE FROM recipe_table WHERE recipe_id = '%s'; ",
+              "DELETE FROM source_table WHERE recipe_id = '%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -716,7 +621,7 @@ DBASE__recipe_delete(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
+    log_write( MID_LOGONLY, "DBASE__source",
             "DELETE: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -724,7 +629,7 @@ DBASE__recipe_delete(
     if ( sql_rc != 0 )
     {
         //  The database creation filed.
-        log_write( MID_FATAL, "DBASE__recipe",
+        log_write( MID_FATAL, "DBASE__source",
                 "DELETE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
     }
     else

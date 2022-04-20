@@ -719,7 +719,7 @@ encode_xml(
     }
     //-----------------------------------------------------------------------
     //  <FILE-NAME></FILE-NAME>
-    if ( rcb_p->file_info_p->dir_name != NULL )
+    if ( rcb_p->file_path != NULL )
     {
         asprintf( &write_data_p, "        <file-name>%s</file-name>\n", rcb_p->file_path );
         list_put_last( rcb_p->export_list_p, write_data_p );

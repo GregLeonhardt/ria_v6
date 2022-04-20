@@ -94,119 +94,258 @@
 
 /****************************************************************************/
 /**
- *  Format an UNIT field.
+ *  Format the date/time string.
  *
- *  @param  in_auip_p           A pointer to an input line containing
- *                              an Unit Of Measurement
- *  @param  unit_p              A pointer to a holding buffer for the
- *                              unit field.
- *  @param  out_buf_size        Size (in bytes) of the output buffer.
+ *  @param  src_date_time_p Pointer to source date/time string.
  *
- *  @return                     A pointer into the input buffer past the
- *                              Unit Of Measurement field.
+ *  @return                 Pointer to a formatted date/time string, or NULL
+ *                          when a valid formatted date string is not detected.
  *
  *  @note
+ *      FORMATTED:          yyyy-mm-dd hh:mm:ss         2022-04-18 18:51:35
  *
  ****************************************************************************/
 
 char  *
-DECODE__fmt_unit(
-    char                    *   in_auip_p,
-    char                    *   unit_p,
-    int                         out_buf_size
+decode_fmt_datetime(
+    char                    *   src_datetime_p
     )
 {
     /**
-     *  @param  xlate_unit_p    A pointer to the translated units.          */
-    char                    *   xlate_unit_p;
+     *  @param  fmt_date_p      Pointer to the formatted date string        */
+    char                    *   fmt_datetime_p;
     /**
-     *  @param  unit            A local buffer for the unit of measurement  */
-    char                        tmp_unit[ out_buf_size + 1 ];
+     *  @param  datetime_p      Pointer inside the date/time string         */
+    char                    *   datetime_p;
     /**
-     *  @param  ndx             Reference index                             */
-    int                         ndx;
+     *  @param                  Date & Time values                          */
+    int                         dt_year;
+    int                         dt_month;
+    int                         dt_day;
+    int                         dt_hour;
+    int                         dt_minute;
+    int                         dt_second;
     /**
-     *  @param  in_unit_p       Local pointer to input data                 */
-    char                    *   in_unit_p;
+     *  @param  dow             Day-Of-Week                                 */
+    char                        dow[ 5 ];
+    /**
+     *  @param  month           Month abbreviation                          */
+    char                        month[ 5 ];
 
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
 
-    //  Skip over leading spaces and or tabs
-    in_unit_p = text_skip_past_whitespace( in_auip_p );
-
-    //  Initialize the translated units buffer
-    memset( tmp_unit, '\0', sizeof( tmp_unit) );
+    //  Assume there isn't a valid date string present
+    fmt_datetime_p = NULL;
+    dt_year   = 0;
+    dt_month  = 0;
+    dt_day    = 0;
+    dt_hour   = 0;
+    dt_minute = 0;
+    dt_second = 0;
 
     /************************************************************************
      *  Function Body
      ************************************************************************/
 
-    //  Does this line ONLY contain 'preperations' ?
-    if ( DECODE__is_preperations( in_unit_p ) == false )
+    //  Is the source date string long enough to contain a valid date ?
+    if ( strlen( src_datetime_p ) >= 8 )
     {
-        //  NO:     Start moving the amount to it's temporary buffer
-        for( ndx = 0;
-             ndx < ( out_buf_size );
-             ndx += 1 )
+        //  YES:    Allocate storage for the formatted date.
+        fmt_datetime_p = mem_malloc( 20 );
+
+        //--------------------------------------------------------------------
+        //  Source format #1    2006-01-25 10:49:24
+        //--------------------------------------------------------------------
+        if (    (          src_datetime_p[  4 ] == '-'   )
+             && (          src_datetime_p[  7 ] == '-'   )
+             && (          src_datetime_p[ 10 ] == ' '   )
+             && (          src_datetime_p[ 13 ] == ':'   )
+             && (          src_datetime_p[ 16 ] == ':'   ) )
         {
-            //  Is this an alpha [a-zA-Z] character ?
-            if ( isalpha( in_unit_p[ ndx ] ) != 0 )
-            {
-                //  YES:    Copy it to the temporary unit buffer
-                tmp_unit[ ndx ] = in_unit_p[ ndx ];
-            }
-            //  Is this a period ['.']
-            else
-            if ( in_unit_p[ ndx ] == '.' )
-            {
-                //  YES:    Throw it away
-                ndx += 1;
-            }
-            else
-            {
-                //  Nothing else here for the unit field
-                break;
-            }
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%d-%d-%d %d:%d:%d",
+                    &dt_year  , &dt_month , &dt_day   ,
+                    &dt_hour  , &dt_minute, &dt_second );
         }
 
-        //  Attempt to translate the unit of measurement
-        xlate_unit_p = xlate_units( tmp_unit );
-
-        //  Was a translated unit of measurement located ?
-        if ( xlate_unit_p != NULL )
+        //--------------------------------------------------------------------
+        //  Source format #2    2010/12/11 19:27:17
+        //--------------------------------------------------------------------
+        else
+        if (    (          src_datetime_p[  4 ] == '/'   )
+             && (          src_datetime_p[  7 ] == '/'   )
+             && (          src_datetime_p[ 10 ] == ' '   )
+             && (          src_datetime_p[ 13 ] == ':'   )
+             && (          src_datetime_p[ 16 ] == ':'   ) )
         {
-            //  YES:    Copy the translation to the output buffer
-            strncpy( unit_p, xlate_unit_p, out_buf_size );
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%d/%d/%d %d:%d:%d",
+                    &dt_year  , &dt_month , &dt_day   ,
+                    &dt_hour  , &dt_minute, &dt_second );
+        }
 
-            //  Strip off any trailing spaces.
-            text_strip_whitespace( unit_p );
+        //--------------------------------------------------------------------
+        //  Source format #3    Sun, 04 Feb 2001 19:40:37 -0600
+        //                      Mon, 1 Jan 2001 09:49:29 -0800
+        //--------------------------------------------------------------------
+        else
+        if (    ( isalpha( src_datetime_p[  0 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  1 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  2 ] ) !=  0  )
+             && (          src_datetime_p[  3 ] == ','   )
+             && ( isdigit( src_datetime_p[  5 ] ) !=  0  ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%s %d %s %d %d:%d:%d",
+                    dow,
+                    &dt_day   ,  month    , &dt_year  ,
+                    &dt_hour  , &dt_minute, &dt_second );
 
-            //  Set the return pointer to after the unit field
-            in_unit_p = &( in_unit_p[ ndx ] );
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+        }
 
-            //---------------------------------------------------------------
-            //  Some recipe formats (CookenPro 2) add a '(s)' following the
-            //  unit of measurement.  We will now skip past it [if it is there].
-            //---------------------------------------------------------------
+        //--------------------------------------------------------------------
+        //  Source format #4    01 Jan 2001 14:16:41
+        //                      2 Jan 2001 10:09:37 -0000
+        //--------------------------------------------------------------------
+        else
+        if (    ( isdigit( src_datetime_p[  0 ] ) !=  0  )
+             && (    (     src_datetime_p[  1 ] == ' '   )
+                  || (     src_datetime_p[  2 ] == ' '   ) )
+             && ( isalpha( src_datetime_p[  3 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  4 ] ) !=  0  ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%d %s %d %d:%d:%d",
+                    &dt_day   ,  month    , &dt_year  ,
+                    &dt_hour  , &dt_minute, &dt_second );
 
-            //  Does the character string '(s)' exist ?
-            if (    ( in_unit_p[ 0 ] == '(' )
-                 && ( in_unit_p[ 1 ] == 's' )
-                 && ( in_unit_p[ 2 ] == ')' ) )
-            {
-                //  YES:    Skip past it.
-                in_unit_p += 3;
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+        }
 
-                //  And any white space following it.
-                text_strip_whitespace( in_unit_p );
-            }
+        //--------------------------------------------------------------------
+        //  Source format #5    Fri May 5, 2006 10:41am(PDT)
+        //--------------------------------------------------------------------
+        else
+        if (    ( isalpha( src_datetime_p[  0 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  1 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  2 ] ) !=  0  )
+             && (          src_datetime_p[  3 ] == ' '   )
+             && ( isalpha( src_datetime_p[  4 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  5 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  6 ] ) !=  0  )
+             && (          src_datetime_p[  7 ] == ' '   )
+             && ( isdigit( src_datetime_p[  8 ] ) !=  0  ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%s %s %d, %d %d:%d",
+                    dow,
+                    month     , &dt_day   ,   &dt_year  ,
+                    &dt_hour  , &dt_minute );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format #6    09/12/06 06:36:15
+        //--------------------------------------------------------------------
+        else
+        if (    (          src_datetime_p[  2 ] == '/'   )
+             && (          src_datetime_p[  5 ] == '/'   )
+             && (          src_datetime_p[  8 ] == ' '   )
+             && (          src_datetime_p[ 11 ] == ':'   )
+             && (          src_datetime_p[ 14 ] == ':'   ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%d/%d/%d %d:%d:%d",
+                    &dt_month , &dt_day   , &dt_year   ,
+                    &dt_hour  , &dt_minute, &dt_second );
+
+            //  Add century to the shorthand year
+            dt_year += 2000;
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format #7    Sat, Oct 14 2006 12:42=C2=01am=20
+        //                      Tues, Oct 17 2006 12:47=C2=01am=20
+        //--------------------------------------------------------------------
+        else
+        if (    ( isalpha( src_datetime_p[  0 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  1 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  2 ] ) !=  0  )
+             && (    (     src_datetime_p[  3 ] == ','   )
+                  || (     src_datetime_p[  4 ] == ','   ) )
+             && ( isalpha( src_datetime_p[  6 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  7 ] ) !=  0  )
+             && ( isdigit( src_datetime_p[ 10 ] ) !=  0  ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%s %s %d %d %d:%d:%d",
+                    dow,
+                    month     , &dt_day   , &dt_year   ,
+                    &dt_hour  , &dt_minute, &dt_second );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format #8    Tue Jan 03 20:35:58 2006
+        //--------------------------------------------------------------------
+        else
+        if (    ( isalpha( src_datetime_p[  0 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  1 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  2 ] ) !=  0  )
+             && (          src_datetime_p[  3 ] == ' '   )
+             && ( isalpha( src_datetime_p[  4 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  5 ] ) !=  0  )
+             && ( isalpha( src_datetime_p[  6 ] ) !=  0  )
+             && (          src_datetime_p[  7 ] == ' '   )
+             && ( isdigit( src_datetime_p[  8 ] ) !=  0  ) )
+        {
+            //  YES:        Parse the date / time string
+            sscanf( src_datetime_p, "%s %s %d %d %d:%d:%d %d",
+                    dow,
+                    month     , &dt_day   , &dt_hour  ,
+                    &dt_minute, &dt_second, &dt_year    );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+        }
+
+        //--------------------------------------------------------------------
+        //  Decoding is complete, build the formatted date / time string
+        //--------------------------------------------------------------------
+
+        //  Did we successfully decode the date time string
+        if (    ( ( 1990 <= dt_year   ) && ( 2200 >= dt_year   ) )
+             && ( (    1 <= dt_month  ) && (   12 >= dt_month  ) )
+             && ( (    1 <= dt_day    ) && (   31 >= dt_day    ) )
+             && ( (    0 <= dt_hour   ) && (   23 >= dt_hour   ) )
+             && ( (    0 <= dt_minute ) && (   59 >= dt_minute ) )
+             && ( (    0 <= dt_second ) && (   59 >= dt_second ) ) )
+        {
+            //  YES:    Format the Date/Time string
+            snprintf( fmt_datetime_p, 20,
+                    "%04d-%02d-%02d %02d:%02d:%02d",
+                    dt_year  , dt_month , dt_day   ,
+                    dt_hour  , dt_minute, dt_second );
         }
         else
         {
-            //  NO:     Return the entry pointer
-            in_unit_p = in_auip_p;
+            //  NO:     The date/time format is unknown or
+            //          the data is invalid.
+            fmt_datetime_p = text_copy_to_new( "1900-01-01 00:00:00" );
+
+            //  Write a warning message
+            log_write( MID_WARNING, "decode_fmt_datetime",
+                       "Improperly formatted DATE/TIME: '%s'\n",
+                       src_datetime_p );
         }
     }
 
@@ -214,8 +353,8 @@ DECODE__fmt_unit(
      *  Function Exit
      ************************************************************************/
 
-    //  Return the pointer that is set past the unit field
-    return ( in_unit_p );
+    // Return the pointer to a formatted date string
+    return ( fmt_datetime_p );
 }
 
 /****************************************************************************/
@@ -252,7 +391,7 @@ decode_is_tag(
      *  Function
      ************************************************************************/
 
-    //  Look for the first occurence of the search tag data.
+    //  Look for the first occurrence of the search tag data.
     return_data_p = strcasestr( data_p, tag_p );
 
     //  Was the tag string found ?

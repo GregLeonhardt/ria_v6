@@ -401,7 +401,7 @@ DBASE__open(
     //  Create TITLE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS title_table("
                                "recipe_id VARCHAR(50),"
-                               "title TEXT,"
+                               "title TINYTEXT,"
                                "PRIMARY KEY(recipe_id)"
                                ");");
 

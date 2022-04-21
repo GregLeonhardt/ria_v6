@@ -309,7 +309,7 @@ decode_fmt_datetime(
              && ( isdigit( src_datetime_p[  8 ] ) !=  0  ) )
         {
             //  YES:        Parse the date / time string
-            sscanf( src_datetime_p, "%s %s %d %d %d:%d:%d %d",
+            sscanf( src_datetime_p, "%s %s %d %d:%d:%d %d",
                     dow,
                     month     , &dt_day   , &dt_hour  ,
                     &dt_minute, &dt_second, &dt_year    );
@@ -1715,6 +1715,21 @@ decode(
                 ok_to_encode = false;
             }
         }
+
+        /********************************************************************
+         *  Verify this is a good recipe
+         ********************************************************************/
+
+        //  Did we encounter any problems this far ?
+        if ( ok_to_encode == true )
+        {
+            //  NO:     Perform the final verification
+            ok_to_encode = DECODE__recipe_verify( rcb_p );
+        }
+
+        /********************************************************************
+         *  Pass the recipe on to the recipe encoder.
+         ********************************************************************/
 
         //  Is it OK to encode this recipe ?
         if ( ok_to_encode == true )

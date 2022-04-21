@@ -44,6 +44,7 @@
 #include "tcb_api.h"            //  API for all tcb_*               PUBLIC
 #include "rcb_api.h"            //  API for all rcb_*               PUBLIC
 #include "import_api.h"         //  API for all import_*            PUBLIC
+#include "email_api.h"          //  API for all email_*             PUBLIC
 #include "xlate_api.h"          //  API for all xlate_*             PUBLIC
                                 //*******************************************
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
@@ -92,6 +93,324 @@
 /****************************************************************************
  * LIB Functions
  ****************************************************************************/
+
+/****************************************************************************/
+/**
+ *  Verify the format of the current recipe
+ *
+ *  @param  rcb_p               Pointer to a Recipe Control Block
+ *
+ *  @return                     TRUE for a valid recipe, else FALSE
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE__recipe_verify(
+    struct  rcb_t           *   rcb_p
+    )
+{
+    /**
+     *  @param  decode_rc       Return code from this function              */
+    int                         decode_rc;
+    /**
+     *  @param  auip_p          Pointer to AUIP structure                   */
+    struct  auip_t          *   auip_p;
+    /**
+     *  @param  tmp_data_p      Pointer to a temporary data buffer          */
+    char                    *   tmp_data_p;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    decode_rc = true;
+
+    /************************************************************************
+     *  Recipe
+     ************************************************************************/
+
+    //  NAME (TITLE)
+    if (    ( rcb_p->recipe_p->name_p           == NULL )
+         || ( strlen( rcb_p->recipe_p->name_p ) <     0 )
+         || ( strlen( rcb_p->recipe_p->name_p ) >   255 ) )
+                    decode_rc = false;
+
+    //  AUIP        (AMOUNT - UNIT - INGREDIENT - PREPARATION)
+    //-----------------------------------------------------------------------
+    if (    ( decode_rc == true )
+         && ( list_query_count( rcb_p->recipe_p->ingredient_p ) == 0 ) )
+    {
+        //  AUIP is required for a valid recipe
+        decode_rc = false;
+    }
+    if (    ( decode_rc == true )
+         && ( list_query_count( rcb_p->recipe_p->ingredient_p ) > 0 ) )
+    {
+        for( auip_p = list_get_first( rcb_p->recipe_p->ingredient_p );
+             auip_p != NULL;
+             auip_p = list_get_next( rcb_p->recipe_p->ingredient_p, auip_p ) )
+        {
+            //  TYPE
+            if (    (         auip_p->type_p   != NULL )
+                 && ( strlen( auip_p->type_p ) !=    1 ) )
+                            decode_rc = false;
+            //  AMOUNT
+            else
+            if (    (         auip_p->amount_p        != NULL )
+                 && (    ( strlen( auip_p->amount_p ) <   0 )
+                      || ( strlen( auip_p->amount_p ) >  15 ) ) )
+                            decode_rc = false;
+            //  UNIT
+            else
+            if (    (         auip_p->unit_p        != NULL )
+                 && (    ( strlen( auip_p->unit_p ) <   0 )
+                      || ( strlen( auip_p->unit_p ) >  15 ) ) )
+                            decode_rc = false;
+            //  INGREDIENT
+            else
+            if (    (         auip_p->ingredient_p        != NULL )
+                 && (    ( strlen( auip_p->ingredient_p ) <   0 )
+                      || ( strlen( auip_p->ingredient_p ) >  99 ) ) )
+                            decode_rc = false;
+            //  PREPERATION
+            else
+            if (    (         auip_p->preparation_p        != NULL )
+                 && (    ( strlen( auip_p->preparation_p ) <   0 )
+                      || ( strlen( auip_p->preparation_p ) >  64 ) ) )
+                            decode_rc = false;
+
+            //  Was there an error ?
+            if ( decode_rc == false )
+            {
+                //  YES:    Stop the verification cycle
+                break;
+            }
+        }
+    }
+
+    //  DIRECTIONS
+#if 0
+    if (    ( decode_rc == true )
+         && ( list_query_count( rcb_p->recipe_p->directions_p ) == 0 ) )
+    {
+        //  DIRECTIONS are required for a valid recipe
+        decode_rc = false;
+    }
+#endif
+    if (    ( decode_rc == true )
+         && ( list_query_count( rcb_p->recipe_p->directions_p ) > 0 ) )
+    {
+        /**
+         *  @param  size        Total size of the directions                */
+        int                     size;
+
+        size = 0;
+
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->directions_p );
+             tmp_data_p != NULL;
+             tmp_data_p = list_get_next( rcb_p->recipe_p->directions_p, tmp_data_p ) )
+        {
+            //  Is there something to write ?
+            if ( text_is_blank_line( tmp_data_p ) != true )
+            {
+                //  YES:    Add the string length to the total length
+                size += strlen( tmp_data_p );
+            }
+        }
+
+        //  Is the directions length within the acceptable range ?
+        if ( ( size <     0 ) || ( size >  2048 ) )
+            decode_rc = false;
+    }
+
+    //  NOTES
+    if (    ( decode_rc == true )
+         && ( list_query_count( rcb_p->recipe_p->notes_p ) > 0 ) )
+    {
+        /**
+         *  @param  size        Total size of the directions                */
+        int                     size;
+
+        size = 0;
+
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->notes_p );
+             tmp_data_p != NULL;
+             tmp_data_p = list_get_next( rcb_p->recipe_p->notes_p, tmp_data_p ) )
+        {
+            //  Is there something to write ?
+            if ( text_is_blank_line( tmp_data_p ) != true )
+            {
+                //  YES:    Add the string length to the total length
+                size += strlen( tmp_data_p );
+            }
+        }
+
+        //  Is the directions length within the acceptable range ?
+        if ( ( size <     0 ) || ( size >  2048 ) )
+            decode_rc = false;
+    }
+
+    /************************************************************************
+     *  Recipe-Information
+     ************************************************************************/
+
+    //  AUTHOR
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->author_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->author_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->author_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  DESCRIPTION
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->description_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->description_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->description_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  WEB_ADDRESS
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->web_address_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->web_address_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->web_address_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  COPYRIGHT
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->copyright_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->copyright_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->copyright_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  EDITED_BY
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->edited_by_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->edited_by_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->edited_by_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  FORMATTED_BY
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->formatted_by_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->formatted_by_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->formatted_by_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    //  IMPORTED_FROM
+    if (    ( decode_rc == true )
+         && (      rcb_p->recipe_p->import_from_p           != NULL )
+         && (    ( strlen( rcb_p->recipe_p->import_from_p ) <     0 )
+              || ( strlen( rcb_p->recipe_p->import_from_p ) >   255 ) ) )
+                    decode_rc = false;
+
+    /************************************************************************
+     *  Recipe-Source
+     ************************************************************************/
+
+    //  GROUP_FROM
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->g_from ) <   0 )
+              || ( strlen( rcb_p->email_info_p->g_from ) > 255 ) ) )
+                    decode_rc = false;
+
+    //  GROUP_SUBJECT
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->g_subject ) <   0 )
+              || ( strlen( rcb_p->email_info_p->g_subject ) > 255 ) ))
+                    decode_rc = false;
+
+    //  GROUP_DATETIME
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->g_datetime ) <   0 )
+              || ( strlen( rcb_p->email_info_p->g_datetime ) > 255 ) ) )
+                    decode_rc = false;
+
+    //  EMAIL_FROM
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->e_from ) <   0 )
+              || ( strlen( rcb_p->email_info_p->e_from ) > 255 ) ) )
+                    decode_rc = false;
+
+    //  EMAIL_SUBJECT
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->e_subject ) <   0 )
+              || ( strlen( rcb_p->email_info_p->e_subject ) > 255 ) ) )
+                    decode_rc = false;
+
+    //  EMAIL_DATETIME
+    if (    ( decode_rc == true )
+         && (    ( strlen( rcb_p->email_info_p->e_datetime ) <   0 )
+              || ( strlen( rcb_p->email_info_p->e_datetime ) > 255 ) ) )
+                    decode_rc = false;
+
+#if 0
+//----------------------------------------------------------------------------
+struct   recipe_t
+{
+    /**
+     *  @param  serves          Number of people                            */
+    char                    *   serves_p;
+    /**
+     *  @param  serving_size    How much each person is served              */
+    char                    *   servings_size_p;
+    /**
+     *  @param  makes           How many of something the recipe will make  */
+    char                    *   makes_p;
+    /**
+     *  @param  makes_unit      Unit of measurement for 'makes'             */
+    char                    *   makes_unit_p;
+    /**
+     *  @param  time_prep       How long is should take to get ready        */
+    char                    *   time_prep_p;
+    /**
+     *  @param  time_wait       After preparation and before cooking        */
+    char                    *   time_wait_p;
+    /**
+     *  @param  time_cook       How long it should take to cook             */
+    char                    *   time_cook_p;
+    /**
+     *  @param  time_rest       After cooked before serving                 */
+    char                    *   time_rest_p;
+    /**
+     *  @param  time_total      All the times added up.                     */
+    char                    *   time_total_p;
+    /**
+     *  @param  based_on        Another recipe this one is based on         */
+    char                    *   based_on_p;
+    /**
+     *  @param  serve_with      Something to serve with                     */
+    char                    *   serve_with_p;
+    /**
+     *  @param  wine            Sone wines that would go well               */
+    char                    *   wine_p;
+    /**
+     *  @param  rating          How good (0-9)                              */
+    char                    *   rating_p;
+    /**
+     *  @param  skill           Skill needed to make (0-9)                  */
+    char                    *   skill_p;
+    /**
+     *  @param  instructions    A single string of the "directions:         */
+    char                    *   instructions_p;
+    /**
+     *  @param  source          Where the recipe came from                  */
+    char                    *   source_p;
+    /**
+     *  @param  Chapter         List of Chapters for this recipe            */
+    struct  list_base_t     *   chapter_p;
+};
+#endif
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( decode_rc );
+}
 
 /****************************************************************************/
 /**

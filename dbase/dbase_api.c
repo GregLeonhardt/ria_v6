@@ -191,19 +191,57 @@ dbase_insert(
 
         //-----------------------------------------------------------------------
         //  TITLE_TABLE
-        DBASE__title_create( rcb_p );
+        if ( dbase_rc == true )
+        {
+            //  YES:    Create the title record
+            dbase_rc = DBASE__title_create( rcb_p );
+        }
 
         //-----------------------------------------------------------------------
         //  RECIPE_TABLE
-        DBASE__recipe_create( rcb_p );
+        if ( dbase_rc == true )
+        {
+            //  YES:    Create the recipe record
+            dbase_rc = DBASE__recipe_create( rcb_p );
+
+            //  Was the create a success ?
+            if ( dbase_rc != true )
+            {
+                //  NO:     We need to delete the new records
+                DBASE__title_delete( rcb_p );
+            }
+        }
 
         //-----------------------------------------------------------------------
         //  INFO_TABLE
-        DBASE__info_create( rcb_p );
+        if ( dbase_rc == true )
+        {
+            dbase_rc = DBASE__info_create( rcb_p );
+
+            //  Was the create a success ?
+            if ( dbase_rc != true )
+            {
+                //  NO:     We need to delete the new records
+                DBASE__title_delete( rcb_p );
+                DBASE__recipe_delete( rcb_p );
+            }
+        }
 
         //-----------------------------------------------------------------------
         //  SOURCE_TABLE
-        DBASE__source_create( rcb_p );
+        if ( dbase_rc == true )
+        {
+            dbase_rc = DBASE__source_create( rcb_p );
+
+            //  Was the create a success ?
+            if ( dbase_rc != true )
+            {
+                //  NO:     We need to delete the new records
+                DBASE__title_delete( rcb_p );
+                DBASE__recipe_delete( rcb_p );
+                DBASE__info_delete( rcb_p );
+            }
+        }
     }
 
     /************************************************************************

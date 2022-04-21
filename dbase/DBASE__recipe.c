@@ -90,7 +90,7 @@
  *  @param  rcb_p               Pointer to a recipe control block
  *
  *  @return                     A pointer to the recipe buffer, NULL
- *                              if the recipe-id is not located.
+ *                              if the recipe can't be built.
  *
  *  @note
  *
@@ -284,9 +284,15 @@ DBASE__recipe_build(
     if ( strlen( buf_c_p ) > 65536 )
     {
         //  YES:    OOPS the data won't fit into the allocated buffer.
-        log_write( MID_FATAL, "DBASE__recipe",
-                   "<NOTES>: At %d the recipe size too large to put into a 65536 "
-                   "byte buffer.", strlen( buf_c_p ) );
+        log_write( MID_WARNING, "DBASE__recipe",
+                   "At %d the recipe size too large to put into a 65536 "
+                   "byte buffer.\n", strlen( buf_c_p ) );
+
+        //  Too big to do anything with.
+        mem_free( buf_c_p );
+
+        //  NULL out the pointer to show the build failed
+        buf_c_p = NULL;
     }
 
     /************************************************************************
@@ -416,66 +422,70 @@ DBASE__recipe_create(
     //  Build the recipe
     rcb_p->db_recipe_p = DBASE__recipe_build( rcb_p );
 
-    //    RECIPE_ID
-    if ( rcb_p->recipe_p->recipe_id_p != NULL )
-    {
-        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
-                            db_command_val, sizeof( db_command_val ),
-                            "recipe_id", rcb_p->recipe_p->recipe_id_p );
-
-        count += 1;
-    }
-
-    //    RECIPE
+    //  Was the build successful ?
     if ( rcb_p->db_recipe_p != NULL )
     {
-        DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
-                            db_command_val, sizeof( db_command_val ),
-                            "recipe", rcb_p->db_recipe_p );
+        //    YES:  RECIPE_ID
+        if ( rcb_p->recipe_p->recipe_id_p != NULL )
+        {
+            DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                                db_command_val, sizeof( db_command_val ),
+                                "recipe_id", rcb_p->recipe_p->recipe_id_p );
 
-        count += 1;
-    }
+            count += 1;
+        }
 
-    //  Are there more than one columns ?
-    if ( count > 1 )
-    {
-        //  YES:    Build the complete command
-        snprintf( db_command, sizeof( db_command ),
-                  "INSERT INTO recipe_table ( %s ) VALUES( %s );",
-                  db_command_col, db_command_val );
-    }
-    else
-    {
-        //  NO:     Build the complete command
-        snprintf( db_command, sizeof( db_command ),
-                  "INSERT INTO recipe_table ( %s ) VALUE( %s );",
-                  db_command_col, db_command_val );
-    }
+        //    RECIPE
+        if ( rcb_p->db_recipe_p != NULL )
+        {
+            DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
+                                db_command_val, sizeof( db_command_val ),
+                                "recipe", rcb_p->db_recipe_p );
 
-    /************************************************************************
-     *  Perform the MySQL query and validate the success or failure.
-     ************************************************************************/
+            count += 1;
+        }
 
-    //  Now perform the command.
-    sql_rc = mysql_query( con, db_command );
+        //  Are there more than one columns ?
+        if ( count > 1 )
+        {
+            //  YES:    Build the complete command
+            snprintf( db_command, sizeof( db_command ),
+                      "INSERT INTO recipe_table ( %s ) VALUES( %s );",
+                      db_command_col, db_command_val );
+        }
+        else
+        {
+            //  NO:     Build the complete command
+            snprintf( db_command, sizeof( db_command ),
+                      "INSERT INTO recipe_table ( %s ) VALUE( %s );",
+                      db_command_col, db_command_val );
+        }
+
+        /************************************************************************
+         *  Perform the MySQL query and validate the success or failure.
+         ************************************************************************/
+
+        //  Now perform the command.
+        sql_rc = mysql_query( con, db_command );
 
 #if DBASE_ACCESS_LOG == 1
-    //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__recipe",
-            "CREATE: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
+        //  Log the dBase access command
+        log_write( MID_LOGONLY, "DBASE__recipe",
+                "CREATE: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
-    //  Was the command successful ?
-    if ( sql_rc != 0 )
-    {
-        //  The database creation filed.
-        log_write( MID_FATAL, "DBASE__recipe",
-                "CREATE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
-    }
-    else
-    {
-        //  Set the return code to success
-        dbase_rc = true;
+        //  Was the command successful ?
+        if ( sql_rc != 0 )
+        {
+            //  The database creation filed.
+            log_write( MID_FATAL, "DBASE__recipe",
+                    "CREATE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
+        }
+        else
+        {
+            //  Set the return code to success
+            dbase_rc = true;
+        }
     }
 
     /************************************************************************

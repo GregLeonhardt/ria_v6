@@ -31,6 +31,8 @@
 #include <stdio.h>              //  Standard I/O definitions
                                 //*******************************************
 #include <string.h>             //  Functions for managing strings
+#include <ctype.h>              //  Determine the type contained
+#include <stdlib.h>             //  ANSI standard library.
                                 //*******************************************
 
 /****************************************************************************
@@ -1084,7 +1086,7 @@ EMAIL__find_subject(
  *
  ****************************************************************************/
 
-#if 0
+#if 1
 int
 EMAIL__filter(
     char                        *   data_p
@@ -1175,4 +1177,210 @@ EMAIL__filter(
     return( email_rc );
 }
 #endif
+
+/****************************************************************************/
+/**
+ *  Scan the recipe text for 'quoted-printable' character sequences and
+ *  convert them back to the original text characters.
+ *
+ *  @param  rcb_p               Pointer to a recipe control block
+ *
+ *  @return void                No information is returned from this function.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+void
+EMAIL__quoted_printable(
+    struct  rcb_t           *   rcb_p
+    )
+{
+    /**
+     * @param list_data_p       Pointer to the read data                    */
+    char                    *   list_data_p;
+    /**
+     * @param import_list_p     Pointer to a list for import data           */
+    struct  list_base_t     *   import_list_p;
+    /**
+     * @param list_lock_key     File list key                               */
+    int                         list_lock_key;
+    /**
+     *  @param  tmp_data_p      Pointer to a temporary data buffer          */
+    char                    *   tmp_data_p;
+    /**
+     *  @param  join_data_p     Pointer to the join data buffer             */
+    char                    *   join_data_p;
+    /**
+     *  @param  join_flag       TRUE = Join the next line, FALSE = Don't    */
+    int                         join_flag;
+    /**
+     *  @param  xlate_char      The translated character                    */
+    long int                    xlate_char;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    join_flag = false;
+
+    //  Create a new import list for the decoded data
+    import_list_p =  list_new( );
+
+    /************************************************************************
+     *  Function Code
+     ************************************************************************/
+
+    //  Lock the list for fast(er) access
+    list_lock_key = list_user_lock( rcb_p->import_list_p );
+
+    //  Scan the complete recipe
+    for( list_data_p = list_fget_first( rcb_p->import_list_p, list_lock_key );
+         list_data_p != NULL;
+         list_data_p = list_fget_next( rcb_p->import_list_p, list_data_p, list_lock_key ) )
+    {
+        //  Remove the data from the level 1 list
+        list_fdelete( rcb_p->import_list_p, list_data_p, list_lock_key );
+
+        //  Should we join this line to the previous line ?
+        if ( join_flag == true )
+        {
+            //  YES:    Reset the join flag
+            join_flag = false;
+
+            //  Join the two text buffers together
+            list_data_p = text_join( join_data_p, list_data_p, true, true );
+        }
+
+        //  Get ready to scan the buffer
+        tmp_data_p = list_data_p;
+
+        //  Scan the buffer for all occurrences of quoted-printable data.
+        do
+        {
+            //  Look for the first character of a quoted printable string
+            tmp_data_p = strchr( tmp_data_p, '=' );
+
+            //  Did we find one ?
+            if ( tmp_data_p != NULL )
+            {
+                //  Is the format correct ?
+                if (    (           tmp_data_p[ 0 ] == '=' )
+                     && ( isxdigit( tmp_data_p[ 1 ] ) != 0 )
+                     && ( isxdigit( tmp_data_p[ 2 ] ) != 0 ) )
+                {
+                    /**
+                     *  @param  in_line         Temporary for HEX to ASCII  */
+                    char                            hex_data[ 3 ];
+
+                    //  Clear the buffer and copy the hex data string
+                    memset( hex_data, '\0', sizeof( hex_data ) );
+                    memcpy( hex_data, &tmp_data_p[ 1 ], 2 );
+
+                    //  Convert the string to a single character
+                    xlate_char = strtol( hex_data, NULL, 16 );
+
+                    //  Is this x'BD (1/2)
+                    if ( xlate_char == 0xBD )
+                    {
+                        //  YES:    Write it out
+                        tmp_data_p[ 0 ] = '1';
+                        tmp_data_p[ 1 ] = '/';
+                        tmp_data_p[ 2 ] = '2';
+                    }
+
+                    //  Is this x'BC (1/4)
+                    else
+                    if ( xlate_char == 0xBC )
+                    {
+                        //  YES:    Write it out
+                        tmp_data_p[ 0 ] = '1';
+                        tmp_data_p[ 1 ] = '/';
+                        tmp_data_p[ 2 ] = '4';
+                    }
+
+                    //  Is this x'BE (3/4)
+                    else
+                    if ( xlate_char == 0xBC )
+                    {
+                        //  YES:    Write it out
+                        tmp_data_p[ 0 ] = '3';
+                        tmp_data_p[ 1 ] = '/';
+                        tmp_data_p[ 2 ] = '4';
+                    }
+
+                    //  Everything else
+                    else
+                    {
+                        //  None of the above.  Insert the converted character
+                        tmp_data_p[ 0 ] = (char)xlate_char;
+                    }
+
+                    //  Replace the quoted printable string with the character
+                    text_remove( tmp_data_p, 1, 2 );
+
+                    //  Point to the next character
+                    tmp_data_p = &tmp_data_p[ 1 ];
+                }
+                //  Is this a line continuation ?
+                else
+                if (    ( tmp_data_p[ 0 ] == '='  )
+                     && ( tmp_data_p[ 1 ] == '\0' ) )
+                {
+                    //  YES:    Set the join flag
+                    join_flag = true;
+
+                    //  Remove the line continuation character
+                    tmp_data_p[ 0 ] = '\0';
+
+                    //  There is nothing in this buffer to look at any more.
+                    tmp_data_p = NULL;
+
+                    //  Save the current buffer pointer
+                    join_data_p = list_data_p;
+                }
+                else
+                {
+                    //  None of the above.  Advance the data pointer.
+                    tmp_data_p = &tmp_data_p[ 1 ];
+                }
+            }
+
+        }   while( tmp_data_p != NULL );
+
+        //  Is the join flag set ?
+        if ( join_flag == false )
+        {
+            //  NO:     Add the current line to the list
+            list_put_last( import_list_p, list_data_p );
+        }
+    }
+
+    //  Release the lock on the import list
+    list_user_unlock( rcb_p->import_list_p, list_lock_key );
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  Delete everything on the old list
+    if ( rcb_p->import_list_p != NULL )
+    {
+        if ( list_query_count( rcb_p->import_list_p ) > 0 )
+        {
+            while( ( list_data_p = list_get_first( rcb_p->import_list_p ) ) != NULL )
+            {
+                list_delete_payload( rcb_p->import_list_p, list_data_p );
+                mem_free( list_data_p );
+            }
+        }
+        list_kill( rcb_p->import_list_p );
+        rcb_p->import_list_p = NULL;
+    }
+
+    //  Replace the old list with the decoded data list
+    rcb_p->import_list_p = import_list_p;
+
+}
 /****************************************************************************/

@@ -401,7 +401,7 @@ DBASE__open(
     //  Create TITLE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS title_table("
                                "recipe_id VARCHAR(50),"
-                               "title TINYTEXT,"
+                               "title TINYBLOB,"
                                "PRIMARY KEY(recipe_id)"
                                ");");
 
@@ -425,7 +425,7 @@ DBASE__open(
     //  Create RECIPE_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS recipe_table("
                                "recipe_id VARCHAR(50),"
-                               "recipe TEXT,"
+                               "recipe BLOB,"
                                "PRIMARY KEY(recipe_id)"
                                ");");
 
@@ -449,16 +449,16 @@ DBASE__open(
     //  Create ADDRESS_TABLE
     sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS info_table("
                                "recipe_id VARCHAR(50),"
-                               "author TINYTEXT,"
-                               "serves TINYTEXT,"
-                               "makes TINYTEXT,"
-                               "makes_unit TINYTEXT,"
+                               "author TINYBLOB,"
+                               "serves TINYBLOB,"
+                               "makes TINYBLOB,"
+                               "makes_unit TINYBLOB,"
                                "time_prep VARCHAR(10),"
                                "time_cook VARCHAR(10),"
                                "time_wait VARCHAR(10),"
                                "time_rest VARCHAR(10),"
-                               "source TINYTEXT,"
-                               "copyright TINYTEXT,"
+                               "source TINYBLOB,"
+                               "copyright TINYBLOB,"
                                "skill TINYINT,"
                                "rating TINYINT,"
                                "PRIMARY KEY(recipe_id)"
@@ -626,11 +626,11 @@ DBASE__open(
                                "file_name TINYTEXT,"
                                "file_size INTEGER,"
                                "file_date_time DATETIME,"
-                               "group_name TINYTEXT,"
-                               "group_subject TINYTEXT,"
+                               "group_name TINYBLOB,"
+                               "group_subject TINYBLOB,"
                                "group_date_time DATETIME,"
-                               "email_name TINYTEXT,"
-                               "email_subject TINYTEXT,"
+                               "email_name TINYBLOB,"
+                               "email_subject TINYBLOB,"
                                "email_date_time DATETIME"
                                ");");
 

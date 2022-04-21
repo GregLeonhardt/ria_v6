@@ -1223,6 +1223,9 @@ email(
      * @param list_lock_key     File list key                               */
     int                         list_lock_key;
     /**
+     * @param encoding_type     TRUE = encoding_type                        */
+    int                         quoted_printable;
+    /**
      * @param email_start_flag  TRUE = e-mail processing                    */
     int                         email_start_flag;
     /**
@@ -1236,6 +1239,9 @@ email(
     /************************************************************************
      *  Function Initialization
      ************************************************************************/
+
+    //  Initialize variables
+    quoted_printable = false;
 
     //  Set the pointer
     tcb_p = void_p;
@@ -1315,6 +1321,12 @@ email(
                 if (    ( email_start_flag     ==               true )
                      && ( rcb_p->recipe_format == RECIPE_FORMAT_NONE ) )
                 {
+                    //  "TRANSFER-ENCODING"
+                    if ( email_find_encoding( list_data_p ) == CTE_QUOTE_PRINT )
+                    {
+                        //  YES:    Set the decode flag
+                        quoted_printable = true;
+                    }
                     //  "NEWSGROUPS:"
                     tmp_data_p = EMAIL__find_newsgroup( list_data_p );
                     if ( tmp_data_p != NULL )
@@ -1372,7 +1384,7 @@ email(
                 //  Is there an active recipe split ?
                 if ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
                 {
-                    //  NO:     Test foe the start of a new recipe.
+                    //  NO:     Test for the start of a new recipe.
                     rcb_p->recipe_format = recipe_is_start( list_data_p );
 
                     //  Is this the start of a new recipe ?
@@ -1400,7 +1412,17 @@ email(
                          || ( tmp_format                           != RECIPE_FORMAT_NONE )
                          || ( EMAIL__is_group_break( list_data_p )               == true ) )
                     {
-                        //  YES"    Put it in one of the DECODE queue
+                        //  YES:    Is this a QUOTED-PRINTABLE e-Mail ?
+                        if ( quoted_printable == true )
+                        {
+                            //  YES:    Decode the quoted printable text
+                            EMAIL__quoted_printable( new_rcb_p );
+
+                            //  Set the decode flag
+                            quoted_printable = false;
+                        }
+
+                        //  Put it in one of the DECODE queue
                         queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
 
                         //  Clear the current recipe format
@@ -1421,7 +1443,7 @@ email(
                         new_rcb_p = rcb_new( rcb_p );
                     }
 
-                    //  Is there a RCB to stote the data ?
+                    //  Is there a RCB to store the data ?
                     if ( new_rcb_p != NULL )
                     {
                         //  YES:    Add this data buffer to the current recipe list.
@@ -1434,7 +1456,17 @@ email(
         //  End-Of-File with an active recipe ?
         if ( new_rcb_p != NULL )
         {
-            //  YES:    Put it in one of the DECODE queue
+            //  YES:    Is this a QUOTED-PRINTABLE e-Mail ?
+            if ( quoted_printable == true )
+            {
+                //  YES:    Decode the quoted printable text
+                EMAIL__quoted_printable( new_rcb_p );
+
+                //  Set the decode flag
+                quoted_printable = false;
+            }
+
+            //  Put it in one of the DECODE queue
             queue_put_payload( decode_tcb->queue_id, new_rcb_p  );
 
             //  Clear the new RCB pointer

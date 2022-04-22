@@ -414,10 +414,112 @@ struct   recipe_t
 
 /****************************************************************************/
 /**
- *  Convert a three character month text string into a two digit number.
+ *  Convert a text AM or PM to a integer.
+ *
+ *  @param  dow_p               A pointer to an input string containing
+ *                              text string.
+ *
+ *  @return                     is successful 1 or 2, else 0.
+ *
+ *  @note
+ *      RC 1 = AM
+ *      RC 2 = PM
+ *
+ ****************************************************************************/
+
+int
+DECODE__am_or_pm(
+    char                    *   dow_p
+    )
+{
+    /**
+     *  @param  month           The numeric month                           */
+    int                         dow;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    dow = 0;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+         if ( strncasecmp( "AM",    dow_p, 2 ) == 0 ) dow =  1;
+    else if ( strncasecmp( "PM",    dow_p, 2 ) == 0 ) dow =  2;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( dow );
+}
+
+/****************************************************************************/
+/**
+ *  Convert a text Day-Of-Week string into a integer.
+ *
+ *  @param  dow_p               A pointer to an input string containing
+ *                              text string.
+ *
+ *  @return                     is successful 1 -> 7, else 0.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DECODE__day_of_week(
+    char                    *   dow_p
+    )
+{
+    /**
+     *  @param  month           The numeric month                           */
+    int                         dow;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    dow = 0;
+
+    /************************************************************************
+     *  Function Body
+     ************************************************************************/
+
+         if ( strncasecmp( "Sun",        dow_p, 3 ) == 0 ) dow =  1;
+    else if ( strncasecmp( "Mon",        dow_p, 3 ) == 0 ) dow =  2;
+    else if ( strncasecmp( "Tue",        dow_p, 3 ) == 0 ) dow =  3;
+    else if ( strncasecmp( "Wed",        dow_p, 3 ) == 0 ) dow =  4;
+    else if ( strncasecmp( "Thu",        dow_p, 3 ) == 0 ) dow =  5;
+    else if ( strncasecmp( "Fri",        dow_p, 3 ) == 0 ) dow =  6;
+    else if ( strncasecmp( "Sat",        dow_p, 3 ) == 0 ) dow =  7;
+    else if ( strncasecmp( "Sunday",     dow_p, 6 ) == 0 ) dow =  1;
+    else if ( strncasecmp( "Monday",     dow_p, 6 ) == 0 ) dow =  2;
+    else if ( strncasecmp( "Tuesday",    dow_p, 7 ) == 0 ) dow =  3;
+    else if ( strncasecmp( "Wednesday",  dow_p, 9 ) == 0 ) dow =  4;
+    else if ( strncasecmp( "Thursday",   dow_p, 8 ) == 0 ) dow =  5;
+    else if ( strncasecmp( "Friday",     dow_p, 6 ) == 0 ) dow =  6;
+    else if ( strncasecmp( "Saturday",   dow_p, 8 ) == 0 ) dow =  7;
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
+    return( dow );
+}
+
+/****************************************************************************/
+/**
+ *  Convert a text Month string into a integer.
  *
  *  @param  month_p             A pointer to an input string containing
- *                              a three character abbreviated month.
+ *                              text string.
  *
  *  @return                     is successful 1 -> 12, else 0.
  *
@@ -445,18 +547,30 @@ DECODE__month(
      *  Function Body
      ************************************************************************/
 
-         if ( strcasecmp( "Jan", month_p ) == 0 ) month =  1;
-    else if ( strcasecmp( "Feb", month_p ) == 0 ) month =  2;
-    else if ( strcasecmp( "Mar", month_p ) == 0 ) month =  3;
-    else if ( strcasecmp( "Apr", month_p ) == 0 ) month =  4;
-    else if ( strcasecmp( "May", month_p ) == 0 ) month =  5;
-    else if ( strcasecmp( "Jun", month_p ) == 0 ) month =  6;
-    else if ( strcasecmp( "Jul", month_p ) == 0 ) month =  7;
-    else if ( strcasecmp( "Aug", month_p ) == 0 ) month =  8;
-    else if ( strcasecmp( "Sep", month_p ) == 0 ) month =  9;
-    else if ( strcasecmp( "Oct", month_p ) == 0 ) month = 10;
-    else if ( strcasecmp( "Nov", month_p ) == 0 ) month = 11;
-    else if ( strcasecmp( "Dec", month_p ) == 0 ) month = 12;
+         if ( strncasecmp( "Jan",        month_p, 3 ) == 0 ) month =  1;
+    else if ( strncasecmp( "Feb",        month_p, 3 ) == 0 ) month =  2;
+    else if ( strncasecmp( "Mar",        month_p, 3 ) == 0 ) month =  3;
+    else if ( strncasecmp( "Apr",        month_p, 3 ) == 0 ) month =  4;
+    else if ( strncasecmp( "May",        month_p, 3 ) == 0 ) month =  5;
+    else if ( strncasecmp( "Jun",        month_p, 3 ) == 0 ) month =  6;
+    else if ( strncasecmp( "Jul",        month_p, 3 ) == 0 ) month =  7;
+    else if ( strncasecmp( "Aug",        month_p, 3 ) == 0 ) month =  8;
+    else if ( strncasecmp( "Sep",        month_p, 3 ) == 0 ) month =  9;
+    else if ( strncasecmp( "Oct",        month_p, 3 ) == 0 ) month = 10;
+    else if ( strncasecmp( "Nov",        month_p, 3 ) == 0 ) month = 11;
+    else if ( strncasecmp( "Dec",        month_p, 3 ) == 0 ) month = 12;
+    else if ( strncasecmp( "January",    month_p, 7 ) == 0 ) month =  1;
+    else if ( strncasecmp( "February",   month_p, 8 ) == 0 ) month =  2;
+    else if ( strncasecmp( "March",      month_p, 5 ) == 0 ) month =  3;
+    else if ( strncasecmp( "April",      month_p, 5 ) == 0 ) month =  4;
+    else if ( strncasecmp( "May",        month_p, 3 ) == 0 ) month =  5;
+    else if ( strncasecmp( "June",       month_p, 4 ) == 0 ) month =  6;
+    else if ( strncasecmp( "July",       month_p, 4 ) == 0 ) month =  7;
+    else if ( strncasecmp( "August",     month_p, 6 ) == 0 ) month =  8;
+    else if ( strncasecmp( "September",  month_p, 9 ) == 0 ) month =  9;
+    else if ( strncasecmp( "October",    month_p, 7 ) == 0 ) month = 10;
+    else if ( strncasecmp( "November",   month_p, 8 ) == 0 ) month = 11;
+    else if ( strncasecmp( "December",   month_p, 8 ) == 0 ) month = 12;
 
     /************************************************************************
      *  Function Exit

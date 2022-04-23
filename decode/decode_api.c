@@ -140,7 +140,7 @@
  *              Jan 02 01:47PM -0800
  *              02/27 From:   ASXV66A    JAMES KILGORE         Time:    12:01
  *
- *  @ToDo   3   Newly discovered Date/Time formats
+ *  @ToDo:  3   Newly discovered Date/Time formats
  *      Saturday, November 02, 1996 1119
  *          My assumption is that 1119 should be the time 11:19
  *      05/22/13 13:47:25

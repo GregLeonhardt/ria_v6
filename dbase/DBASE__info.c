@@ -500,7 +500,7 @@ DBASE__info_read(
         db_info_p->time_rest_p  = text_copy_to_new( row[  6 ] );
         db_info_p->source_p     = text_copy_to_new( row[  7 ] );
         db_info_p->copyright_p  = text_copy_to_new( row[  8 ] );
-        //  @FixMe  3   The next two are 'INT' not strings.
+        //  @ToDo:  3   The next two are 'INT' not strings.
 //      db_info_p->skill_p      = text_copy_to_new( row[  9 ] );
 //      db_info_p->rating_p     = text_copy_to_new( row[ 10 ] );
 

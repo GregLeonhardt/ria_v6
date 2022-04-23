@@ -134,8 +134,18 @@ DECODE__recipe_verify(
 
     //  NAME (TITLE)
     if (    ( rcb_p->recipe_p->name_p           == NULL )
-         || ( strlen( rcb_p->recipe_p->name_p ) <     0 )
+         || ( strlen( rcb_p->recipe_p->name_p ) <     4 )
          || ( strlen( rcb_p->recipe_p->name_p ) >   255 ) )
+                    decode_rc = false;
+
+    //  @note   This is nothing but a hack.  Some recipes are being decoded
+    //          that wind up with a recipe name (title) of <BR>.  These
+    //          recipes are obviously corrupted.  The fix needs to be a
+    //          few steps before here but as I am clueless as to what or
+    //          where the broken code is i am just excluding them from
+    //          being entered into the dBase here.
+    else
+    if ( strncasecmp( rcb_p->recipe_p->name_p, "<BR>", 4 ) == 0 )
                     decode_rc = false;
 
     //  AUIP        (AMOUNT - UNIT - INGREDIENT - PREPARATION)
@@ -197,7 +207,8 @@ DECODE__recipe_verify(
          && ( list_query_count( rcb_p->recipe_p->directions_p ) == 0 ) )
     {
         //  DIRECTIONS are required for a valid recipe
-        decode_rc = false;
+//      decode_rc = false;
+        decode_rc = true;
     }
 #endif
     if (    ( decode_rc == true )

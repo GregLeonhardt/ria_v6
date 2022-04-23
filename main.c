@@ -48,6 +48,9 @@
 //  Generate default command line parameters
 #define DEBUG_CMD_LINE          ( 0 )
 
+//  White Box Testing
+#define WBT                     ( 0 )
+
 //  Version Numbers
 #define VER_MAJ                 6
 #define VER_MIN                 8
@@ -617,6 +620,22 @@ main(
     //  Log the event
     log_write( MID_INFO, "main",
                          "Log initialization complete.\n" );
+
+    /************************************************************************
+     *  White Box Testing       (Unit Testing)
+     ************************************************************************/
+#if WBT
+    log_write( MID_INFO, "main", "Strarting White Box Testing (WBT)\n" );
+
+    //  Did all the tests PASS
+    if ( decode_wbt( ) != true )
+    {
+        //  NO:     Message
+        log_write( MID_FATAL, "main", "Terminating!\n" );
+    }
+
+    log_write( MID_INFO, "main", "White Bix Testing is complete.\n" );
+#endif
 
     /************************************************************************
      *  Command line processing

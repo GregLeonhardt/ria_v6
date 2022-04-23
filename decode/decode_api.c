@@ -115,15 +115,26 @@
  *
  *      Returns:    YYYY-MM-DD HH:MM:SS
  *
- *  Formats:
- *      #01    YY MM DD HH MM SS
- *      #08     MM DD YY HH MM AP
- *      #02    DD MON YY HH MM SS
- *      #03    DOW DD MON YY HH MM( SS)
- *      #04    DOW MON DD YY HH MMam
- *      #05    DOW MON DD YY HH MM
- *      #06    DOW MON DD HH MM SS YY
- *      #07    DOW DD MON YY HH MM AP
+ *  @note
+ *      Formats:                                            SEQUENCE-ID
+ *          YY MM DD HH MM SS                                   #01
+ *          MM DD YY HH MM   (AP)                               #02
+ *          MM DD YY                                            #03
+ *          DD MON YY HH MM SS                                  #04
+ *          DOW     DD MON YY HH MM SS AP                       #05
+ *          DOW     DD MON YY HH MM    AP                       #06
+ *          DOW     DD MON YY HH MM( SS)                        #07
+ *          DOW MON DD     YY HH MMam                           #08
+ *          DOW MON DD     YY HH MM                             #09
+ *          DOW MON DD        HH MM SS YY                       #10
+ *          DOW MON DD     YY                                   #11
+ *              MON DD     YY HH MM    AP                       #12
+ *
+ *  @note
+ *      The following formats have been discovered but as there is no
+ *      year specified, I will not be creating a decode for them:
+ *              09/14  1:22 AM
+ *              02/27 From:   ASXV66A    JAMES KILGORE         Time:    12:01
  *
  ****************************************************************************/
 
@@ -191,7 +202,7 @@ decode_fmt_datetime(
     fmt_datetime_p = tmp_datetime_p;
     do
     {
-        //  Scan for a colon ':' character
+        //  Scan for a 'Colon' ':' character
         fmt_datetime_p = strchr( fmt_datetime_p, ':' );
         if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
     }   while( fmt_datetime_p != NULL );
@@ -200,7 +211,7 @@ decode_fmt_datetime(
     fmt_datetime_p = tmp_datetime_p;
     do
     {
-        //  Scan for a forward-slash '/' character
+        //  Scan for a 'Slash' '/' character
         fmt_datetime_p = strchr( fmt_datetime_p, '/' );
         if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
     }   while( fmt_datetime_p != NULL );
@@ -209,7 +220,7 @@ decode_fmt_datetime(
     fmt_datetime_p = tmp_datetime_p;
     do
     {
-        //  Scan for a dash '-' character
+        //  Scan for a 'Minus' '-' character
         fmt_datetime_p = strchr( fmt_datetime_p, '-' );
         if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
     }   while( fmt_datetime_p != NULL );
@@ -218,8 +229,26 @@ decode_fmt_datetime(
     fmt_datetime_p = tmp_datetime_p;
     do
     {
-        //  Scan for a comma ',' character
+        //  Scan for a 'Comma' ',' character
         fmt_datetime_p = strchr( fmt_datetime_p, ',' );
+        if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
+    }   while( fmt_datetime_p != NULL );
+
+    //  "("
+    fmt_datetime_p = tmp_datetime_p;
+    do
+    {
+        //  Scan for a 'Left Parenthesis' '(' character
+        fmt_datetime_p = strchr( fmt_datetime_p, '(' );
+        if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
+    }   while( fmt_datetime_p != NULL );
+
+    //  ")"
+    fmt_datetime_p = tmp_datetime_p;
+    do
+    {
+        //  Scan for a 'Right Parenthesis' ')' character
+        fmt_datetime_p = strchr( fmt_datetime_p, ')' );
         if ( fmt_datetime_p != NULL ) fmt_datetime_p[ 0 ] = ' ';
     }   while( fmt_datetime_p != NULL );
 
@@ -229,49 +258,13 @@ decode_fmt_datetime(
      ************************************************************************/
 
     //  Is the source date string long enough to contain a valid date ?
-    if ( strlen( tmp_datetime_p ) >= 8 )
+    if ( strlen( tmp_datetime_p ) >= 5 )
     {
         //  YES:    Allocate storage for the formatted date.
         fmt_datetime_p = mem_malloc( 20 );
 
         //--------------------------------------------------------------------
-        //  Source format #08     MM DD YY HH MM AP
-        //--------------------------------------------------------------------
-
-        //  Do we have a successful decode yet ?
-        if ( decoded == false )
-        {
-            //  Parse the date / time string
-            sscanf( tmp_datetime_p, "%d %d %d %d %d %s",
-                    &dt_month , &dt_day   , &dt_year  ,
-                    &dt_hour  , &dt_minute, ap         );
-
-            //  Convert the month string to an integer
-            dt_ap = DECODE__am_or_pm( ap );
-
-            //  Verify a successful decode
-            if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
-                 && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
-                 && ( dt_minute != -1 )
-                 && ( dt_second == -1 )
-                 && ( dt_dow    == -1 )
-                 && ( dt_ap     >   0 ) )
-            {
-                //  YES:    Good decode
-                decoded = true;
-            }
-            else
-            {
-                //  NO:     Bad decode
-                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
-                       dt_minute = dt_second = dt_ap     = -1;
-            }
-        }
-
-        //--------------------------------------------------------------------
-        //  Source format #01    YY MM DD HH MM SS
+        //  Source format   YY MM DD HH MM SS                              #01
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -304,39 +297,35 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #07    DOW DD MON YY HH MM AP
+        //  Source format   MM DD YY HH MM   (AP)                          #02
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
         if ( decoded == false )
         {
             //  Parse the date / time string
-            sscanf( tmp_datetime_p, "%s %d %s %d %d %d %s",
-                    dow,
-                    &dt_day   , month     , &dt_year,
-                    &dt_hour  , &dt_minute, ap       );
+            sscanf( tmp_datetime_p, "%d %d %d %d %d %s",
+                    &dt_month , &dt_day   , &dt_year  ,
+                    &dt_hour  , &dt_minute, ap         );
 
             //  Convert the month string to an integer
             dt_ap = DECODE__am_or_pm( ap );
 
-
-            //  Convert the month string to an integer
-            dt_dow = DECODE__day_of_week( dow );
-
-            //  Convert the month string to an integer
-            dt_month = DECODE__month( month );
-
+            //  Verify a successful decode
             if (    ( dt_year   != -1 )
                  && ( dt_month  != -1 )
                  && ( dt_day    != -1 )
                  && ( dt_hour   != -1 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
-                 && ( dt_dow    >   0 )
-                 && ( dt_ap     >   0 ) )
+                 && ( dt_dow    == -1 )
+                 && ( dt_ap     != -2 ) )   //  May or may-not be present
             {
                 //  YES:    Good decode
                 decoded = true;
+
+                //  Seconds isn't included in this format.
+                dt_second = 0;
             }
             else
             {
@@ -347,7 +336,48 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #02    DD MON YY HH MM SS
+        //  Source format   MM DD YY                                       #03
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%d %d %d %d %d %s",
+                    &dt_month , &dt_day   , &dt_year  ,
+                    &dt_hour  , &dt_minute, ap         );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Verify a successful decode
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   == -1 )
+                 && ( dt_minute == -1 )
+                 && ( dt_second == -1 )
+                 && ( dt_dow    == -1 )
+                 && ( dt_ap     ==  0 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+
+                //  There isn't a time with this format so use '00:00:00'
+                dt_hour   = 0;
+                dt_minute = 0;
+                dt_second = 0;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   DD MON YY HH MM SS                             #04
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -382,56 +412,17 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #03    DOW DD MON YY HH MM( SS)
+        //  Source format   DOW     DD MON YY HH MM SS AP                  #05
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
         if ( decoded == false )
         {
             //  Parse the date / time string
-            sscanf( tmp_datetime_p, "%s %d %s %d %d %d %d",
+            sscanf( tmp_datetime_p, "%s %d %s %d %d %d %d %s",
                     dow,
-                    &dt_day   ,  month    , &dt_year  ,
-                    &dt_hour  , &dt_minute, &dt_second );
-
-            //  Convert the month string to an integer
-            dt_dow = DECODE__day_of_week( dow );
-
-            //  Convert the month string to an integer
-            dt_month = DECODE__month( month );
-
-            if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
-                 && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
-                 && ( dt_minute != -1 )
-//               && ( dt_second != -1 )     //  Seconds may or MAY NOT exist
-                 && ( dt_dow    >   0 )
-                 && ( dt_ap     == -1 ) )
-            {
-                //  YES:    Good decode
-                decoded = true;
-            }
-            else
-            {
-                //  NO:     Bad decode
-                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
-                       dt_minute = dt_second = dt_ap     = -1;
-            }
-        }
-
-        //--------------------------------------------------------------------
-        //  Source format #04    DOW MON DD YY HH MMam
-        //--------------------------------------------------------------------
-
-        //  Do we have a successful decode yet ?
-        if ( decoded == false )
-        {
-            //  Parse the date / time string
-            sscanf( tmp_datetime_p, "%s %s %d, %d %d %d%s",
-                    dow,
-                    month     , &dt_day   ,   &dt_year  ,
-                    &dt_hour  , &dt_minute,   ap         );
+                    &dt_day   , month     , &dt_year  ,
+                    &dt_hour  , &dt_minute, &dt_second, ap       );
 
             //  Convert the month string to an integer
             dt_ap = DECODE__am_or_pm( ap );
@@ -463,7 +454,143 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #05    DOW MON DD YY HH MM
+        //  Source format   DOW     DD MON YY HH MM    AP                  #06
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%s %d %s %d %d %d %s",
+                    dow,
+                    &dt_day   , month     , &dt_year,
+                    &dt_hour  , &dt_minute, ap       );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Convert the month string to an integer
+            dt_dow = DECODE__day_of_week( dow );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+                 && ( dt_second == -1 )
+                 && ( dt_dow    >   0 )
+                 && ( dt_ap     >   0 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+
+                //  Seconds isn't included in this format.
+                dt_second = 0;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   DOW     DD MON YY HH MM( SS)                   #07
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%s %d %s %d %d %d %d",
+                    dow,
+                    &dt_day   ,  month    , &dt_year  ,
+                    &dt_hour  , &dt_minute, &dt_second );
+
+            //  Convert the month string to an integer
+            dt_dow = DECODE__day_of_week( dow );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+//               && ( dt_second != -1 )     //  Seconds may or MAY NOT exist
+                 && ( dt_dow    >   0 )
+                 && ( dt_ap     == -1 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+
+                //  Was the seconds included ?
+                if ( dt_second == -1 )
+                {
+                    //  YES:    Set it to zero
+                    dt_second = 0;
+                }
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   DOW MON DD     YY HH MMam                      @08
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%s %s %d %d %d %d%s",
+                    dow,
+                    month     , &dt_day   ,   &dt_year  ,
+                    &dt_hour  , &dt_minute,   ap         );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Convert the month string to an integer
+            dt_dow = DECODE__day_of_week( dow );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+                 && ( dt_second == -1 )
+                 && ( dt_dow    >   0 )
+                 && ( dt_ap     >   0 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+
+                //  Seconds isn't included in this format.
+                dt_second = 0;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   DOW MON DD     YY HH MM                        @09
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -486,12 +613,15 @@ decode_fmt_datetime(
                  && ( dt_day    != -1 )
                  && ( dt_hour   != -1 )
                  && ( dt_minute != -1 )
-                 && ( dt_second != -1 )
+                 && ( dt_second == -1 )
                  && ( dt_dow    >   0 )
                  && ( dt_ap     == -1 ) )
             {
                 //  YES:    Good decode
                 decoded = true;
+
+                //  There isn't a seconds position for this format
+                dt_second = 0;
             }
             else
             {
@@ -502,7 +632,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #06    DOW MON DD HH MM SS YY
+        //  Source format   DOW MON DD        HH MM SS YY                  @10
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -541,16 +671,17 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format #10    DOW MON DD YY
+        //  Source format   DOW MON DD     YY                              #11
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
         if ( decoded == false )
         {
             //  Parse the date / time string
-            sscanf( tmp_datetime_p, "%s %s %d %d",
+            sscanf( tmp_datetime_p, "%s %s %d %d %d",
                     dow,
-                    month     , &dt_day   , &dt_year    );
+                    month     , &dt_day   , &dt_year   ,
+                    &dt_hour                            );
 
             //  Convert the month string to an integer
             dt_dow = DECODE__day_of_week( dow );
@@ -582,53 +713,99 @@ decode_fmt_datetime(
                        dt_minute = dt_second = dt_ap     = -1;
             }
         }
+
         //--------------------------------------------------------------------
-        //  Missing Seconds
+        //  Source format       MON DD     YY HH MM    AP                  @12
         //--------------------------------------------------------------------
 
-        //  Was the time 'PM'
-        if ( dt_second == -1 )
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
         {
-            //  YES:    Zero it out
-            dt_second = 0;
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%s %d %d %d %d %s",
+                    month     , &dt_day   , &dt_year   ,
+                    &dt_hour  , &dt_minute, ap          );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+                 && ( dt_second == -1 )
+                 && ( dt_dow    == -1 )
+                 && ( dt_ap     >   0 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+
+                //  There isn't a seconds position for this format
+                dt_second = 0;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
         }
 
         //--------------------------------------------------------------------
         //  Adjust the hour using AM/PM
         //--------------------------------------------------------------------
 
-        //  Was the time 'PM'
-        if ( dt_ap == 2 )
+        //  Was the decode successful ?
+        if ( decoded == true )
         {
-            //  YES:    Add twelve hours to the hour
-            dt_hour += 12;
+            //  Was the time 'PM'
+            if ( dt_ap == 2 )
+            {
+                //  YES:    Add twelve hours to the hour
+                dt_hour += 12;
+
+                //  Fix for 12:00 PM
+                if ( dt_hour == 24 )
+                {
+                    //  YES:    Change the hour to 00
+                    dt_hour = 0;
+                }
+            }
         }
 
         //--------------------------------------------------------------------
         //  Change a two digit year into a four digit year
         //--------------------------------------------------------------------
 
-        //  Do we have a two digit year ?
-        if ( dt_year < 1970 )
+        //  Was the decode successful ?
+        if ( decoded == true )
         {
-            //  Do we have a Y2K problem ?
-            if ( dt_year >= 100 )
+            //  Do we have a two digit year ?
+            if ( dt_year < 1970 )
             {
-                //  YES:    Correct the year
-                dt_year += 1900;
-            }
-            //  YES:    In the twentieth century ?
-            else
-            if ( dt_year >= 70 )
-            {
-                //  YES:    Correct the year
-                dt_year += 1900;
-            }
-            //  00 = 2000
-            else
-            {
-                //  Correct the year
-                dt_year += 2000;
+                //  Do we have a Y2K problem ?
+                if ( dt_year >= 100 )
+                {
+                    //  YES:    Correct the year
+                    dt_year += 1900;
+                }
+                //  YES:    In the twentieth century ?
+                else
+                if ( dt_year >= 70 )
+                {
+                    //  YES:    Correct the year
+                    dt_year += 1900;
+                }
+                //  00 = 2000
+                else
+                {
+                    //  Correct the year
+                    dt_year += 2000;
+                }
             }
         }
 
@@ -1862,6 +2039,49 @@ decode_save_chapter(
      ************************************************************************/
 
     //  DONE!
+}
+
+/****************************************************************************/
+/**
+ *  Unit tests for decode_*
+ *
+ *  @param  void                No parameters are passed into this function.
+ *
+ *  @return decode_rc           TRUE if all test pass, else FALSE
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+decode_wbt(
+    void
+    )
+{
+   /**
+     *  @param  decode_rc       Return code from this function              */
+    int                         decode_rc;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Initialize variables
+    decode_rc = true;
+
+    /************************************************************************
+     *  Function Code
+     ************************************************************************/
+
+    //  Verify success to this point
+    if ( decode_rc == true ) decode_rc = DECODE__TEST_fmt_datetime( );
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    // Return the pointer that is set past the amount field
+    return ( decode_rc );
 }
 
 /****************************************************************************/

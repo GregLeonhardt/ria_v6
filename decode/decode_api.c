@@ -132,9 +132,16 @@
  *
  *  @note
  *      The following formats have been discovered but as there is no
- *      year specified, I will not be creating a decode for them:
+ *      year specified.
+ *      Should I use the file date (year) as a default ?
+ *      I will not be creating a decode for them:
  *              09/14  1:22 AM
+ *              Jan 02 01:47PM -0800
  *              02/27 From:   ASXV66A    JAMES KILGORE         Time:    12:01
+ *
+ *  @ToDo   3   Newly discovered Date/Time formats
+ *      Saturday, November 02, 1996 1119
+ *          My assumption is that 1119 should be the time 11:19
  *
  ****************************************************************************/
 
@@ -2253,16 +2260,6 @@ decode(
             }
         }
 
-        /********************************************************************
-         *  Verify this is a good recipe
-         ********************************************************************/
-
-        //  Did we encounter any problems this far ?
-        if ( ok_to_encode == true )
-        {
-            //  NO:     Perform the final verification
-            ok_to_encode = DECODE__recipe_verify( rcb_p );
-        }
 
         /********************************************************************
          *  Pass the recipe on to the recipe encoder.
@@ -2273,6 +2270,9 @@ decode(
         {
             //  Post processing recipe format.
             decode_post( rcb_p );
+
+            //  Perform the final verification
+            ok_to_encode = DECODE__recipe_verify( rcb_p );
 
             //  Put it in one of the IMPORT queue's
             queue_put_payload( encode_tcb->queue_id, rcb_p  );

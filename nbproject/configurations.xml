@@ -136,6 +136,8 @@
                    kind="IMPORTANT_FILES_FOLDER">
       <itemPath>.gitignore</itemPath>
       <itemPath>Makefile</itemPath>
+      <itemPath>README.MD</itemPath>
+      <itemPath>Translations</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>

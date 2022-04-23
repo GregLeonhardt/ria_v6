@@ -49,7 +49,7 @@
 #define DEBUG_CMD_LINE          ( 0 )
 
 //  White Box Testing
-#define WBT                     ( 0 )
+#define WBT                     ( 1 )
 
 //  Version Numbers
 #define VER_MAJ                 6

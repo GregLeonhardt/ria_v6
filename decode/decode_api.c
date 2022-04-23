@@ -120,15 +120,16 @@
  *          YY MM DD HH MM SS                                   #01
  *          MM DD YY HH MM   (AP)                               #02
  *          MM DD YY                                            #03
- *          DD MON YY HH MM SS                                  #04
- *          DOW     DD MON YY HH MM SS AP                       #05
- *          DOW     DD MON YY HH MM    AP                       #06
- *          DOW     DD MON YY HH MM( SS)                        #07
- *          DOW MON DD     YY HH MMam                           #08
- *          DOW MON DD     YY HH MM                             #09
- *          DOW MON DD        HH MM SS YY                       #10
- *          DOW MON DD     YY                                   #11
- *              MON DD     YY HH MM    AP                       #12
+ *          MM DD YY HH MM SS                                   #04
+ *          DD MON YY HH MM SS                                  #05
+ *          DOW     DD MON YY HH MM SS AP                       #06
+ *          DOW     DD MON YY HH MM    AP                       #07
+ *          DOW     DD MON YY HH MM( SS)                        #08
+ *          DOW MON DD     YY HH MMam                           #09
+ *          DOW MON DD     YY HH MM                             #10
+ *          DOW MON DD        HH MM SS YY                       #11
+ *          DOW MON DD     YY                                   #12
+ *              MON DD     YY HH MM    AP                       #13
  *
  *  @note
  *      The following formats have been discovered but as there is no
@@ -142,6 +143,10 @@
  *  @ToDo   3   Newly discovered Date/Time formats
  *      Saturday, November 02, 1996 1119
  *          My assumption is that 1119 should be the time 11:19
+ *      05/22/13 13:47:25
+ *      10/4/2013 8:16:41 PM
+ *      Monday, April 08, 2002 09:24:28 PM
+ *      2/25/2008 8:24:24 Cheryl
  *
  ****************************************************************************/
 
@@ -271,7 +276,7 @@ decode_fmt_datetime(
         fmt_datetime_p = mem_malloc( 20 );
 
         //--------------------------------------------------------------------
-        //  Source format   YY MM DD HH MM SS                              #01
+        //  Source format   YYYY MM DD HH MM SS                            #01
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -283,7 +288,7 @@ decode_fmt_datetime(
                     &dt_hour  , &dt_minute, &dt_second );
 
             //  Verify a successful decode
-            if (    ( dt_year   != -1 )
+            if (    ( dt_year   >  1970 )
                  && ( dt_month  != -1 )
                  && ( dt_day    != -1 )
                  && ( dt_hour   != -1 )
@@ -291,6 +296,42 @@ decode_fmt_datetime(
                  && ( dt_second != -1 )
                  && ( dt_dow    == -1 )
                  && ( dt_ap     == -1 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   MM DD YY HH MM SS (AP)                         #04
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%d %d %d %d %d %d %s",
+                    &dt_month , &dt_day   , &dt_year  ,
+                    &dt_hour  , &dt_minute, &dt_second, ap );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Verify a successful decode
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+                 && ( dt_second != -1 )
+                 && ( dt_dow    == -1 )
+                 && ( dt_ap     != -2 ) )
             {
                 //  YES:    Good decode
                 decoded = true;
@@ -384,7 +425,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DD MON YY HH MM SS                             #04
+        //  Source format   DD MON YY HH MM SS                             #05
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -419,7 +460,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW     DD MON YY HH MM SS AP                  #05
+        //  Source format   DOW     DD MON YY HH MM SS AP                  #06
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -461,7 +502,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW     DD MON YY HH MM    AP                  #06
+        //  Source format   DOW     DD MON YY HH MM    AP                  #07
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -506,7 +547,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW     DD MON YY HH MM( SS)                   #07
+        //  Source format   DOW     DD MON YY HH MM( SS)                   #08
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -552,7 +593,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW MON DD     YY HH MMam                      @08
+        //  Source format   DOW MON DD     YY HH MMam                      @09
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -597,7 +638,49 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW MON DD     YY HH MM                        @09
+        //  Source format   DOW MON DD     YY HH MM SSap                   @10
+        //--------------------------------------------------------------------
+
+        //  Do we have a successful decode yet ?
+        if ( decoded == false )
+        {
+            //  Parse the date / time string
+            sscanf( tmp_datetime_p, "%s %s %d %d %d %d %d%s",
+                    dow,
+                    month     , &dt_day   ,   &dt_year  ,
+                    &dt_hour  , &dt_minute,   &dt_second, ap );
+
+            //  Convert the month string to an integer
+            dt_ap = DECODE__am_or_pm( ap );
+
+            //  Convert the month string to an integer
+            dt_dow = DECODE__day_of_week( dow );
+
+            //  Convert the month string to an integer
+            dt_month = DECODE__month( month );
+
+            if (    ( dt_year   != -1 )
+                 && ( dt_month  != -1 )
+                 && ( dt_day    != -1 )
+                 && ( dt_hour   != -1 )
+                 && ( dt_minute != -1 )
+                 && ( dt_second != -1 )
+                 && ( dt_dow    >   0 )
+                 && ( dt_ap     >   0 ) )
+            {
+                //  YES:    Good decode
+                decoded = true;
+            }
+            else
+            {
+                //  NO:     Bad decode
+                dt_dow = dt_year = dt_month = dt_day = dt_hour = \
+                       dt_minute = dt_second = dt_ap     = -1;
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Source format   DOW MON DD     YY HH MM                        @11
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -639,7 +722,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW MON DD        HH MM SS YY                  @10
+        //  Source format   DOW MON DD        HH MM SS YY                  @12
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -678,7 +761,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DOW MON DD     YY                              #11
+        //  Source format   DOW MON DD     YY                              #13
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -722,7 +805,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format       MON DD     YY HH MM    AP                  @12
+        //  Source format       MON DD     YY HH MM    AP                  @14
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -779,7 +862,7 @@ decode_fmt_datetime(
                 if ( dt_hour == 24 )
                 {
                     //  YES:    Change the hour to 00
-                    dt_hour = 0;
+                    dt_hour = 12;
                 }
             }
         }

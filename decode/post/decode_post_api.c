@@ -112,37 +112,40 @@ decode_post(
 
     if ( rcb_p->recipe_p->instructions_p != NULL )
     {
-        //  Directions  analysis
+        //  POST processing: Directions  analysis
         DECODE_POST__directions_cleanup( rcb_p );
 
-        //  Directions format
+        //  POST processing: Directions format
         DECODE_POST__fmt_directions( rcb_p );
 
-        //  Find "FROM:" in the directions
+        //  POST processing:  "FROM:" in the directions
         DECODE_POST__directions_from( rcb_p );
 
-        //  Find "SOURCE:" in the directions
+        //  POST processing:  "SOURCE:" in the directions
         DECODE_POST__directions_source( rcb_p );
 
-        //  Find "COPYRIGHT:" in the directions
+        //  POST processing:  "COPYRIGHT:" in the directions
         DECODE_POST__directions_copyright( rcb_p );
 
-        //  Find "DESCRIPTION:" in the directions
+        //  POST processing:  "DESCRIPTION:" in the directions
         DECODE_POST__directions_description( rcb_p );
 
-        //  Find "MAKES:" in the directions
+        //  POST processing:  "MAKES:" in the directions
         DECODE_POST__directions_makes( rcb_p );
 
-        //  Find "TIME-wxyz:" in the directions
+        //  POST processing:  "TIME-wxyz:" in the directions
         DECODE_POST__directions_time( rcb_p );
 
-        //  Find "S(Imported From):" in the directions
+        //  POST processing:  "S(Imported From):" in the directions
         DECODE_POST__directions_import_from( rcb_p );
 
         //  @ToDo: 3 Ratings:
 
-        //  Find "NOTES:" in the directions
+        //  POST processing:  "NOTES:" in the directions
         DECODE_POST__directions_notes( rcb_p );
+
+        //  POST processing: DATE / TIME
+        DECODE_POST__datetime( rcb_p );
     }
 
     //  Compute the recipe checksum (Recipe-ID)

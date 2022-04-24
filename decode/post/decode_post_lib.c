@@ -50,7 +50,8 @@
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
                                 //*******************************************
 #include "decode_api.h"         //  API for all decode_*            PUBLIC
-#include "decode_post_lib.h"    //  API for all POST__*             PRIVATE
+#include "decode_post_lib.h"
+#include "email_api.h"    //  API for all POST__*             PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -2640,10 +2641,9 @@ DECODE_POST__directions_notes(
 /**
  *  Compute the recipe checksum (Recipe-ID)
  *
- *  @param  void                No parameters are passed in.
+ *  @param  rcb_p               Pointer to a recipe control block
  *
- *  @return void                Upon successful completion TRUE is returned
- *                              else FALSE is returned.
+ *  @return void                No return code from this function.
  *
  *  @note
  *
@@ -2780,5 +2780,63 @@ DECODE_POST__recipe_id(
 #endif
 
     EVP_MD_CTX_free( mdctx );
+}
+
+/****************************************************************************/
+/**
+ *  Decode e-Mail date & time information into MySQL format.
+ *
+ *  @param  rcb_p               Pointer to a recipe control block
+ *
+ *  @return void                No return code from this function.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+void
+DECODE_POST__datetime(
+    struct  rcb_t           *   rcb_p
+    )
+{
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+
+    /************************************************************************
+     *  Function Code
+     ************************************************************************/
+
+    //  FILE-INFO
+    if ( strlen( rcb_p->file_info_p->date_time ) > 0 )
+    {
+        strncpy( rcb_p->file_info_p->date_time,
+                 decode_fmt_datetime( rcb_p->file_info_p->date_time ),
+                 sizeof( rcb_p->file_info_p->date_time ) );
+    }
+
+    //  E-MAIL: FROM
+    if ( strlen( rcb_p->email_info_p->e_datetime ) > 0 )
+    {
+        strncpy( rcb_p->email_info_p->e_datetime,
+                 decode_fmt_datetime( rcb_p->email_info_p->e_datetime ),
+                 sizeof( rcb_p->email_info_p->e_datetime ) );
+    }
+
+    //  E-MAIL: GROUP FROM
+    if ( strlen( rcb_p->email_info_p->g_datetime ) > 0 )
+    {
+        strncpy( rcb_p->email_info_p->g_datetime,
+                 decode_fmt_datetime( rcb_p->email_info_p->g_datetime ),
+                 sizeof( rcb_p->email_info_p->g_datetime ) );
+    }
+
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  DONE!
 }
 /****************************************************************************/

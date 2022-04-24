@@ -456,6 +456,9 @@ EMAIL__is_group_break(
     //  Locate the first character in the buffer
     tmp_data_p = text_skip_past_whitespace( data_p );
 
+    //  Remove any trailing white space from the data
+    text_strip_whitespace( tmp_data_p );
+
     /************************************************************************
      *  Function
      ************************************************************************/

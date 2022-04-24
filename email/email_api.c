@@ -1229,6 +1229,9 @@ email(
      * @param email_start_flag  TRUE = e-mail processing                    */
     int                         email_start_flag;
     /**
+     * @param group_start_flag  TRUE = e-mail group processing              */
+    int                         group_start_flag;
+    /**
      * @param tmp_data_p        Temporary data pointer                      */
     char                    *   tmp_data_p;
     /**
@@ -1314,70 +1317,129 @@ email(
                 if (    ( rcb_p->recipe_format == RECIPE_FORMAT_NONE )
                      && ( EMAIL__is_start( list_data_p ) == true ) )
                 {
+                    //  YES:    Set the e-Mail start flag true
                     email_start_flag = true;
+
+                    //  Set the group start flag false
+                    group_start_flag = false;
                 }
 
                 //  Are we processing an e-Mail message ?
                 if (    ( email_start_flag     ==               true )
                      && ( rcb_p->recipe_format == RECIPE_FORMAT_NONE ) )
                 {
-                    //  "TRANSFER-ENCODING"
-                    if ( email_find_encoding( list_data_p ) == CTE_QUOTE_PRINT )
+                    //  Is this an e-Mail group break string ?
+                    if ( EMAIL__is_group_break( list_data_p ) == true )
                     {
-                        //  YES:    Set the decode flag
-                        quoted_printable = true;
+                        //  YES:    Set the flag true
+                        group_start_flag = true;
                     }
-                    //  "NEWSGROUPS:"
-                    tmp_data_p = EMAIL__find_newsgroup( list_data_p );
-                    if ( tmp_data_p != NULL )
+
+                    //  Are we processing an e-Mail header or a group message ?
+                    if ( group_start_flag == false )
                     {
-                        //  YES:    Save the information
-                        memset( rcb_p->email_info_p->g_from, '\0', FROM_L );
-                        if ( strlen( tmp_data_p ) < FROM_L )
-                            memcpy( rcb_p->email_info_p->g_from,
-                                    tmp_data_p, strlen( tmp_data_p ) );
-                        else
-                            memcpy( rcb_p->email_info_p->g_from,
-                                    tmp_data_p, FROM_L - 1 );
+                        //  E-MAIL Header:
+                        //  "TRANSFER-ENCODING"
+                        if ( email_find_encoding( list_data_p ) == CTE_QUOTE_PRINT )
+                        {
+                            //  YES:    Set the decode flag
+                            quoted_printable = true;
+                        }
+                        //  "NEWSGROUPS:"
+                        tmp_data_p = EMAIL__find_newsgroup( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->g_from, '\0', FROM_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->g_from,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->g_from,
+                                        tmp_data_p, FROM_L - 1 );
+                        }
+                        //  "SUBJECT:"
+                        tmp_data_p = EMAIL__find_subject( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->e_subject, '\0', SUBJECT_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->e_subject,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->e_subject,
+                                        tmp_data_p, SUBJECT_L - 1 );
+                        }
+                        //  "FROM:"
+                        tmp_data_p = EMAIL__find_from( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->e_from, '\0', FROM_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->e_from,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->e_from,
+                                        tmp_data_p, FROM_L - 1 );
+                        }
+                        //  "DATE:"
+                        tmp_data_p = EMAIL__find_datetime( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->e_datetime, '\0', DATETIME_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->e_datetime,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->e_datetime,
+                                        tmp_data_p, DATETIME_L - 1 );
+                        }
                     }
-                    //  "SUBJECT:"
-                    tmp_data_p = EMAIL__find_subject( list_data_p );
-                    if ( tmp_data_p != NULL )
+                    else
                     {
-                        //  YES:    Save the information
-                        memset( rcb_p->email_info_p->e_subject, '\0', SUBJECT_L );
-                        if ( strlen( tmp_data_p ) < FROM_L )
-                            memcpy( rcb_p->email_info_p->e_subject,
-                                    tmp_data_p, strlen( tmp_data_p ) );
-                        else
-                            memcpy( rcb_p->email_info_p->e_subject,
-                                    tmp_data_p, SUBJECT_L - 1 );
-                    }
-                    //  "FROM:"
-                    tmp_data_p = EMAIL__find_from( list_data_p );
-                    if ( tmp_data_p != NULL )
-                    {
-                        //  YES:    Save the information
-                        memset( rcb_p->email_info_p->e_from, '\0', FROM_L );
-                        if ( strlen( tmp_data_p ) < FROM_L )
-                            memcpy( rcb_p->email_info_p->e_from,
-                                    tmp_data_p, strlen( tmp_data_p ) );
-                        else
-                            memcpy( rcb_p->email_info_p->e_from,
-                                    tmp_data_p, FROM_L - 1 );
-                    }
-                    //  "DATE:"
-                    tmp_data_p = EMAIL__find_datetime( list_data_p );
-                    if ( tmp_data_p != NULL )
-                    {
-                        //  YES:    Save the information
-                        memset( rcb_p->email_info_p->e_datetime, '\0', DATETIME_L );
-                        if ( strlen( tmp_data_p ) < FROM_L )
-                            memcpy( rcb_p->email_info_p->e_datetime,
-                                    tmp_data_p, strlen( tmp_data_p ) );
-                        else
-                            memcpy( rcb_p->email_info_p->e_datetime,
-                                    tmp_data_p, DATETIME_L - 1 );
+                        //  Must be a group message
+                        //  "SUBJECT:"
+                        tmp_data_p = EMAIL__find_subject( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->g_subject, '\0', SUBJECT_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->g_subject,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->g_subject,
+                                        tmp_data_p, SUBJECT_L - 1 );
+                        }
+                        //  "FROM:"
+                        tmp_data_p = EMAIL__find_from( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->g_from, '\0', FROM_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->g_from,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->g_from,
+                                        tmp_data_p, FROM_L - 1 );
+                        }
+                        //  "DATE:"
+                        tmp_data_p = EMAIL__find_datetime( list_data_p );
+                        if ( tmp_data_p != NULL )
+                        {
+                            //  YES:    Save the information
+                            memset( rcb_p->email_info_p->g_datetime, '\0', DATETIME_L );
+                            if ( strlen( tmp_data_p ) < FROM_L )
+                                memcpy( rcb_p->email_info_p->g_datetime,
+                                        tmp_data_p, strlen( tmp_data_p ) );
+                            else
+                                memcpy( rcb_p->email_info_p->g_datetime,
+                                        tmp_data_p, DATETIME_L - 1 );
+                        }
                     }
                 }
 
@@ -1430,6 +1492,9 @@ email(
 
                         //  Clear the new RCB pointer
                         new_rcb_p = NULL;
+
+                        //  Set the group start flag false
+                        group_start_flag = false;
                     }
 
 

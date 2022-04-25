@@ -121,7 +121,7 @@
  *          MM DD YY HH MM   (AP)                               #02
  *          MM DD YY                                            #03
  *          MM DD YY HH MM SS                                   #04
- *          DD MON YY HH MM SS                                  #05
+ *          DD MON YY HH MM (SS)                                #05
  *          DOW     DD MON YY HH MM SS AP                       #06
  *          DOW     DD MON YY HH MM    AP                       #07
  *          DOW     DD MON YY HH MM( SS)                        #08
@@ -139,14 +139,6 @@
  *              09/14  1:22 AM
  *              Jan 02 01:47PM -0800
  *              02/27 From:   ASXV66A    JAMES KILGORE         Time:    12:01
- *
- *  @ToDo:  3   Newly discovered Date/Time formats
- *      Saturday, November 02, 1996 1119
- *          My assumption is that 1119 should be the time 11:19
- *      05/22/13 13:47:25
- *      10/4/2013 8:16:41 PM
- *      Monday, April 08, 2002 09:24:28 PM
- *      2/25/2008 8:24:24 Cheryl
  *
  ****************************************************************************/
 
@@ -288,10 +280,10 @@ decode_fmt_datetime(
                     &dt_hour  , &dt_minute, &dt_second );
 
             //  Verify a successful decode
-            if (    ( dt_year   >  1970 )
-                 && ( dt_month  != -1 )
+            if (    ( dt_year   >  70 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour  < 24 )
                  && ( dt_minute != -1 )
                  && ( dt_second != -1 )
                  && ( dt_dow    == -1 )
@@ -325,9 +317,9 @@ decode_fmt_datetime(
 
             //  Verify a successful decode
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second != -1 )
                  && ( dt_dow    == -1 )
@@ -361,9 +353,9 @@ decode_fmt_datetime(
 
             //  Verify a successful decode
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    == -1 )
@@ -400,7 +392,7 @@ decode_fmt_datetime(
 
             //  Verify a successful decode
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
                  && ( dt_hour   == -1 )
                  && ( dt_minute == -1 )
@@ -425,7 +417,7 @@ decode_fmt_datetime(
         }
 
         //--------------------------------------------------------------------
-        //  Source format   DD MON YY HH MM SS                             #05
+        //  Source format   DD MON YY HH MM (SS)                           #05
         //--------------------------------------------------------------------
 
         //  Do we have a successful decode yet ?
@@ -440,16 +432,24 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
-                 && ( dt_second != -1 )
+//               && ( dt_second != -1 )     //  Seconds may or MAY NOT exist
                  && ( dt_dow    == -1 )
                  && ( dt_ap     == -1 ) )
             {
                 //  YES:    Good decode
                 decoded = true;
+
+                //  Was the seconds included ?
+                if (    ( dt_second == -1 )
+                     || ( dt_second  > 59 ) )
+                {
+                    //  YES:    Set it to zero
+                    dt_second = 0;
+                }
             }
             else
             {
@@ -482,9 +482,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second != -1 )
                  && ( dt_dow    >   0 )
@@ -524,9 +524,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    >   0 )
@@ -566,9 +566,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
 //               && ( dt_second != -1 )     //  Seconds may or MAY NOT exist
                  && ( dt_dow    >   0 )
@@ -578,7 +578,8 @@ decode_fmt_datetime(
                 decoded = true;
 
                 //  Was the seconds included ?
-                if ( dt_second == -1 )
+                if (    ( dt_second == -1 )
+                     || ( dt_second  > 59 ) )
                 {
                     //  YES:    Set it to zero
                     dt_second = 0;
@@ -615,9 +616,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    >   0 )
@@ -660,9 +661,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second != -1 )
                  && ( dt_dow    >   0 )
@@ -699,9 +700,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    >   0 )
@@ -741,9 +742,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second != -1 )
                  && ( dt_dow    >   0 )
@@ -780,9 +781,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   == -1 )
+                 &&(( dt_hour   == -1 ) || ( dt_hour > 23   ) )
                  && ( dt_minute == -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    >   0 )
@@ -823,9 +824,9 @@ decode_fmt_datetime(
             dt_month = DECODE__month( month );
 
             if (    ( dt_year   != -1 )
-                 && ( dt_month  != -1 )
+                 && ( dt_month  >=  1 ) && ( dt_month <= 12 )
                  && ( dt_day    != -1 )
-                 && ( dt_hour   != -1 )
+                 && ( dt_hour   >=  0 ) && ( dt_hour <= 23 )
                  && ( dt_minute != -1 )
                  && ( dt_second == -1 )
                  && ( dt_dow    == -1 )

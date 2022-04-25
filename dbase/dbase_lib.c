@@ -633,7 +633,8 @@ DBASE__open(
                                "group_date_time DATETIME,"
                                "email_name TINYBLOB,"
                                "email_subject TINYBLOB,"
-                               "email_date_time DATETIME"
+                               "email_date_time DATETIME,"
+                               "PRIMARY KEY(recipe_id)"
                                ");");
 
 #if DBASE_ACCESS_LOG == 1
@@ -860,12 +861,12 @@ DBASE__discard_recipe(
         //--------------------------------------------------------------------
 
         if (    ( continue_flag == true )
-             && (    ( db_source.group_date_time_p == NULL )
-                  || ( strncmp( db_source.group_date_time_p,
+             && (    ( db_source.group_date_time_p != NULL )
+                  && ( strncmp( db_source.group_date_time_p,
                                 "1970-01-01 00:00:00",
                                 strlen( db_source.group_date_time_p ) ) > 0 ) )
-             && (    ( strlen( rcb_p->email_info_p->g_datetime ) == 0 )
-                  || ( strncmp( rcb_p->email_info_p->g_datetime,
+             || (    ( strlen( rcb_p->email_info_p->g_datetime ) != 0 )
+                  && ( strncmp( rcb_p->email_info_p->g_datetime,
                                 "1970-01-01 00:00:00",
                                 strlen( rcb_p->email_info_p->g_datetime ) ) > 0 ) ) )
         {
@@ -873,12 +874,12 @@ DBASE__discard_recipe(
             //  @NOTE:  If the continue flag is true one of the two timestamps
             //          is valid.
 
-            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-From: "
-                    "Existing: '%s', NEW: '%s'\n",
-                      db_source.group_name_p, rcb_p->email_info_p->g_from );
-            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-Time: "
-                    "Existing: '%s', NEW: '%s'\n",
-                      db_source.group_date_time_p, rcb_p->email_info_p->g_datetime );
+//          log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-From: "
+//                  "Existing: '%s', NEW: '%s'\n",
+//                    db_source.group_name_p, rcb_p->email_info_p->g_from );
+//          log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-Time: "
+//                  "Existing: '%s', NEW: '%s'\n",
+//                    db_source.group_date_time_p, rcb_p->email_info_p->g_datetime );
 
             //----------------------------------------------------------------
             //  Case 02
@@ -896,7 +897,7 @@ DBASE__discard_recipe(
                 //  YES:    Delete the old recipe so it can be replaces
                 delete_flag = true;
                 continue_flag = false;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 02\n" );
+//              log_write( MID_INFO, "DBASE__duplicate", "Case 02\n" );
             }
 
             //----------------------------------------------------------------
@@ -915,7 +916,7 @@ DBASE__discard_recipe(
                 //  YES:    Delete the old recipe so it can be replaces
                 discard_flag = true;
                 continue_flag = false;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 03\n" );
+//              log_write( MID_INFO, "DBASE__duplicate", "Case 03\n" );
             }
 
             //  @NOTE:  If the continue flag is true both timestamps are valid.
@@ -951,7 +952,7 @@ DBASE__discard_recipe(
                 {
                     //  YES:    Delete the old recipe so it can be replaces
                     delete_flag = true;
-                    log_write( MID_INFO, "DBASE__duplicate", "Case 04.1\n" );
+//                  log_write( MID_INFO, "DBASE__duplicate", "Case 04.1\n" );
                 }
 
                 //------------------------------------------------------------
@@ -966,7 +967,7 @@ DBASE__discard_recipe(
                 {
                     //  NO:     Discard the new recipe
                     discard_flag = true;
-                    log_write( MID_INFO, "DBASE__duplicate", "Case 04.2\n" );
+//                  log_write( MID_INFO, "DBASE__duplicate", "Case 04.2\n" );
                 }
             }
 
@@ -994,7 +995,7 @@ DBASE__discard_recipe(
                 {
                     //  YES:    Discard the new recipe.
                     discard_flag = true;
-                    log_write( MID_INFO, "DBASE__duplicate", "Case 05.1\n" );
+//                  log_write( MID_INFO, "DBASE__duplicate", "Case 05.1\n" );
                 }
 
                 //------------------------------------------------------------
@@ -1009,7 +1010,7 @@ DBASE__discard_recipe(
                 {
                     //  NO:     Delete the old recipe so it can be replaces.
                     delete_flag = true;
-                    log_write( MID_INFO, "DBASE__duplicate", "Case 05.2\n" );
+//                  log_write( MID_INFO, "DBASE__duplicate", "Case 05.2\n" );
                 }
             }
         }
@@ -1022,9 +1023,9 @@ DBASE__discard_recipe(
         else
         {
 
-            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: File-Time: "
-                    "Existing: '%s', NEW: '%s'\n",
-                      db_source.file_date_time_p, rcb_p->file_info_p->date_time );
+//          log_write( MID_INFO, "DBASE__duplicate", "DEBUG: File-Time: "
+//                  "Existing: '%s', NEW: '%s'\n",
+//                    db_source.file_date_time_p, rcb_p->file_info_p->date_time );
 
             //----------------------------------------------------------------
             //  Case 06.1
@@ -1035,17 +1036,17 @@ DBASE__discard_recipe(
 
             if (    ( continue_flag == true )
                  && ( strncmp( db_source.file_date_time_p,
-                               rcb_p->email_info_p->g_datetime,
-                               strlen( db_source.group_date_time_p ) ) < 0 ) )
+                               rcb_p->file_info_p->date_time,
+                               strlen( db_source.file_date_time_p ) ) > 0 ) )
             {
                 //  YES:    Delete the old recipe so it can be replaces
                 delete_flag = true;
                 continue_flag = false;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 06.1\n" );
+//              log_write( MID_INFO, "DBASE__duplicate", "Case 06.1\n" );
             }
 
             //----------------------------------------------------------------
-            //  Case 06.1
+            //  Case 06.2
             //  The file timestamp of the dBase recipe is newer than or
             //  equal to the new one.
             //
@@ -1057,7 +1058,7 @@ DBASE__discard_recipe(
                 //  YES:    Delete the old recipe so it can be replaces
                 discard_flag = true;
                 continue_flag = false;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 06.1\n" );
+//              log_write( MID_INFO, "DBASE__duplicate", "Case 06.2\n" );
             }
         }
     }

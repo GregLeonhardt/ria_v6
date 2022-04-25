@@ -364,8 +364,7 @@ DBASE__info_create(
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
     log_write( MID_LOGONLY, "DBASE__info",
-//          "CREATE: RC:(%s) = %.128s \n", sql_rc?"FAIL":"PASS", db_command );
-            "CREATE: RC:(%s) = %s \n", sql_rc?"FAIL":"PASS", db_command );
+            "CREATE: RC:(%s) = %.768s \n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
     //  Was the command successful ?
@@ -463,7 +462,7 @@ DBASE__info_read(
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
     log_write( MID_LOGONLY, "DBASE__info",
-            "READ: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
+            "READ: RC:(%s) = %.768s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
     //  Was the command successful ?
@@ -632,7 +631,7 @@ DBASE__info_delete(
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
     log_write( MID_LOGONLY, "DBASE__info",
-            "DELETE: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
+            "DELETE: RC:(%s) = %.768s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
     //  Was the command successful ?

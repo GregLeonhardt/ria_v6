@@ -165,6 +165,7 @@ dbase_insert(
      *  Function Body
      ************************************************************************/
 
+    //-----------------------------------------------------------------------
     //  Three things that are needed to have a real recipe
     //  1)  Name
     //  2)  Ingredients
@@ -179,67 +180,67 @@ dbase_insert(
                   rcb_p->recipe_p->recipe_id_p,
                   rcb_p->recipe_p->name_p );
 
-        //  Does this recipe already exist in the database ?
-        if ( DBASE__title_exists( rcb_p ) == true )
-        {
-            //  YES:    Delete it.
-            DBASE__title_delete( rcb_p );
-            DBASE__recipe_delete( rcb_p );
-            DBASE__info_delete( rcb_p );
-            DBASE__source_delete( rcb_p );
-        }
-
         //-----------------------------------------------------------------------
-        //  TITLE_TABLE
+        //  INSERT OR DISCARD THE NEW RECIPE
         if ( dbase_rc == true )
         {
-            //  YES:    Create the title record
-            dbase_rc = DBASE__title_create( rcb_p );
-        }
-
-        //-----------------------------------------------------------------------
-        //  RECIPE_TABLE
-        if ( dbase_rc == true )
-        {
-            //  YES:    Create the recipe record
-            dbase_rc = DBASE__recipe_create( rcb_p );
-
-            //  Was the create a success ?
-            if ( dbase_rc != true )
+            //  YES:    Should we discard the new recipe
+            if ( DBASE__discard_recipe( rcb_p ) == false )
             {
-                //  NO:     We need to delete the new records
-                DBASE__title_delete( rcb_p );
-            }
-        }
+                //  NO:     Insert it
 
-        //-----------------------------------------------------------------------
-        //  INFO_TABLE
-        if ( dbase_rc == true )
-        {
-            dbase_rc = DBASE__info_create( rcb_p );
+                //-----------------------------------------------------------------------
+                //  TITLE_TABLE
+                if ( dbase_rc == true )
+                {
+                    //  YES:    Create the title record
+                    dbase_rc = DBASE__title_create( rcb_p );
+                }
 
-            //  Was the create a success ?
-            if ( dbase_rc != true )
-            {
-                //  NO:     We need to delete the new records
-                DBASE__title_delete( rcb_p );
-                DBASE__recipe_delete( rcb_p );
-            }
-        }
+                //-----------------------------------------------------------------------
+                //  RECIPE_TABLE
+                if ( dbase_rc == true )
+                {
+                    //  YES:    Create the recipe record
+                    dbase_rc = DBASE__recipe_create( rcb_p );
 
-        //-----------------------------------------------------------------------
-        //  SOURCE_TABLE
-        if ( dbase_rc == true )
-        {
-            dbase_rc = DBASE__source_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                    }
+                }
 
-            //  Was the create a success ?
-            if ( dbase_rc != true )
-            {
-                //  NO:     We need to delete the new records
-                DBASE__title_delete( rcb_p );
-                DBASE__recipe_delete( rcb_p );
-                DBASE__info_delete( rcb_p );
+                //-----------------------------------------------------------------------
+                //  INFO_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__info_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                    }
+                }
+
+                //-----------------------------------------------------------------------
+                //  SOURCE_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__source_create( rcb_p );
+
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                    }
+                }
             }
         }
     }

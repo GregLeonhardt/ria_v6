@@ -11,7 +11,7 @@
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains private definitions (etc.) that apply to internal 
+ *  This file contains private definitions (etc.) that apply to internal
  *  library components of the 'dbase' library.
  *
  *  @note
@@ -259,6 +259,11 @@ DBASE__source_update(
 //----------------------------------------------------------------------------
 int
 DBASE__source_delete(
+    struct  rcb_t           *   rcb_p
+    );
+//----------------------------------------------------------------------------
+int
+DBASE__discard_recipe(
     struct  rcb_t           *   rcb_p
     );
 //----------------------------------------------------------------------------

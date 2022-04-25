@@ -260,7 +260,7 @@ DBASE__source_create(
         DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
                             db_command_val, sizeof( db_command_val ),
                             "file_date_time",
-                            decode_fmt_datetime( rcb_p->file_info_p->date_time ) );
+                            rcb_p->file_info_p->date_time );
 
         count += 1;
     }
@@ -292,7 +292,7 @@ DBASE__source_create(
         DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
                             db_command_val, sizeof( db_command_val ),
                             "group_date_time",
-                            decode_fmt_datetime( rcb_p->email_info_p->g_datetime ) );
+                            rcb_p->email_info_p->g_datetime );
 
         count += 1;
     }
@@ -324,7 +324,7 @@ DBASE__source_create(
         DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
                             db_command_val, sizeof( db_command_val ),
                             "email_date_time",
-                            decode_fmt_datetime( rcb_p->email_info_p->e_datetime ) );
+                            rcb_p->email_info_p->e_datetime );
 
         count += 1;
     }
@@ -456,7 +456,8 @@ DBASE__source_read(
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
     log_write( MID_LOGONLY, "DBASE__source",
-            "READ: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
+            "READ: RC:(%s) = %s\n", sql_rc?"FAIL":"PASS", db_command );
+//          "READ: RC:(%s) = %.128s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
     //  Was the command successful ?
@@ -482,17 +483,28 @@ DBASE__source_read(
     if ( row != NULL )
     {
         //  YES:    Read the RECIPE-ID
-        db_source_p->recipe_id_p        = text_copy_to_new( row[  0 ] );
-        db_source_p->src_format_p       = text_copy_to_new( row[  1 ] );
-        db_source_p->file_name_p        = text_copy_to_new( row[  2 ] );
-        db_source_p->file_size_p        = text_copy_to_new( row[  3 ] );
-        db_source_p->file_date_time_p   = text_copy_to_new( row[  4 ] );
-        db_source_p->group_name_p       = text_copy_to_new( row[  5 ] );
-        db_source_p->group_subject_p    = text_copy_to_new( row[  6 ] );
-        db_source_p->group_date_time_p  = text_copy_to_new( row[  7 ] );
-        db_source_p->email_name_p       = text_copy_to_new( row[  8 ] );
-        db_source_p->email_subject_p    = text_copy_to_new( row[  9 ] );
-        db_source_p->email_date_time_p  = text_copy_to_new( row[ 10 ] );
+        if ( row[  0 ] != NULL )
+            db_source_p->recipe_id_p        = text_copy_to_new( row[  0 ] );
+        if ( row[  1 ] != NULL )
+            db_source_p->src_format_p       = text_copy_to_new( row[  1 ] );
+        if ( row[  2 ] != NULL )
+            db_source_p->file_name_p        = text_copy_to_new( row[  2 ] );
+        if ( row[  3 ] != NULL )
+            db_source_p->file_size_p        = text_copy_to_new( row[  3 ] );
+        if ( row[  4 ] != NULL )
+            db_source_p->file_date_time_p   = text_copy_to_new( row[  4 ] );
+        if ( row[  5 ] != NULL )
+            db_source_p->group_name_p       = text_copy_to_new( row[  5 ] );
+        if ( row[  6 ] != NULL )
+            db_source_p->group_subject_p    = text_copy_to_new( row[  6 ] );
+        if ( row[  7 ] != NULL )
+            db_source_p->group_date_time_p  = text_copy_to_new( row[  7 ] );
+        if ( row[  8 ] != NULL )
+            db_source_p->email_name_p       = text_copy_to_new( row[  8 ] );
+        if ( row[  9 ] != NULL )
+            db_source_p->email_subject_p    = text_copy_to_new( row[  9 ] );
+        if ( row[ 10 ] != NULL )
+            db_source_p->email_date_time_p  = text_copy_to_new( row[ 10 ] );
 
         //  Release the results
         mysql_free_result( result );

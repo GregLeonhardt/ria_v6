@@ -43,7 +43,9 @@
 #include "libtools_api.h"       //  My Tools Library
                                 //*******************************************
 #include "dbase_api.h"          //  API for all dbase_*             PUBLIC
-#include "dbase_lib.h"          //  API for all DBASE__*            PRIVATE
+#include "dbase_lib.h"
+#include "rcb_api.h"
+#include "email_api.h"          //  API for all DBASE__*            PRIVATE
                                 //*******************************************
 
 /****************************************************************************
@@ -791,5 +793,293 @@ DBASE__add_col_val(
 
     //  Bye-Bye.
     return ( dbase_rc );
+}
+
+/****************************************************************************/
+/**
+ *  Test for a duplicate recipe-id.  If found, decide if the existing recipe
+ *  should be replaces or if the new recipe should be discarded.
+ *
+ *  @param  rcb_p               Pointer to a recipe control block
+ *
+ *  @return                     FALSE when the new recipe should be inserted.
+ *                              TRUE when the new recipe should be discarded
+ *                              as a duplicate recipe.
+ *
+ *  @note
+ *
+ ****************************************************************************/
+
+int
+DBASE__discard_recipe(
+    struct  rcb_t           *   rcb_p
+    )
+{
+    /**
+     *  @param  dbase_rc        Return code from this function              */
+    int                         discard_flag;
+    /**
+     *  @param  func_rc         Return code from a called function          */
+    int                         func_rc;
+    /**
+     *  @param  delete_flag     When TRUE, delete the existing recipe       */
+    int                         delete_flag;
+    /**
+     *  @param  continue_flag   When TRUE, continue testing                 */
+    int                         continue_flag;
+    /**
+     *  @param  db_source       Pointer to a source table structure         */
+    struct  db_source_t         db_source;
+
+    /************************************************************************
+     *  Function Initialization
+     ************************************************************************/
+
+    //  Variable initialization
+    discard_flag = false;       //  The new recipe should be inserted.
+    delete_flag = false;        //  Don't delete the existing recipe.
+    continue_flag = true;       //  Until we find out what to do.
+
+    //  Attempt to read the existing recipe
+    func_rc = DBASE__source_read( rcb_p, &db_source );
+
+    /************************************************************************
+     *  Decide by e-Mail address and e-Mail post date / time.
+     ************************************************************************/
+
+    //  Does the recipe-id already exist in the dBase ?
+    if ( func_rc != 0 )
+    {
+
+        //--------------------------------------------------------------------
+        //  Case 01
+        //  Both recipes in the dBase and the new one do NOT have a valid group
+        //  timestamp.
+        //
+        //  Discard the new recipe leaving the dBase as is.
+        //--------------------------------------------------------------------
+
+        if (    ( continue_flag == true )
+             && (    ( db_source.group_date_time_p == NULL )
+                  || ( strncmp( db_source.group_date_time_p,
+                                "1970-01-01 00:00:00",
+                                strlen( db_source.group_date_time_p ) ) > 0 ) )
+             && (    ( strlen( rcb_p->email_info_p->g_datetime ) == 0 )
+                  || ( strncmp( rcb_p->email_info_p->g_datetime,
+                                "1970-01-01 00:00:00",
+                                strlen( rcb_p->email_info_p->g_datetime ) ) > 0 ) ) )
+        {
+
+            //  @NOTE:  If the continue flag is true one of the two timestamps
+            //          is valid.
+
+            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-From: "
+                    "Existing: '%s', NEW: '%s'\n",
+                      db_source.group_name_p, rcb_p->email_info_p->g_from );
+            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: Group-Time: "
+                    "Existing: '%s', NEW: '%s'\n",
+                      db_source.group_date_time_p, rcb_p->email_info_p->g_datetime );
+
+            //----------------------------------------------------------------
+            //  Case 02
+            //  The recipe in the dBase does NOT have a valid group timestamp.
+            //
+            //  Replace the existing recipe in the dBase with the new recipe.
+            //----------------------------------------------------------------
+
+            if (    ( continue_flag == true )
+                 && (      db_source.group_date_time_p == NULL )
+                      || ( strncmp( db_source.group_date_time_p,
+                                    "1970-01-01 00:00:00",
+                                    strlen( db_source.group_date_time_p ) ) < 0 ) )
+            {
+                //  YES:    Delete the old recipe so it can be replaces
+                delete_flag = true;
+                continue_flag = false;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 02\n" );
+            }
+
+            //----------------------------------------------------------------
+            //  Case 03
+            //  The new recipe does NOT have a valid group timestamp.
+            //
+            //  Discard the new recipe.
+            //----------------------------------------------------------------
+            else
+            if (    ( continue_flag == true )
+                 && (      rcb_p->email_info_p->g_datetime == NULL )
+                      || ( strncmp( rcb_p->email_info_p->g_datetime,
+                                    "1970-01-01 00:00:00",
+                                    strlen( rcb_p->email_info_p->g_datetime ) ) < 0 ) )
+            {
+                //  YES:    Delete the old recipe so it can be replaces
+                discard_flag = true;
+                continue_flag = false;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 03\n" );
+            }
+
+            //  @NOTE:  If the continue flag is true both timestamps are valid.
+
+            //----------------------------------------------------------------
+            //  Case 04
+            //  Both recipes were sent by the same person
+            //----------------------------------------------------------------
+
+            else
+            if (    ( continue_flag == true )
+                 && ( db_source.group_name_p != NULL )
+                 && ( strlen( db_source.group_name_p ) ==
+                      strlen( rcb_p->email_info_p->g_from ) )
+                 && ( strncmp( db_source.group_name_p,
+                               rcb_p->email_info_p->g_from,
+                               strlen( db_source.group_name_p ) ) == 0 ) )
+            {
+                //  No more testing.
+                continue_flag = false;
+
+                //------------------------------------------------------------
+                //  Case 04.1
+                //  The timestamp of the recipe in the dBase is older than
+                //  or the same as he new recipe.
+                //
+                //  Delete the dBase recipe and replace it with the new one
+                //------------------------------------------------------------
+
+                if ( strncmp( db_source.group_date_time_p,
+                              rcb_p->email_info_p->g_datetime,
+                              strlen( db_source.group_date_time_p ) ) <= 0 )
+                {
+                    //  YES:    Delete the old recipe so it can be replaces
+                    delete_flag = true;
+                    log_write( MID_INFO, "DBASE__duplicate", "Case 04.1\n" );
+                }
+
+                //------------------------------------------------------------
+                //  Case 04.2
+                //  The timestamp of the recipe in the dBase is newer than
+                //  the new recipe.
+                //
+                //  Discard the new recipe
+                //------------------------------------------------------------
+
+                else
+                {
+                    //  NO:     Discard the new recipe
+                    discard_flag = true;
+                    log_write( MID_INFO, "DBASE__duplicate", "Case 04.2\n" );
+                }
+            }
+
+            //----------------------------------------------------------------
+            //  Case 05
+            //  Both recipes were sent by different people.
+            //----------------------------------------------------------------
+
+            else
+            {
+                //  No more testing.
+                continue_flag = false;
+
+                //------------------------------------------------------------
+                //  Case 05.1
+                //  The timestamp of the recipe in the dBase is older than
+                //  or the same as he new recipe.
+                //
+                //  Discard the new recipe.
+                //------------------------------------------------------------
+
+                if ( strncmp( db_source.group_date_time_p,
+                              rcb_p->email_info_p->g_datetime,
+                              strlen( db_source.group_date_time_p ) ) <= 0 )
+                {
+                    //  YES:    Discard the new recipe.
+                    discard_flag = true;
+                    log_write( MID_INFO, "DBASE__duplicate", "Case 05.1\n" );
+                }
+
+                //------------------------------------------------------------
+                //  Case 05.2
+                //  The timestamp of the recipe in the dBase is newer than
+                //  the new recipe.
+                //
+                //  Delete the dBase recipe and replace it with the new one
+                //------------------------------------------------------------
+
+                else
+                {
+                    //  NO:     Delete the old recipe so it can be replaces.
+                    delete_flag = true;
+                    log_write( MID_INFO, "DBASE__duplicate", "Case 05.2\n" );
+                }
+            }
+        }
+
+        //--------------------------------------------------------------------
+        //  Case 06
+        //  Both e-mail group timestamps are invalid.
+        //--------------------------------------------------------------------
+
+        else
+        {
+
+            log_write( MID_INFO, "DBASE__duplicate", "DEBUG: File-Time: "
+                    "Existing: '%s', NEW: '%s'\n",
+                      db_source.file_date_time_p, rcb_p->file_info_p->date_time );
+
+            //----------------------------------------------------------------
+            //  Case 06.1
+            //  The file timestamp of the dBase recipe is older than the new one.
+            //
+            //  Delete the dBase recipe and replace it.
+            //----------------------------------------------------------------
+
+            if (    ( continue_flag == true )
+                 && ( strncmp( db_source.file_date_time_p,
+                               rcb_p->email_info_p->g_datetime,
+                               strlen( db_source.group_date_time_p ) ) < 0 ) )
+            {
+                //  YES:    Delete the old recipe so it can be replaces
+                delete_flag = true;
+                continue_flag = false;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 06.1\n" );
+            }
+
+            //----------------------------------------------------------------
+            //  Case 06.1
+            //  The file timestamp of the dBase recipe is newer than or
+            //  equal to the new one.
+            //
+            //  Discard the new recipe.
+            //----------------------------------------------------------------
+
+            else
+            {
+                //  YES:    Delete the old recipe so it can be replaces
+                discard_flag = true;
+                continue_flag = false;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 06.1\n" );
+            }
+        }
+    }
+
+    /************************************************************************
+     *  Delete the existing recipe from the dBase
+     ************************************************************************/
+
+    //  Should the existing recipe be deleted ?
+    if ( delete_flag == true )
+    {
+        //  YES:    Delete it.
+        DBASE__title_delete( rcb_p );
+        DBASE__recipe_delete( rcb_p );
+        DBASE__info_delete( rcb_p );
+        DBASE__source_delete( rcb_p );
+    }
+    /************************************************************************
+     *  Function Exit
+     ************************************************************************/
+
+    //  Bye-Bye.
+    return ( discard_flag );
 }
 /****************************************************************************/

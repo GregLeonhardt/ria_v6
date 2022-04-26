@@ -471,7 +471,7 @@ DBASE__source_read(
 
     if (result == NULL)
     {
-        //  Failed to locate the records
+        //  Failed to locate the record(s)
         MYQL__access_error( db_command );
     }
 
@@ -482,27 +482,27 @@ DBASE__source_read(
     if ( row != NULL )
     {
         //  YES:    Read the RECIPE-ID
-        if ( row[  0 ] != NULL )
+        if ( row[  0 ] != NULL )            //  recipe_id
             db_source_p->recipe_id_p        = text_copy_to_new( row[  0 ] );
-        if ( row[  1 ] != NULL )
+        if ( row[  1 ] != NULL )            //  format
             db_source_p->src_format_p       = text_copy_to_new( row[  1 ] );
-        if ( row[  2 ] != NULL )
+        if ( row[  2 ] != NULL )            //  file_name
             db_source_p->file_name_p        = text_copy_to_new( row[  2 ] );
-        if ( row[  3 ] != NULL )
+        if ( row[  3 ] != NULL )            //  file_size
             db_source_p->file_size_p        = text_copy_to_new( row[  3 ] );
-        if ( row[  4 ] != NULL )
+        if ( row[  4 ] != NULL )            //  file_date_time
             db_source_p->file_date_time_p   = text_copy_to_new( row[  4 ] );
-        if ( row[  5 ] != NULL )
+        if ( row[  5 ] != NULL )            //  group_name
             db_source_p->group_name_p       = text_copy_to_new( row[  5 ] );
-        if ( row[  6 ] != NULL )
+        if ( row[  6 ] != NULL )            //  group_subject
             db_source_p->group_subject_p    = text_copy_to_new( row[  6 ] );
-        if ( row[  7 ] != NULL )
+        if ( row[  7 ] != NULL )            //  group_date_time
             db_source_p->group_date_time_p  = text_copy_to_new( row[  7 ] );
-        if ( row[  8 ] != NULL )
+        if ( row[  8 ] != NULL )            //  email_name
             db_source_p->email_name_p       = text_copy_to_new( row[  8 ] );
-        if ( row[  9 ] != NULL )
+        if ( row[  9 ] != NULL )            //  email_subject
             db_source_p->email_subject_p    = text_copy_to_new( row[  9 ] );
-        if ( row[ 10 ] != NULL )
+        if ( row[ 10 ] != NULL )            //  email_date_time
             db_source_p->email_date_time_p  = text_copy_to_new( row[ 10 ] );
 
         //  Release the results

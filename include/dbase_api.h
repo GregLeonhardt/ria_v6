@@ -11,11 +11,11 @@
 
 /******************************** JAVADOC ***********************************/
 /**
- *  This file contains public definitions (etc.) that apply to external 
+ *  This file contains public definitions (etc.) that apply to external
  *  library components of the 'dbase' library.
  *
  * DATETIME is stored as 'YYYY-MM-DD hh:mm:ss'
- * 
+ *
  *  @note
  *      TABLE   ROW             TYPE
  *      -----   -----           ---------------------------------------------
@@ -58,7 +58,7 @@
  *              RECIPE-ID       VARCHAR(50)
  *              SRC-FORMAT      TINYBLOB
  *              FILE-NAME       TINYBLOB
- *              FILE-SIZE       INTEGER
+ *              FILE-SIZE       VARCHAR(15)
  *              FILE-DATE-TIME  DATETIME
  *              GROUP-NAME      TINYBLOB
  *              GROUP-SUBJECT   TINYBLOB

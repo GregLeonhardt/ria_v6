@@ -626,7 +626,7 @@ DBASE__open(
                                "recipe_id VARCHAR(50),"
                                "format TINYTEXT,"
                                "file_name TINYTEXT,"
-                               "file_size INTEGER,"
+                               "file_size VARCHAR(15),"
                                "file_date_time DATETIME,"
                                "group_name TINYBLOB,"
                                "group_subject TINYBLOB,"

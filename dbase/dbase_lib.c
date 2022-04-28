@@ -831,6 +831,16 @@ DBASE__discard_recipe(
     /**
      *  @param  db_source       Pointer to a source table structure         */
     struct  db_source_t         db_source;
+    /**
+     *  @param  db_datetime     Date & Time of the recipe in the dBase      */
+    char                        db_datetime[ 20 ];
+    /**
+     *  @param  ins_datetime    Date & Time of the insert recipe            */
+    char                        ins_datetime[ 20 ];
+#if 1
+    char                    *   db_datetime_p  = db_datetime;
+    char                    *   ins_datetime_p = ins_datetime;
+#endif
 
     /************************************************************************
      *  Function Initialization
@@ -844,6 +854,187 @@ DBASE__discard_recipe(
     //  Attempt to read the existing recipe
     func_rc = DBASE__source_read( rcb_p, &db_source );
 
+#if 1
+    /************************************************************************
+     *  Get the best Date & Time from the dBase recipe
+     ************************************************************************/
+
+    //  Is this a duplicate recipe ?
+    if ( func_rc == true )
+    {
+        //  YES:    I there an e-Mail group Date/Time ?
+        if ( db_source.group_date_time_p == NULL )
+        {
+            //  NO:     Try to get Date & Time from an e-Mail
+            if ( db_source.email_date_time_p == NULL )
+            {
+                //  NO:     OK, try to get Date & Time from the file
+                if ( db_source.file_date_time_p == NULL )
+                {
+                    //  NO:     None of the above.  Makeup a Date/Time
+                    memcpy( db_datetime, "1970-01-01 00:00:00", sizeof( db_datetime ) );
+                }
+                else
+                {
+                    //  YES:    Use the File Date/Time
+                    memcpy( db_datetime, db_source.file_date_time_p, sizeof( db_datetime ) );
+                }
+            }
+            else
+            {
+                //  YES:    Use the e-Mail Date/Time
+                memcpy( db_datetime, db_source.email_date_time_p, sizeof( db_datetime ) );
+            }
+        }
+        else
+        {
+            //  YES:    Use the e-Mail group Date/Time
+            memcpy( db_datetime, db_source.group_date_time_p, sizeof( db_datetime ) );
+        }
+
+        /************************************************************************
+         *  Get the best Date & Time from the insert recipe
+         ************************************************************************/
+
+        //  Is this a duplicate recipe ?
+        if ( func_rc == true )
+        {
+            //  I there an e-Mail group Date/Time ?
+            if ( rcb_p->email_info_p->g_datetime == NULL )
+            {
+                //  NO:     Try to get Date & Time from an e-Mail
+                if ( rcb_p->email_info_p->e_datetime == NULL )
+                {
+                    //  NO:     OK, try to get Date & Time from the file
+                    if ( rcb_p->file_info_p->date_time == NULL )
+                    {
+                        //  NO:     None of the above.  Makeup a Date/Time
+                        memcpy( ins_datetime, "1970-01-01 00:00:00", sizeof( db_datetime ) );
+                    }
+                    else
+                    {
+                        //  YES:    Use the File Date/Time
+                        memcpy( ins_datetime, rcb_p->file_info_p->date_time, sizeof( db_datetime ) );
+                    }
+                }
+                else
+                {
+                    //  YES:    Use the e-Mail Date/Time
+                    memcpy( ins_datetime, rcb_p->email_info_p->e_datetime, sizeof( db_datetime ) );
+                }
+            }
+            else
+            {
+                //  YES:    Use the e-Mail group Date/Time
+                memcpy( ins_datetime, rcb_p->email_info_p->g_datetime, sizeof( db_datetime ) );
+            }
+        }
+
+        /********************************************************************
+         *  CASE-1
+         *  Both recipes were sent by the same person
+         *
+         *  ACTION:
+         *  Use the recipe with the most recent date/time stamp.
+         ********************************************************************/
+
+        if (    ( continue_flag == true )
+             && ( db_source.group_name_p != NULL )
+             && ( strlen( db_source.group_name_p ) ==
+                  strlen( rcb_p->email_info_p->g_from ) )
+             && ( strncmp( db_source.group_name_p,
+                           rcb_p->email_info_p->g_from,
+                           strlen( db_source.group_name_p ) ) == 0 ) )
+        {
+            //  No more testing.
+            continue_flag = false;
+
+            //----------------------------------------------------------------
+            //  CASE-1.1
+            //  The timestamp of the dBase recipe is older than or the same as
+            //  the insert recipe.
+            //
+            //  Delete the dBase recipe and replace it with the new one
+            //
+            //  @NOTE:  The assumption is that is the DATE/TIME stamps are the
+            //          same the insert recipe is an updated recipe.
+            //----------------------------------------------------------------
+
+            if ( strncmp( db_datetime, ins_datetime, sizeof( db_datetime ) )  <= 0 )
+            {
+                //  YES:    Delete the old recipe so it can be replaces
+                delete_flag = true;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 01.1 "
+                                     "Replace the dBase recipe\n" );
+            }
+
+            //----------------------------------------------------------------
+            //  CASE-1.2
+            //  The timestamp of the recipe in the dBase is newer than
+            //  the new recipe.
+            //
+            //  Discard the new recipe
+            //----------------------------------------------------------------
+
+            else
+            {
+                //  NO:     Discard the new recipe
+                discard_flag = true;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 01.2 "
+                                     "Discard the insert recipe\n" );
+            }
+        }
+        else
+        {
+
+            /****************************************************************
+             *  CASE-2
+             *  Recipes were sent by different people
+             *
+             *  ACTION:
+             *  Use the recipe with the oldest date/time stamp.
+             ****************************************************************/
+
+            //  No more testing.
+            continue_flag = false;
+
+            //------------------------------------------------------------
+            //  CASE-2.1
+            //  The timestamp of the recipe in the dBase is older than
+            //  or the same as he new recipe.
+            //
+            //  Discard the new recipe.
+            //------------------------------------------------------------
+
+            if ( strncmp( db_datetime, ins_datetime, sizeof( db_datetime ) )  <= 0 )
+            {
+                //  YES:    Discard the new recipe.
+                discard_flag = true;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 02.1 "
+                                     "Discard the insert recipe\n" );
+            }
+
+            //------------------------------------------------------------
+            //  CASE-2.2
+            //  The timestamp of the recipe in the dBase is newer than
+            //  the new recipe.
+            //
+            //  Delete the dBase recipe and replace it with the new one
+            //------------------------------------------------------------
+
+            else
+            {
+                //  NO:     Delete the old recipe so it can be replaces.
+                delete_flag = true;
+                log_write( MID_INFO, "DBASE__duplicate", "Case 02.2 "
+                                     "Replace the dBase recipe\n" );
+            }
+        }
+    }
+
+
+#else
+    //  @ToDo:  2   Duplicate code should be removed.
     /************************************************************************
      *  Decide by e-Mail address and e-Mail post date / time.
      ************************************************************************/
@@ -1062,6 +1253,7 @@ DBASE__discard_recipe(
             }
         }
     }
+#endif
 
     /************************************************************************
      *  Delete the existing recipe from the dBase

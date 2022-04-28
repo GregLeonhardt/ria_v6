@@ -28,7 +28,7 @@
    #define DBASE_EXT         extern
 #endif
 
-#define DBASE_ACCESS_LOG        ( 1 )
+#define DBASE_ACCESS_LOG        ( 0 )
 
 /****************************************************************************
  * System APIs

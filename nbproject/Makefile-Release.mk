@@ -35,6 +35,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/dbase/DBASE__cuisine.o \
 	${OBJECTDIR}/dbase/DBASE__info.o \
 	${OBJECTDIR}/dbase/DBASE__recipe.o \
 	${OBJECTDIR}/dbase/DBASE__source.o \
@@ -102,6 +103,11 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ria_v6: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/ria_v6 ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/dbase/DBASE__cuisine.o: dbase/DBASE__cuisine.c
+	${MKDIR} -p ${OBJECTDIR}/dbase
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/dbase/DBASE__cuisine.o dbase/DBASE__cuisine.c
 
 ${OBJECTDIR}/dbase/DBASE__info.o: dbase/DBASE__info.c
 	${MKDIR} -p ${OBJECTDIR}/dbase

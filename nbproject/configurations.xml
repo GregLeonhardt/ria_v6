@@ -27,6 +27,7 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="dbase" displayName="dbase" projectFiles="true">
+        <itemPath>dbase/DBASE__cuisine.c</itemPath>
         <itemPath>dbase/DBASE__info.c</itemPath>
         <itemPath>dbase/DBASE__recipe.c</itemPath>
         <itemPath>dbase/DBASE__source.c</itemPath>
@@ -179,6 +180,8 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="dbase/DBASE__cuisine.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="dbase/DBASE__info.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbase/DBASE__recipe.c" ex="false" tool="0" flavor2="0">
@@ -344,6 +347,8 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="dbase/DBASE__cuisine.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="dbase/DBASE__info.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="dbase/DBASE__recipe.c" ex="false" tool="0" flavor2="0">

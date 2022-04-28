@@ -227,6 +227,21 @@ dbase_insert(
                 }
 
                 //-----------------------------------------------------------------------
+                //  CUISINE_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__cuisine_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                    }
+                }
+
+                //-----------------------------------------------------------------------
                 //  SOURCE_TABLE
                 if ( dbase_rc == true )
                 {
@@ -238,6 +253,7 @@ dbase_insert(
                         //  NO:     We need to delete the new records
                         DBASE__title_delete( rcb_p );
                         DBASE__recipe_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
                         DBASE__info_delete( rcb_p );
                     }
                 }

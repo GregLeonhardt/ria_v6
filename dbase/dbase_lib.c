@@ -1074,6 +1074,7 @@ DBASE__discard_recipe(
         DBASE__title_delete( rcb_p );
         DBASE__recipe_delete( rcb_p );
         DBASE__info_delete( rcb_p );
+        DBASE__cuisine_delete( rcb_p );
         DBASE__source_delete( rcb_p );
     }
     /************************************************************************

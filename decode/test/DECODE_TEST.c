@@ -177,7 +177,7 @@ struct  TEST_date_time_s                TEST_date_time_s[ ] =
     { "2005-11-20 19:33:43", "11/20/2005 7:33:43 PM"            },  //  64
     { "2005-11-21 22:04:22", "11/21/05 22:04:22"                },  //  65
 
-    //  @ToDo:  2   The following were discovered in the wild.
+    //  The following were discovered in the wild.
     { "1996-07-17 10:38:00", "Wed, 17 Jul 1996 10:38 -0500 (EST)"}, //  66  #08
     { "1997-03-02 14:43:00", "2 Mar 1997, 14:43"                },  //  67  #05
     { "1997-08-08 21:33:14", "97-08-08 21:33:14 EDT"            },  //  68  #01

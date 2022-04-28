@@ -808,11 +808,11 @@ main(
             //  Unzip all "*.zip" files
             count = file_unzip( in_dir_name_p );
 
-            //  YES:    Build the file list
-            file_ls( file_list_p, in_dir_name_p, NULL );
-
             //  Loop until there aren't any more files to unzip
         }   while( count != 0 );
+
+        //  Now that all 'ZIP' files are extracted, build the file list
+        file_ls( file_list_p, in_dir_name_p, NULL );
     }
     else
     {

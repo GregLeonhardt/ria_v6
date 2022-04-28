@@ -53,8 +53,8 @@
 #define DIET                    "Diet:"
 #define DIET_L                  strlen( DIET )
 //----------------------------------------------------------------------------
-#define COURSE                  "Course:"
-#define COURSE_L                strlen( COURSE )
+#define MEAL                    "Meal:"
+#define MEAL_L                  strlen( MEAL )
 //----------------------------------------------------------------------------
 #define CUISINE                 "Cuisine:"
 #define CUISINE_L               strlen( CUISINE )

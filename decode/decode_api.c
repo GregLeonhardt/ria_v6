@@ -2095,12 +2095,12 @@ decode_save_chapter(
             decode_append( recipe_p->diet_p,
                            ( data_p + DIET_L ) );
         }
-        //  Course ?
+        //  Meal ?
         else
-        if ( strncmp( COURSE, data_p, COURSE_L ) == 0 )
+        if ( strncmp( MEAL, data_p, MEAL_L ) == 0 )
         {
-            decode_append( recipe_p->course_p,
-                           ( data_p + COURSE_L ) );
+            decode_append( recipe_p->meal_p,
+                           ( data_p + MEAL_L ) );
         }
         //  Cuisine ?
         else

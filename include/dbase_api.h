@@ -42,7 +42,7 @@
  *      OCCASION
  *              RECIPE-ID       VARCHAR(50)
  *              NAME            VARCHAR(35)
- *      COURSE
+ *      MEAL
  *              RECIPE-ID       VARCHAR(50)
  *              NAME            VARCHAR(35)
  *      DIET

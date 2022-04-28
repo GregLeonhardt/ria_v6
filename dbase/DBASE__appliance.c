@@ -9,7 +9,7 @@
 /******************************** JAVADOC ***********************************/
 /**
  *  This file contains the CRUD (Create, Read, Update, and Delete) functions
- *  for the CUISINE-TABLE in the RECIPE 'dbase' library.
+ *  for the APPLIANCE-TABLE in the RECIPE 'dbase' library.
  *
  *  @note
  *
@@ -85,7 +85,7 @@
 
 /****************************************************************************/
 /**
- *  Create a new record in the CUISINE-TABLE
+ *  Create a new record in the APPLIANCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -97,7 +97,7 @@
  ****************************************************************************/
 
 int
-DBASE__cuisine_exists(
+DBASE__appliance_exists(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -108,8 +108,8 @@ DBASE__cuisine_exists(
      *  @param  func_rc         Called function return code                 */
     int                         func_rc;
     /**
-     *  @param  db_cuisine_p    Structure to hold cuisine data              */
-    struct  db_cuisine_t        db_cuisine;
+     *  @param  db_appliance_p    Structure to hold appliance data              */
+    struct  db_appliance_t        db_appliance;
     /**
      * @param list_data_p       Pointer to the read data                    */
     char                    *   data_p;
@@ -121,16 +121,16 @@ DBASE__cuisine_exists(
     //  Variable initialization
     dbase_rc = false;
 
-    //  Zero out and initialize the cuisine data structure
-    memset( &db_cuisine, 0x00, sizeof( struct  db_cuisine_t ) );
-    db_cuisine.cuisine_list_p = list_new( );
+    //  Zero out and initialize the appliance data structure
+    memset( &db_appliance, 0x00, sizeof( struct  db_appliance_t ) );
+    db_appliance.appliance_list_p = list_new( );
 
     /************************************************************************
      *  Function Code
      ************************************************************************/
 
-    //  Attempt to read the cuisine from the dBase
-    func_rc = DBASE__cuisine_read( rcb_p, &db_cuisine );
+    //  Attempt to read the appliance from the dBase
+    func_rc = DBASE__appliance_read( rcb_p, &db_appliance );
 
     //  Does the RECIPE-ID already exist ?
     if( func_rc == true )
@@ -138,22 +138,22 @@ DBASE__cuisine_exists(
         //  YES:    It already exists.
         dbase_rc = true;
 
-        //  Release the storage used to hold the cuisine
-        mem_free( db_cuisine.recipe_id_p   );
+        //  Release the storage used to hold the appliance
+        mem_free( db_appliance.recipe_id_p   );
 
         //--------------------------------------------------------------------
-        if ( list_query_count( db_cuisine.cuisine_list_p ) > 0 )
+        if ( list_query_count( db_appliance.appliance_list_p ) > 0 )
         {
-            while( ( data_p = list_get_first( db_cuisine. cuisine_list_p) ) != NULL )
+            while( ( data_p = list_get_first( db_appliance. appliance_list_p) ) != NULL )
             {
-                list_delete_payload( db_cuisine.cuisine_list_p, data_p );
+                list_delete_payload( db_appliance.appliance_list_p, data_p );
                 mem_free( data_p );
             }
         }
-        if ( list_kill( db_cuisine.cuisine_list_p ) != true )
+        if ( list_kill( db_appliance.appliance_list_p ) != true )
         {
-            log_write( MID_FATAL, "DBASE__cuisine",
-                          "list_kill( recipe_p->cuisine ) failed\n" );
+            log_write( MID_FATAL, "DBASE__appliance",
+                          "list_kill( recipe_p->appliance ) failed\n" );
         }
         //--------------------------------------------------------------------
 
@@ -161,7 +161,7 @@ DBASE__cuisine_exists(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__cuisine",
+    log_write( MID_LOGONLY, "DBASE__appliance",
             "EXISTS: %s\n", dbase_rc == 0?"FALSE":"TRUE" );
 #endif
 
@@ -174,7 +174,7 @@ DBASE__cuisine_exists(
 
 /****************************************************************************/
 /**
- *  Create a new record in the CUISINE-TABLE
+ *  Create a new record in the APPLIANCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -185,7 +185,7 @@ DBASE__cuisine_exists(
  ****************************************************************************/
 
 int
-DBASE__cuisine_create(
+DBASE__appliance_create(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -215,12 +215,12 @@ DBASE__cuisine_create(
      *  Build the MySQL command
      ************************************************************************/
 
-    if ( list_query_count( rcb_p->recipe_p->cuisine_p ) != 0 )
+    if ( list_query_count( rcb_p->recipe_p->appliance_p ) != 0 )
     {
         char * db_cmd_p = db_command;
-        for( tmp_data_p = list_get_first( rcb_p->recipe_p->cuisine_p );
+        for( tmp_data_p = list_get_first( rcb_p->recipe_p->appliance_p );
              tmp_data_p != NULL;
-             tmp_data_p = list_get_next( rcb_p->recipe_p->cuisine_p, tmp_data_p ) )
+             tmp_data_p = list_get_next( rcb_p->recipe_p->appliance_p, tmp_data_p ) )
         {
 
             //  Clear out the MySQL command buffer.
@@ -236,7 +236,7 @@ DBASE__cuisine_create(
                                     "recipe_id", rcb_p->recipe_p->recipe_id_p );
             }
 
-            //    CUISINE
+            //    APPLIANCE
             if ( rcb_p->recipe_p->name_p != NULL )
             {
                 DBASE__add_col_val( db_command_col, sizeof( db_command_col ),
@@ -245,7 +245,7 @@ DBASE__cuisine_create(
             }
             //  NO:     Build the complete command
             snprintf( db_command, sizeof( db_command ),
-                      "INSERT INTO cuisine_table ( %s ) VALUES( %s );",
+                      "INSERT INTO appliance_table ( %s ) VALUES( %s );",
                       db_command_col, db_command_val );
 
             /****************************************************************
@@ -257,7 +257,7 @@ DBASE__cuisine_create(
 
 #if DBASE_ACCESS_LOG == 1
             //  Log the dBase access command
-            log_write( MID_LOGONLY, "DBASE__cuisine",
+            log_write( MID_LOGONLY, "DBASE__appliance",
                     "CREATE: RC:(%s) = %.768s \n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -265,7 +265,7 @@ DBASE__cuisine_create(
             if ( sql_rc != 0 )
             {
                 //  The database creation filed.
-                log_write( MID_FATAL, "DBASE__cuisine",
+                log_write( MID_FATAL, "DBASE__appliance",
                         "CREATE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
 
                 //  Set the return code to success
@@ -284,10 +284,10 @@ DBASE__cuisine_create(
 
 /****************************************************************************/
 /**
- *  Read a record from the CUISINE-TABLE
+ *  Read a record from the APPLIANCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
- *  @param  db_cuisine_p    *   Structure to hold cuisine data
+ *  @param  db_appliance_p    *   Structure to hold appliance data
  *
  *  @return                     TRUE when the record is successfully
  *                              read, else FALSE.
@@ -297,9 +297,9 @@ DBASE__cuisine_create(
  ****************************************************************************/
 
 int
-DBASE__cuisine_read(
+DBASE__appliance_read(
     struct  rcb_t           *   rcb_p,
-    struct  db_cuisine_t    *   db_cuisine_p
+    struct  db_appliance_t    *   db_appliance_p
     )
 {
     /**
@@ -325,16 +325,16 @@ DBASE__cuisine_read(
     //  Variable initialization
     dbase_rc = false;
 
-    //  Clear any old pointers in the cuisine structure
-    db_cuisine_p->recipe_id_p = NULL;
+    //  Clear any old pointers in the appliance structure
+    db_appliance_p->recipe_id_p = NULL;
 
-    //  Verify the cuisine list is empty
-    if ( list_query_count( rcb_p->recipe_p->cuisine_p ) != 0 )
+    //  Verify the appliance list is empty
+    if ( list_query_count( rcb_p->recipe_p->appliance_p ) != 0 )
     {
-        //  The list for cuisine MUST be empty when this function is called.
-        log_write( MID_LOGONLY, "DBASE__cuisine",
-                   "READ: The cuisine list is NOT empty ( %d )\n",
-                   list_query_count( rcb_p->recipe_p->cuisine_p ) );
+        //  The list for appliance MUST be empty when this function is called.
+        log_write( MID_LOGONLY, "DBASE__appliance",
+                   "READ: The appliance list is NOT empty ( %d )\n",
+                   list_query_count( rcb_p->recipe_p->appliance_p ) );
     }
 
     //  Clear out the MySQL command buffer.
@@ -346,7 +346,7 @@ DBASE__cuisine_read(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command),
-              "SELECT recipe_id, cuisine FROM cuisine_table WHERE recipe_id='%s'; ",
+              "SELECT recipe_id, appliance FROM appliance_table WHERE recipe_id='%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -354,7 +354,7 @@ DBASE__cuisine_read(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__cuisine",
+    log_write( MID_LOGONLY, "DBASE__appliance",
             "READ: RC:(%s) = %.768s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -381,10 +381,10 @@ DBASE__cuisine_read(
     if ( row != NULL )
     {
         //  YES:    Read the RECIPE-ID
-        db_cuisine_p->recipe_id_p   = text_copy_to_new( row[  0 ] );
+        db_appliance_p->recipe_id_p   = text_copy_to_new( row[  0 ] );
 
-        //  Read the CUISINE-DATA
-        list_put_last( db_cuisine_p->cuisine_list_p, text_copy_to_new( row[  1 ] ) );
+        //  Read the APPLIANCE-DATA
+        list_put_last( db_appliance_p->appliance_list_p, text_copy_to_new( row[  1 ] ) );
 
         //  Release the results
         mysql_free_result( result );
@@ -402,7 +402,7 @@ DBASE__cuisine_read(
 
 /****************************************************************************/
 /**
- *  Update an existing record in the CUISINE-TABLE
+ *  Update an existing record in the APPLIANCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -414,7 +414,7 @@ DBASE__cuisine_read(
  ****************************************************************************/
 
 int
-DBASE__cuisine_update(
+DBASE__appliance_update(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -444,13 +444,13 @@ DBASE__cuisine_update(
      ************************************************************************/
 
     //  Delete the existing record
-    dbase_rc = DBASE__cuisine_delete( rcb_p );
+    dbase_rc = DBASE__appliance_delete( rcb_p );
 
     //  Was the delete successful ?
     if ( dbase_rc == true )
     {
         //  YES:    CREATE the new record
-        dbase_rc = DBASE__cuisine_create( rcb_p );
+        dbase_rc = DBASE__appliance_create( rcb_p );
     }
 
     /************************************************************************
@@ -466,7 +466,7 @@ DBASE__cuisine_update(
 
 /****************************************************************************/
 /**
- *  Delete a record from the CUISINE-TABLE
+ *  Delete a record from the APPLIANCE-TABLE
  *
  *  @param  rcb_p               Pointer to a recipe control block
  *
@@ -478,7 +478,7 @@ DBASE__cuisine_update(
  ****************************************************************************/
 
 int
-DBASE__cuisine_delete(
+DBASE__appliance_delete(
     struct  rcb_t           *   rcb_p
     )
 {
@@ -509,7 +509,7 @@ DBASE__cuisine_delete(
 
     //  Build the MySQL command
     snprintf( db_command, sizeof( db_command ),
-              "DELETE FROM cuisine_table WHERE recipe_id = '%s'; ",
+              "DELETE FROM appliance_table WHERE recipe_id = '%s'; ",
               rcb_p->recipe_p->recipe_id_p );
 
     //  Now perform the command.
@@ -517,7 +517,7 @@ DBASE__cuisine_delete(
 
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
-    log_write( MID_LOGONLY, "DBASE__cuisine",
+    log_write( MID_LOGONLY, "DBASE__appliance",
             "DELETE: RC:(%s) = %.768s\n", sql_rc?"FAIL":"PASS", db_command );
 #endif
 
@@ -525,7 +525,7 @@ DBASE__cuisine_delete(
     if ( sql_rc != 0 )
     {
         //  The database creation filed.
-        log_write( MID_FATAL, "DBASE__cuisine",
+        log_write( MID_FATAL, "DBASE__appliance",
                 "DELETE: RC:(%d) = %s\n", sql_rc, mysql_error( con ) );
     }
     else

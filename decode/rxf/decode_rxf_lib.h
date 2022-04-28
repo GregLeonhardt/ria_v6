@@ -89,8 +89,8 @@
 #define RXF_RECIPE_OCCASION     "OCCASION:"
 #define RXF_RECIPE_OCCASION_L   strlen( RXF_RECIPE_OCCASION )
 //----------------------------------------------------------------------------
-#define RXF_RECIPE_COURSE       "COURSE:"
-#define RXF_RECIPE_COURSE_L     strlen( RXF_RECIPE_COURSE )
+#define RXF_RECIPE_MEAL         "MEAL:"
+#define RXF_RECIPE_MEAL_L       strlen( RXF_RECIPE_MEAL )
 //----------------------------------------------------------------------------
 #define RXF_RECIPE_DIET         "DIET:"
 #define RXF_RECIPE_DIET_L       strlen( RXF_RECIPE_DIET )

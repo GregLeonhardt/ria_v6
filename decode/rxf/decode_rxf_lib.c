@@ -61,7 +61,7 @@ enum    data_type_e
     RXF_DT_VOID                 =   0,
     RXF_DT_CUISINE              =   1,
     RXF_DT_OCCASION             =   2,
-    RXF_DT_COURSE               =   3,
+    RXF_DT_MEAL                 =   3,
     RXF_DT_DIET                 =   4,
     RXF_DT_APPLIANCE            =   5,
     RXF_DT_CHAPTER              =   6,
@@ -287,9 +287,9 @@ DECODE_RXF__parse_data(
                         decode_append( recipe_p->occasion_p, raw_chapter );
                     }   break;
                     //
-                    case    RXF_DT_COURSE:
+                    case    RXF_DT_MEAL:
                     {
-                        decode_append( recipe_p->course_p, raw_chapter );
+                        decode_append( recipe_p->meal_p, raw_chapter );
                     }   break;
                     //
                     case    RXF_DT_DIET:
@@ -1011,20 +1011,20 @@ DECODE_RXF__do_recipe_data(
     log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_OCCASION -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
-    //  COURSE:
+    //  MEAL:
     else
-    if ( strncmp( in_buffer_p, RXF_RECIPE_COURSE, RXF_RECIPE_COURSE_L  ) == 0 )
+    if ( strncmp( in_buffer_p, RXF_RECIPE_MEAL, RXF_RECIPE_MEAL_L  ) == 0 )
     {
         //  YES:    Jump past the search string
-        tmp_data_p = in_buffer_p + RXF_RECIPE_COURSE_L;
+        tmp_data_p = in_buffer_p + RXF_RECIPE_MEAL_L;
 
         //  Skip past any leading whitespace.
         tmp_data_p = text_skip_past_whitespace( tmp_data_p );
 
-        //  Save the course data
+        //  Save the meal data
         if ( strlen( tmp_data_p ) >= 1 )
-            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_COURSE );
-    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_COURSE -- %s\n", tmp_data_p );
+            DECODE_RXF__parse_data( recipe_p, tmp_data_p, RXF_DT_MEAL );
+    log_write( MID_TEMPORARY, "DECODE_RXF__do_recipe_data", "RXF_RECIPE_MEAL -- %s\n", tmp_data_p );
     }
     //------------------------------------------------------------------------
     //  DIET:

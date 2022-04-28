@@ -241,6 +241,96 @@ dbase_insert(
                     }
                 }
 
+
+                //-----------------------------------------------------------------------
+                //  OCCASION_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__occasion_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                    }
+                }
+                //-----------------------------------------------------------------------
+                //  MEAL_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__meal_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                        DBASE__occasion_delete( rcb_p );
+                    }
+                }
+
+                //-----------------------------------------------------------------------
+                //  DIET_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__diet_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                        DBASE__occasion_delete( rcb_p );
+                        DBASE__meal_delete( rcb_p );
+                    }
+                }
+
+                //-----------------------------------------------------------------------
+                //  APPLIANCE_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__appliance_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                        DBASE__occasion_delete( rcb_p );
+                        DBASE__meal_delete( rcb_p );
+                        DBASE__diet_delete( rcb_p );
+                    }
+                }
+
+                //-----------------------------------------------------------------------
+                //  CHAPTER_TABLE
+                if ( dbase_rc == true )
+                {
+                    dbase_rc = DBASE__chapter_create( rcb_p );
+                    //  Was the create a success ?
+                    if ( dbase_rc != true )
+                    {
+                        //  NO:     We need to delete the new records
+                        DBASE__title_delete( rcb_p );
+                        DBASE__recipe_delete( rcb_p );
+                        DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                        DBASE__occasion_delete( rcb_p );
+                        DBASE__meal_delete( rcb_p );
+                        DBASE__diet_delete( rcb_p );
+                        DBASE__appliance_delete( rcb_p );
+                    }
+                }
+
                 //-----------------------------------------------------------------------
                 //  SOURCE_TABLE
                 if ( dbase_rc == true )
@@ -253,8 +343,13 @@ dbase_insert(
                         //  NO:     We need to delete the new records
                         DBASE__title_delete( rcb_p );
                         DBASE__recipe_delete( rcb_p );
-                        DBASE__cuisine_delete( rcb_p );
                         DBASE__info_delete( rcb_p );
+                        DBASE__cuisine_delete( rcb_p );
+                        DBASE__occasion_delete( rcb_p );
+                        DBASE__meal_delete( rcb_p );
+                        DBASE__diet_delete( rcb_p );
+                        DBASE__appliance_delete( rcb_p );
+                        DBASE__chapter_delete( rcb_p );
                     }
                 }
             }

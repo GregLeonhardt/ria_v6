@@ -154,8 +154,8 @@
 #define MXP_DIET                "Diet:"
 #define MXP_DIET_L              strlen( MXP_DIET )
 //----------------------------------------------------------------------------
-#define MXP_COURSE              "Course:"
-#define MXP_COURSE_L            strlen( MXP_COURSE )
+#define MXP_MEAL                "Meal:"
+#define MXP_MEAL_L              strlen( MXP_MEAL )
 //----------------------------------------------------------------------------
 #define MXP_CUISINE             "Cuisine:"
 #define MXP_CUISINE_L           strlen( MXP_CUISINE )
@@ -680,12 +680,12 @@ DECODE_MXP__categories(
                         decode_append( recipe_p->diet_p,
                                        ( xlated_chapter_p + MXP_DIET_L ) );
                     }
-                    //  Course ?
+                    //  Meal ?
                     else
-                    if ( strncmp( MXP_COURSE, xlated_chapter_p, MXP_COURSE_L ) == 0 )
+                    if ( strncmp( MXP_MEAL, xlated_chapter_p, MXP_MEAL_L ) == 0 )
                     {
-                        decode_append( recipe_p->course_p,
-                                       ( xlated_chapter_p + MXP_COURSE_L ) );
+                        decode_append( recipe_p->meal_p,
+                                       ( xlated_chapter_p + MXP_MEAL_L ) );
                     }
                     //  Cuisine ?
                     else

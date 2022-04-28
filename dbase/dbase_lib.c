@@ -526,11 +526,11 @@ DBASE__open(
     }
 
     /************************************************************************
-     *  Create the COURSE table (If it doesn't already exist).
+     *  Create the MEAL table (If it doesn't already exist).
      ************************************************************************/
 
-    //  Create COURSE_TABLE
-    sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS course_table ("
+    //  Create MEAL_TABLE
+    sql_rc = mysql_query( con, "CREATE TABLE IF NOT EXISTS meal_table ("
                                "recipe_id VARCHAR(50),"
                                "name VARCHAR(35)"
                                ");");
@@ -538,14 +538,14 @@ DBASE__open(
 #if DBASE_ACCESS_LOG == 1
     //  Log the dBase access command
     log_write( MID_INFO, "DBASE__open",
-            "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS course_table(" );
+            "(%s) = %-30s\n", sql_rc?"TRUE":"FALSE", "CREATE TABLE IF NOT EXISTS meal_table(" );
 #endif
 
     //  Was the command successful ?
     if ( sql_rc != 0 )
     {
         //  The database table creation filed.
-        MYQL__access_error( "CREATE TABLE ... course_table" );
+        MYQL__access_error( "CREATE TABLE ... meal_table" );
     }
 
     /************************************************************************
@@ -1075,6 +1075,11 @@ DBASE__discard_recipe(
         DBASE__recipe_delete( rcb_p );
         DBASE__info_delete( rcb_p );
         DBASE__cuisine_delete( rcb_p );
+        DBASE__occasion_delete( rcb_p );
+        DBASE__meal_delete( rcb_p );
+        DBASE__diet_delete( rcb_p );
+        DBASE__appliance_delete( rcb_p );
+        DBASE__chapter_delete( rcb_p );
         DBASE__source_delete( rcb_p );
     }
     /************************************************************************

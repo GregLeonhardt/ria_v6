@@ -251,20 +251,22 @@ Diet:Yeast Free,                    Yeast Free, YeastFree
 #############################
 ####    Major meal categories
 #############################
-Course:Appetizers,                  Appetizers, APPETIZER, HDOuevres, HorsDoeuv
-Course:Appetizers,                  Appetizers & Hors d'Oeuvres
-Course:Breakfast,                   Breakfast, Breakfasts, Pancakes, WAFFLES
-Course:Breakfast,                   Breakfast/Brunch
-Course:Brunch,                      Brunch, LUNCHEON, Breakfast/Brunch
-Course:Buffet,                      Buffet
-Course:Desserts,                    Desserts, DESSERT, Cobbler
-Course:Lunch,                       Lunch
-Course:Main Dish,                   Main Dish, Main-Dish
-Course:Main Dish,                   MainDish, MainDishes, Main, Entree
-Course:Main Dish,                   MainCoarse, Main Course, Main Dishes, MAINCOARSE
-Course:Side Dish,                   Side Dish, Side-Dish, Side Dishes
-Course:Side Dish,                   SideDish, SideDishes, Side
-Course:Snack,                       Snack, Snacks, snack, snaks, Party
+Meal:Appetizers,                    Appetizers, APPETIZER, HDOuevres, HorsDoeuv
+Meal:Appetizers,                    Appetizers & Hors d'Oeuvres
+Meal:Breakfast,                     Breakfast, Breakfasts, Pancakes, WAFFLES
+Meal:Breakfast,                     Breakfast/Brunch
+Meal:Brunch,                        Brunch, LUNCHEON, Breakfast/Brunch
+Meal:Buffet,                        Buffet
+Meal:Desserts,                      Desserts, DESSERT, Cobbler
+Meal:Lunch,                         Lunch
+Meal:Dinner,                        Dinner, Supper, Evening Meal, Main Meal
+Meal:Dinner,                        Dinner Party, Potluck, Pot Luck
+Meal:Dinner,                        Main Dish, Main-Dish
+Meal:Dinner,                        MainDish, MainDishes, Main, Entree
+Meal:Dinner,                        MainCoarse, Main Course, Main Dishes, MAINCOARSE
+Meal:Side Dish,                     Side Dish, Side-Dish, Side Dishes
+Meal:Side Dish,                     SideDish, SideDishes, Side
+Meal:Snack,                         Snack, Snacks, snack, snaks, Party
 #############################
 ####    Part of the world the recipe would be associated with.
 #############################

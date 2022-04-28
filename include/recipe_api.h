@@ -196,8 +196,8 @@ struct   recipe_t
      *  @param  Occasion        List of occasions to use this recipe        */
     struct  list_base_t     *   occasion_p;
     /**
-     *  @param  Course          List of courses to use this recipe          */
-    struct  list_base_t     *   course_p;
+     *  @param  Meal            List of meals to use this recipe            */
+    struct  list_base_t     *   meal_p;
     /**
      *  @param  Diet            List of diet(s) to use this recipe          */
     struct  list_base_t     *   diet_p;

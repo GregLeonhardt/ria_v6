@@ -54,7 +54,7 @@
  *          </time>
  *          <source></source>			        # Where the recipe was published.
  *          <categories>
- *              <course></course>                       # Zero (0) to many
+// *              <meal></meal>                         # Zero (0) to many
  *              <diet></diet>                           # Zero (0) to many
  *              <diet></diet>
  *              <cuisine></cuisine>
@@ -521,20 +521,20 @@ encode_xml(
         }
 
         //  ####################
-        //  <COURSE></COURSE>
-        if ( list_query_count( rcb_p->recipe_p->course_p ) != 0 )
+        //  <MEAL></MEAL>
+        if ( list_query_count( rcb_p->recipe_p->meal_p ) != 0 )
         {
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->course_p );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->meal_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->course_p, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->meal_p, tmp_data_p ) )
             {
-                asprintf( &write_data_p, "        <course>%s</course>\n", tmp_data_p );
+                asprintf( &write_data_p, "        <meal>%s</meal>\n", tmp_data_p );
                 list_put_last( rcb_p->export_list_p, write_data_p );
             }
         }
         else
         {
-            asprintf( &write_data_p, "        <course></course>\n" );
+            asprintf( &write_data_p, "        <meal></meal>\n" );
             list_put_last( rcb_p->export_list_p, write_data_p );
         }
 

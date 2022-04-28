@@ -459,18 +459,18 @@ encode_rxf(
         list_put_last( rcb_p->export_list_p, write_data_p );
 
         //  ####################
-        //  type=COURSE
-        asprintf( &write_data_p, "    COURSE:     " );
+        //  type=MEAL
+        asprintf( &write_data_p, "    MEAL:     " );
         list_put_last( rcb_p->export_list_p, write_data_p );
 
-        if ( list_query_count( rcb_p->recipe_p->course_p ) != 0 )
+        if ( list_query_count( rcb_p->recipe_p->meal_p ) != 0 )
         {
             //  Set the flag
             first_category = true;
 
-            for( tmp_data_p = list_get_first( rcb_p->recipe_p->course_p );
+            for( tmp_data_p = list_get_first( rcb_p->recipe_p->meal_p );
                  tmp_data_p != NULL;
-                 tmp_data_p = list_get_next( rcb_p->recipe_p->course_p, tmp_data_p ) )
+                 tmp_data_p = list_get_next( rcb_p->recipe_p->meal_p, tmp_data_p ) )
             {
                 if ( first_category == true )
                 {

@@ -129,7 +129,7 @@ recipe_new(
     //  Create the lists needed by the structure
     recipe_p->appliance_p  = list_new( );
     recipe_p->diet_p       = list_new( );
-    recipe_p->course_p     = list_new( );
+    recipe_p->meal_p     = list_new( );
     recipe_p->cuisine_p    = list_new( );
     recipe_p->occasion_p   = list_new( );
     recipe_p->chapter_p    = list_new( );
@@ -353,18 +353,18 @@ recipe_kill(
                       "list_kill( recipe_p->occasion ) failed\n" );
     }
     //------------------------------------------------------------------------
-    if ( list_query_count( recipe_p->course_p ) > 0 )
+    if ( list_query_count( recipe_p->meal_p ) > 0 )
     {
-        while( ( data_p = list_get_first( recipe_p->course_p ) ) != NULL )
+        while( ( data_p = list_get_first( recipe_p->meal_p ) ) != NULL )
         {
-            list_delete_payload( recipe_p->course_p, data_p );
+            list_delete_payload( recipe_p->meal_p, data_p );
             mem_free( data_p );
         }
     }
-    if ( list_kill( recipe_p->course_p ) != true )
+    if ( list_kill( recipe_p->meal_p ) != true )
     {
         log_write( MID_FATAL, recipe_p->rcb_p->tcb_p->thread_name,
-                      "list_kill( recipe_p->course ) failed\n" );
+                      "list_kill( recipe_p->meal ) failed\n" );
     }
     //------------------------------------------------------------------------
     if ( list_query_count( recipe_p->diet_p ) > 0 )

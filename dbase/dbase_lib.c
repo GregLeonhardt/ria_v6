@@ -964,8 +964,10 @@ DBASE__discard_recipe(
             {
                 //  YES:    Delete the old recipe so it can be replaces
                 delete_flag = true;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 01.1 "
-                                     "Replace the dBase recipe\n" );
+#if DBASE_ACCESS_LOG
+                log_write( MID_LOGONLY, "DBASE__duplicate", "Case 01.1 "
+                    "Replace the dBase recipe\n" );
+#endif
             }
 
             //----------------------------------------------------------------
@@ -980,8 +982,10 @@ DBASE__discard_recipe(
             {
                 //  NO:     Discard the new recipe
                 discard_flag = true;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 01.2 "
-                                     "Discard the insert recipe\n" );
+#if DBASE_ACCESS_LOG
+                log_write( MID_LOGONLY, "DBASE__duplicate", "Case 01.2 "
+                    "Discard the insert recipe\n" );
+#endif
             }
         }
         else
@@ -1010,8 +1014,10 @@ DBASE__discard_recipe(
             {
                 //  YES:    Discard the new recipe.
                 discard_flag = true;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 02.1 "
-                                     "Discard the insert recipe\n" );
+#if DBASE_ACCESS_LOG
+                log_write( MID_LOGONLY, "DBASE__duplicate", "Case 02.1 "
+                    "Discard the insert recipe\n" );
+#endif
             }
 
             //------------------------------------------------------------
@@ -1026,8 +1032,10 @@ DBASE__discard_recipe(
             {
                 //  NO:     Delete the old recipe so it can be replaces.
                 delete_flag = true;
-                log_write( MID_INFO, "DBASE__duplicate", "Case 02.2 "
-                                     "Replace the dBase recipe\n" );
+#if DBASE_ACCESS_LOG
+                log_write( MID_LOGONLY, "DBASE__duplicate", "Case 02.2 "
+                    "Replace the dBase recipe\n" );
+#endif
             }
         }
     }
